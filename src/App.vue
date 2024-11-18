@@ -1,85 +1,77 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <div dir="rtl" class="">
+    <div>
+      <div class="min-h-screen bg-gray-900">
+        <div class="sidebar min-h-screen w-56 overflow-hidden border-r bg-white shadow-lg">
+          <div class="flex h-screen flex-col justify-between pt-2 pb-6">
+            <div>
+              <div class="w-max p-3 px-2">
+                <font-awesome-icon :icon="['fas', 'bars-staggered']" />
+                <font-awesome-icon :icon="['fas', 'bars']" />
+              </div>
+              <ul class="mt-6 space-y-2 tracking-wide px-2">
+                <li class="min-w-max border-b-2 py-2 mb-4">
+                  <RouterLink
+                    href="#"
+                    aria-label="dashboard"
+                    class="relative flex items-center space-x-4"
+                  >
+                    <font-awesome-icon
+                      class="text-gray-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
+                      :icon="['fas', 'user']"
+                    />
+                    <span class="font-medium px-3">المدير العام</span>
+                  </RouterLink>
+                </li>
+                <li class="min-w-max py-2">
+                  <RouterLink
+                    href="#"
+                    aria-label="dashboard"
+                    class="relative flex items-center space-x-4"
+                  >
+                    <font-awesome-icon
+                      class="text-gray-500 bg-opacity-30 p-3 mx-1 size-4"
+                      :icon="['fas', 'user']"
+                    />
+                    <span class="font-medium px-3"> سجل الحضور </span>
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
+            <!-- <div class="w-max -mb-3">
+              <a
+                href="#"
+                class="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 group-hover:fill-cyan-600"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span class="group-hover:text-gray-700">Settings</span>
+              </a>
+            </div> -->
+          </div>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <RouterView />
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+add this in your css .sidebar {
+  transition: all 0.4s ease-in-out;
 }
 </style>
