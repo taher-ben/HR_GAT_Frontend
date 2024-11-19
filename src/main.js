@@ -11,9 +11,16 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { faUser, faBars, faBarsStaggered } from '@fortawesome/free-solid-svg-icons'
+import {
+  faUser,
+  faBars,
+  faBarsStaggered,
+  faUserPlus,
+  faGear,
+  faClipboardUser,
+} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faTwitter, faUser, faBars, faBarsStaggered)
+library.add(faTwitter, faUser, faBars, faBarsStaggered, faUserPlus, faGear, faClipboardUser)
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.use(createPinia())
