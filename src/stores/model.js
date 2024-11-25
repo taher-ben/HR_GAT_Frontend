@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useModalStore = defineStore('modal', {
   state: () => ({
-    isOpen: false,
+    isOpen: true,
   }),
   getters: {
     hiddenClass(state) {
