@@ -18,9 +18,23 @@ import {
   faUserPlus,
   faGear,
   faClipboardUser,
+  faMagnifyingGlass,
+  faEllipsis,
+  faArrowDown,
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faTwitter, faUser, faBars, faBarsStaggered, faUserPlus, faGear, faClipboardUser)
+library.add(
+  faTwitter,
+  faUser,
+  faBars,
+  faBarsStaggered,
+  faUserPlus,
+  faGear,
+  faClipboardUser,
+  faMagnifyingGlass,
+  faEllipsis,
+  faArrowDown,
+)
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.use(createPinia())

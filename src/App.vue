@@ -65,7 +65,11 @@ const modalStore = useModalStore()
               <li
                 class="min-w-max py-2 mb-4 hover:bg-gray-200 transition ease-in-out delay-75 md:px-2 px-1"
               >
-                <RouterLink to="/" aria-label="search" class="relative flex items-center space-x-4">
+                <RouterLink
+                  to="/about"
+                  aria-label="search"
+                  class="relative flex items-center space-x-4"
+                >
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'gear']"
