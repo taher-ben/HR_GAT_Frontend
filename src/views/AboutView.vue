@@ -1,6 +1,5 @@
 <script setup>
 import { useModalStore } from '@/stores/model'
-
 const modalStore = useModalStore()
 </script>
 <template>
@@ -8,45 +7,8 @@ const modalStore = useModalStore()
     <div class="flex md:flex-row flex-col bg-white w-full h-full">
       <div class="w-8/12 my-4 mx-4">
         <div class="mx-auto max-w-screen-xl bg-white">
-          <h1 class="mt-20 mb-10 ml-5 text-2xl font-bold text-gray-900">البحث عن موضف</h1>
-          <div class="bg-white py-2 px-3">
-            <nav class="flex flex-wrap gap-4">
-              <a
-                href="#"
-                class="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"
-              >
-                Account
-              </a>
-
-              <a
-                href="#"
-                class="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"
-              >
-                Settings
-              </a>
-
-              <a
-                href="#"
-                class="inline-flex whitespace-nowrap border-b-2 border-transparent border-b-purple-600 py-2 px-3 text-sm font-semibold text-purple-600 transition-all duration-200 ease-in-out"
-              >
-                Orders
-              </a>
-
-              <a
-                href="#"
-                class="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"
-              >
-                Sales
-              </a>
-
-              <a
-                href="#"
-                class="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"
-              >
-                Suppliers
-              </a>
-            </nav>
-          </div>
+          <h1 class="mt-20 mb-10 ml-5 text-3xl mx-2 text-blue-500 font-bold">البحث عن موضف</h1>
+          <div class="bg-white py-2 px-3"></div>
         </div>
         <div class="bg-gray-50">
           <div class="mx-auto px-2 py-10">
@@ -54,7 +16,9 @@ const modalStore = useModalStore()
               <div
                 class="flex w-full flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0"
               >
-                <form class="relative flex w-full max-w-2xl items-center">
+                <form
+                  class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out rounded-xl px-2 flex w-full max-w-2xl items-center"
+                >
                   <font-awesome-icon
                     class="w-4 h-4 absolute left-2 text-gray-500 dark:text-gray-400"
                     :icon="['fas', 'magnifying-glass']"
@@ -74,12 +38,8 @@ const modalStore = useModalStore()
                 <thead class="hidden border-b lg:table-header-group">
                   <tr class="">
                     <td
-                      class="whitespace-normal flex items-center py-4 text-sm font-semibold text-gray-800 sm:px-3"
+                      class="whitespace-normal flex items-center text-sm font-semibold text-gray-800 sm:px-3 py-5"
                     >
-                      <font-awesome-icon
-                        class="float-start align-middle px-1"
-                        :icon="['fas', 'arrow-down']"
-                      />
                       الاسم
                     </td>
 
@@ -116,7 +76,9 @@ const modalStore = useModalStore()
                     </td>
                   </tr>
                 </thead>
-                <tbody class="bg-white lg:border-gray-300">
+                <tbody
+                  class="bg-white lg:border-gray-300 hover:bg-gray-100 transition ease-in-out duration-150 cursor-pointer"
+                >
                   <tr class="">
                     <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">محمد</td>
                     <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">أحمد</td>
@@ -139,30 +101,6 @@ const modalStore = useModalStore()
                     </td>
                     <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
                       mohamed.ahmed@example.com
-                    </td>
-                  </tr>
-                  <tr class="">
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">فاطمة</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">علي</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      987654321098
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">أنثى</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">78901</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      20 يوليو 2020
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      شارع الزيتون، بنغازي
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      15 أبريل 1995
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      0923456789
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      fatima.ali@example.com
                     </td>
                   </tr>
                 </tbody>
@@ -248,5 +186,3 @@ const modalStore = useModalStore()
     </div>
   </div>
 </template>
-
-<style></style>

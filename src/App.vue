@@ -81,7 +81,7 @@ const modalStore = useModalStore()
                 class="min-w-max py-2 mb-4 hover:bg-gray-200 transition ease-in-out delay-75 md:px-2 px-1"
               >
                 <RouterLink
-                  to="/"
+                  to="/AttendaceView"
                   aria-label="attendance"
                   class="relative flex items-center space-x-4"
                 >
