@@ -2,7 +2,7 @@
   <div class="h-screen overflow-hidden">
     <div class="md:w-full w-fit h-full overflow-scroll bg-white">
       <form
-        class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex w-full md:max-w-2xl items-center mx-8 mt-8"
+        class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mx-8 mt-8 md:w-full w-fit"
       >
         <font-awesome-icon
           class="w-4 h-4 absolute left-2 text-gray-500"
@@ -16,7 +16,7 @@
           placeholder="ادخل بيانات الموظف"
         />
       </form>
-      <div class="lg:flex lg:h-full lg:flex-col p-8">
+      <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4">
         <div class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
           <!-- days of week  -->
           <div
@@ -55,8 +55,8 @@
                       <p class="text-sm font-medium text-gray-900">{{ event.title }}</p>
                       <p class="text-xs text-gray-500">{{ event.description }}</p>
                     </li>
-                    <li class="mb-1 md:hidden block">
-                      <font-awesome-icon class="text-xl text-blue-400" :icon="['fas', 'circle']" />
+                    <li class="mb-1 flex justify-center md:hidden">
+                      <font-awesome-icon class="text-blue-400" :icon="['fas', 'circle']" />
                     </li>
                   </ul>
                 </div>
@@ -87,14 +87,21 @@ export default {
           isToday: false,
           events: [{ id: 1, title: 'اجتماع فريق', description: 'الساعة 10:00 صباحًا' }],
         },
-        { date: '2022-12-06', day: 6, currentMonth: true, isToday: false, events: [] },
         {
-          date: '2022-12-07',
-          day: 7,
+          date: '2022-12-05',
+          day: 6,
           currentMonth: true,
-          isToday: true,
-          events: [{ id: 2, title: 'إجازة سنوية', description: 'موظف: أحمد علي' }],
+          isToday: false,
+          events: [{ id: 1, title: 'اجتماع فريق', description: 'الساعة 10:00 صباحًا' }],
         },
+        // {
+        //   date: '2022-12-07',
+        //   day: 7,
+        //   currentMonth: true,
+        //   isToday: true,
+        //   events: [{ id: 2, title: 'إجازة سنوية', description: 'موظف: أحمد علي' }],
+        // },
+        { date: '2022-12-08', day: 7, currentMonth: true, isToday: false, events: [] },
         { date: '2022-12-08', day: 8, currentMonth: true, isToday: false, events: [] },
         { date: '2022-12-09', day: 9, currentMonth: true, isToday: false, events: [] },
         {

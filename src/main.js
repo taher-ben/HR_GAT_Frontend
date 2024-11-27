@@ -22,6 +22,8 @@ import {
   faEllipsis,
   faArrowDown,
   faCircle,
+  faChartSimple,
+  faHandHoldingDollar,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -36,6 +38,8 @@ library.add(
   faEllipsis,
   faArrowDown,
   faCircle,
+  faChartSimple,
+  faHandHoldingDollar,
 )
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)

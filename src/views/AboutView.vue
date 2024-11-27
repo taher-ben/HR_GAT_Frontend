@@ -7,101 +7,57 @@ const modalStore = useModalStore()
     <div class="flex md:flex-row flex-col bg-white w-full h-full">
       <div class="w-8/12 my-4 mx-4">
         <div class="mx-auto max-w-screen-xl bg-white">
-          <h1 class="mt-20 mb-10 ml-5 text-3xl mx-2 text-blue-500 font-bold">البحث عن موضف</h1>
+          <h1 class="mt-20 mb-10 ml-5 text-3xl mx text-blue-500 font-bold">البحث عن موضف</h1>
           <div class="bg-white py-2 px-3"></div>
         </div>
         <div class="bg-gray-50">
           <div class="mx-auto px-2 py-10">
             <div class="mt-4 w-full">
-              <div
-                class="flex w-full flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0"
+              <form
+                class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
               >
-                <form
-                  class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out rounded-xl px-2 flex w-full max-w-2xl items-center"
-                >
-                  <font-awesome-icon
-                    class="w-4 h-4 absolute left-2 text-gray-500 dark:text-gray-400"
-                    :icon="['fas', 'magnifying-glass']"
-                  />
-                  <input
-                    type="name"
-                    name="search"
-                    class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none focus:border-b-2"
-                    placeholder="ادخل بيانات الموظف"
-                  />
-                </form>
-              </div>
+                <font-awesome-icon
+                  class="w-4 h-4 absolute left-2 text-gray-500"
+                  :icon="['fas', 'magnifying-glass']"
+                />
+                <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
+                <input
+                  type="name"
+                  name="search"
+                  class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
+                  placeholder="ادخل بيانات الموظف"
+                />
+              </form>
             </div>
 
             <div class="mt-6 overflow-hidden rounded-xl bg-white px-6 shadow lg:px-4">
-              <table class="min-w-full border-collapse border-spacing-y-2 border-spacing-x-2">
-                <thead class="hidden border-b lg:table-header-group">
-                  <tr class="">
-                    <td
-                      class="whitespace-normal flex items-center text-sm font-semibold text-gray-800 sm:px-3 py-5"
-                    >
-                      الاسم
-                    </td>
-
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      اللقب
-                    </td>
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      الرقم الوطني
-                    </td>
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      الجنس
-                    </td>
-
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      الرقم الوظيفي
-                    </td>
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      تاريخ التوظيف
-                    </td>
-
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      العنوان
-                    </td>
-
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      تاريخ الميلاد
-                    </td>
-
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      الهاتف
-                    </td>
-                    <td class="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">
-                      البريد الإلكتروني
-                    </td>
+              <table class="w-full table-auto border-collapse border border-gray-300">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th class="border border-gray-300 px-4 py-2">الاسم</th>
+                    <th class="border border-gray-300 px-4 py-2">اللقب</th>
+                    <th class="border border-gray-300 px-4 py-2">الرقم الوطني</th>
+                    <th class="border border-gray-300 px-4 py-2">الجنس</th>
+                    <th class="border border-gray-300 px-4 py-2">الرقم الوظيفي</th>
+                    <th class="border border-gray-300 px-4 py-2">تاريخ التوظيف</th>
+                    <th class="border border-gray-300 px-4 py-2">العنوان</th>
+                    <th class="border border-gray-300 px-4 py-2">تاريخ الميلاد</th>
+                    <th class="border border-gray-300 px-4 py-2">الهاتف</th>
+                    <th class="border border-gray-300 px-4 py-2">البريد الإلكتروني</th>
                   </tr>
                 </thead>
-                <tbody
-                  class="bg-white lg:border-gray-300 hover:bg-gray-100 transition ease-in-out duration-150 cursor-pointer"
-                >
-                  <tr class="">
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">محمد</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">أحمد</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      123456789012
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">ذكر</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">56789</td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      15 مارس 2019
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      شارع الجامعة، طرابلس
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      1 يناير 1990
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      0912345678
-                    </td>
-                    <td class="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">
-                      mohamed.ahmed@example.com
-                    </td>
+                <tbody>
+                  <tr class="hover:bg-gray-50">
+                    <td class="border border-gray-300 px-4 py-2">محمد</td>
+                    <td class="border border-gray-300 px-4 py-2">أحمد</td>
+                    <td class="border border-gray-300 px-4 py-2">123456789012</td>
+                    <td class="border border-gray-300 px-4 py-2">ذكر</td>
+                    <td class="border border-gray-300 px-4 py-2">56789</td>
+                    <td class="border border-gray-300 px-4 py-2">15 مارس 2019</td>
+                    <td class="border border-gray-300 px-4 py-2">شارع الجامعة، طرابلس</td>
+                    <td class="border border-gray-300 px-4 py-2">1 يناير 1990</td>
+                    <td class="border border-gray-300 px-4 py-2">0912345678</td>
+                    <td class="border border-gray-300 px-4 py-2">mohamed.ahmed@example.com</td>
                   </tr>
                 </tbody>
               </table>

@@ -35,11 +35,7 @@ const modalStore = useModalStore()
               </li>
 
               <li class="min-w-max py-2 mb-4 md:px-2 px-1">
-                <RouterLink
-                  to="/Login"
-                  aria-label="dashboard"
-                  class="relative flex items-center space-x-4"
-                >
+                <RouterLink to="/Login" aria-label="dashboard" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'user']"
@@ -50,11 +46,7 @@ const modalStore = useModalStore()
               <li
                 class="min-w-max py-2 mb-4 hover:bg-gray-200 transition ease-in-out delay-75 md:px-2 px-1"
               >
-                <RouterLink
-                  to="/"
-                  aria-label="employees"
-                  class="relative flex items-center space-x-4"
-                >
+                <RouterLink to="/" aria-label="employees" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'user-plus']"
@@ -65,11 +57,7 @@ const modalStore = useModalStore()
               <li
                 class="min-w-max py-2 mb-4 hover:bg-gray-200 transition ease-in-out delay-75 md:px-2 px-1"
               >
-                <RouterLink
-                  to="/about"
-                  aria-label="search"
-                  class="relative flex items-center space-x-4"
-                >
+                <RouterLink to="/about" aria-label="search" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'gear']"
@@ -83,13 +71,43 @@ const modalStore = useModalStore()
                 <RouterLink
                   to="/AttendaceView"
                   aria-label="attendance"
-                  class="relative flex items-center space-x-4"
+                  class="relative flex items-center"
                 >
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'clipboard-user']"
                   />
                   <span class="font-medium px-3"> الحضور اليومي</span>
+                </RouterLink>
+              </li>
+              <li
+                class="min-w-max py-2 mb-4 hover:bg-gray-200 transition ease-in-out delay-75 md:px-2 px-1"
+              >
+                <RouterLink
+                  to="/PenaltiesAndRewards"
+                  aria-label="attendance"
+                  class="relative flex items-center"
+                >
+                  <font-awesome-icon
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
+                    :icon="['fas', 'hand-holding-dollar']"
+                  />
+                  <span class="font-medium px-3"> الخصومات والمكافآت </span>
+                </RouterLink>
+              </li>
+              <li
+                class="min-w-max py-2 mb-4 hover:bg-gray-200 transition ease-in-out delay-75 md:px-2 px-1"
+              >
+                <RouterLink
+                  to="/chartsView"
+                  aria-label="attendance"
+                  class="relative flex items-center"
+                >
+                  <font-awesome-icon
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
+                    :icon="['fas', 'chart-simple']"
+                  />
+                  <span class="font-medium px-3">التخطيط</span>
                 </RouterLink>
               </li>
             </ul>
