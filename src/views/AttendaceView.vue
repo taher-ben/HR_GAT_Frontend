@@ -1,6 +1,7 @@
 <template>
   <div class="h-screen overflow-hidden">
-    <div class="md:w-full w-fit h-full overflow-scroll bg-white">
+    <div class="md:w-full w-fit h-full overflow-scroll">
+      <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold px-8">جدول الحضور</h1>
       <form
         class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mx-8 mt-8 md:w-full w-fit"
       >

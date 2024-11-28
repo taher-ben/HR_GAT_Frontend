@@ -2,7 +2,7 @@ import './assets/index.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
+import Validation from '@/Validation/Validation'
 import App from './App.vue'
 import router from './router'
 /* import the fontawesome core */
@@ -44,6 +44,7 @@ library.add(
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.use(createPinia())
+app.use(Validation)
 app.use(router)
 
 app.mount('#app')

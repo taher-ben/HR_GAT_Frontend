@@ -7,7 +7,7 @@ const modalStore = useModalStore()
     <div class="flex md:flex-row flex-col bg-white w-full h-full">
       <div class="w-8/12 my-4 mx-4">
         <div class="mx-auto max-w-screen-xl bg-white">
-          <h1 class="mt-20 mb-10 ml-5 text-3xl mx text-blue-500 font-bold">البحث عن موضف</h1>
+          <h1 class="mt-20 mb-10 ml-5 text-3xl font-bold">البحث عن موضف</h1>
           <div class="bg-white py-2 px-3"></div>
         </div>
         <div class="bg-gray-50">

@@ -1,10 +1,10 @@
 <template>
   <div class="p-6 w-full bg-white h-screen">
-    <header class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold">إدارة الخصومات والمكافآت</h1>
+    <header class="flex flex-col flex-end mb-6">
+      <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold">إدارة الخصومات والمكافآت</h1>
       <div class="flex md:flex-row flex-col gap-4">
         <form
-          class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mx-8 md:w-full w-fit"
+          class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center md:w-full w-fit"
         >
           <font-awesome-icon
             class="w-4 h-4 absolute left-2 text-gray-500"

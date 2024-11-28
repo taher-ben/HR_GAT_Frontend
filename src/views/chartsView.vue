@@ -1,6 +1,6 @@
 <template>
   <div class="p-6 w-screen bg-white">
-    <h1 class="text-2xl font-bold text-center mb-6">إحصائيات الموظفين</h1>
+    <h1 class="mt-20 mb-10 ml-5 text-3xl font-bold">إحصائيات الموظفين</h1>
 
     <!-- أزرار التنقل -->
     <div dir="ltr" class="flex md:flex-row flex-col justify-center md:space-x-4 mb-6">
