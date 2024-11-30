@@ -1,6 +1,6 @@
 <template>
-  <div class="p-6 w-full bg-white h-screen">
-    <header class="flex flex-col flex-end mb-6">
+  <div class="p-6 w-full bg-white">
+    <header class="flex flex-col flex-end mb-6 w-fit">
       <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold">إدارة الخصومات والمكافآت</h1>
       <div class="flex md:flex-row flex-col gap-4">
         <form
@@ -18,7 +18,7 @@
             placeholder="ادخل بيانات الموظف"
           />
         </form>
-        <select v-model="filterType" class="p-2 border rounded">
+        <select v-model="filterType" class="p-2 border rounded md:w-full xs:w-96">
           <option value="">الكل</option>
           <option value="reward">مكافأة</option>
           <option value="penalty">عقوبة</option>
@@ -26,8 +26,8 @@
       </div>
     </header>
 
-    <section class="mb-6">
-      <table class="w-full table-auto border-collapse border border-gray-300">
+    <section class="mb-6 overflow-y-scroll">
+      <table class="md:w-full w-fit table-auto border-collapse border border-gray-300">
         <thead>
           <tr class="bg-gray-100">
             <th class="border border-gray-300 px-4 py-2">رقم السجل</th>
@@ -72,10 +72,13 @@
       <h2 class="text-xl font-bold mb-4">
         {{ formMode === 'add' ? 'إضافة سجل جديد' : 'تعديل السجل' }}
       </h2>
-      <form @submit.prevent="submitForm" class="grid grid-cols-2 gap-4">
+      <form
+        @submit.prevent="submitForm"
+        class="flex flex-col md:grid grid-cols-2 gap-4 md:w-full xs:w-[50%]"
+      >
         <div>
           <label class="block mb-1">الموظف:</label>
-          <select v-model="form.EmployeeID" class="p-2 border rounded w-full">
+          <select v-model="form.EmployeeID" class="p-2 border rounded md:w-full sm:w-96 w-24">
             <option
               v-for="employee in employees"
               :key="employee.EmployeeID"
@@ -100,17 +103,28 @@
         </div>
         <div>
           <label class="block mb-1">المبلغ:</label>
-          <input v-model="form.Amount" type="number" class="p-2 border rounded w-full" />
+          <input
+            v-model="form.Amount"
+            type="number"
+            class="p-2 border rounded md:w-full sm:w-96 w-fit"
+          />
         </div>
         <div>
           <label class="block mb-1">التاريخ:</label>
-          <input v-model="form.Date" type="date" class="p-2 border rounded w-full" />
+          <input
+            v-model="form.Date"
+            type="date"
+            class="p-2 border rounded md:w-full sm:w-96 w-fit"
+          />
         </div>
-        <div class="col-span-2">
+        <div class="md:col-span-2">
           <label class="block mb-1">السبب:</label>
-          <textarea v-model="form.Reason" class="p-2 border rounded w-full"></textarea>
+          <textarea
+            v-model="form.Reason"
+            class="p-2 border rounded md:w-full sm:w-96 w-fit"
+          ></textarea>
         </div>
-        <div class="col-span-2 flex justify-end gap-4">
+        <div class="col-span-2 flex justify-strat gap-4">
           <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">
             {{ formMode === 'add' ? 'إضافة' : 'تحديث' }}
           </button>

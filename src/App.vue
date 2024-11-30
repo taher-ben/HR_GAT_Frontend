@@ -115,7 +115,7 @@ const modalStore = useModalStore()
         </div>
       </div>
       <div
-        class="w-full z-20"
+        class="w-full z-50"
         :class="[modalStore.isOpen ? 'opacity-0 md:opacity-100' : 'opacity-100']"
       >
         <RouterView />

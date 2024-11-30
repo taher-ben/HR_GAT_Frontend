@@ -1,21 +1,32 @@
 <template>
-  <div class="p-6 w-screen bg-white">
+  <div class="md:p-6 px-10 bg-white">
     <h1 class="mt-20 mb-10 ml-5 text-3xl font-bold">إحصائيات الموظفين</h1>
 
     <!-- أزرار التنقل -->
-    <div dir="ltr" class="flex md:flex-row flex-col justify-center md:space-x-4 mb-6">
-      <button
-        v-for="(chart, index) in chartTypes"
-        :key="index"
-        @click="activeChart = chart.id"
-        class="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-700 focus:outline-none"
-      >
-        {{ chart.label }}
-      </button>
+    <div dir="rtl" class="flex md:flex-row flex-col justify-center md:space-x-4 mb-6">
+      <div>
+        <select
+          @change="activeChart = $event.target.value"
+          class="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-500 focus:outline-none my-2 mx-auto"
+        >
+          <option v-for="(chart, index) in chartTypes" :key="index" :value="chart.id">
+            {{ chart.label }}
+          </option>
+        </select>
+      </div>
+      <div v-for="(chart, index) in chartTypes" :key="index">
+        <button
+          v-if="activeChart === chart.id"
+          @click="activeChart = chart.id"
+          class="px-4 py-2 rounded-lg text-white bg-blue-700 focus:outline-none my-1 mx-auto"
+        >
+          {{ chart.label }}
+        </button>
+      </div>
     </div>
 
     <!-- الرسومات البيانية -->
-    <div class="w-full flex justify-center">
+    <div class="md:w-full w-[30rem] h-full flex md:justify-center mx-auto">
       <div
         v-for="(chart, index) in chartTypes"
         :key="index"
@@ -23,7 +34,7 @@
         class="bg-white shadow-xl rounded-lg p-6 w-1/2"
       >
         <h2 class="text-xl font-semibold text-center mb-4">{{ chart.label }}</h2>
-        <canvas :id="chart.canvasId"></canvas>
+        <canvas class="w-full" :id="chart.canvasId"></canvas>
       </div>
     </div>
   </div>

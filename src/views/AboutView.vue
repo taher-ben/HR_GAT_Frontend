@@ -3,9 +3,11 @@ import { useModalStore } from '@/stores/model'
 const modalStore = useModalStore()
 </script>
 <template>
-  <div class="about">
-    <div class="flex md:flex-row flex-col bg-white w-full h-full">
-      <div class="w-8/12 my-4 mx-4">
+  <div class="about w-full z-50 bg-gray-50">
+    <div
+      class="flex md:flex-row flex-col bg-white md:w-full w-screen h-screen overflow-y-scroll z-40"
+    >
+      <div class="md:w-9/12 w-full my-4 px-4">
         <div class="mx-auto max-w-screen-xl bg-white">
           <h1 class="mt-20 mb-10 ml-5 text-3xl font-bold">البحث عن موضف</h1>
           <div class="bg-white py-2 px-3"></div>
@@ -30,11 +32,12 @@ const modalStore = useModalStore()
               </form>
             </div>
 
-            <div class="mt-6 overflow-hidden rounded-xl bg-white px-6 shadow lg:px-4">
+            <div class="mt-6 rounded-xl bg-white shadow overflow-x-scroll">
               <table class="w-full table-auto border-collapse border border-gray-300">
                 <thead>
                   <tr class="bg-gray-100">
                     <th class="border border-gray-300 px-4 py-2">الاسم</th>
+                    <th class="border border-gray-300 px-3 py-2">الاسم الاوسط</th>
                     <th class="border border-gray-300 px-4 py-2">اللقب</th>
                     <th class="border border-gray-300 px-4 py-2">الرقم الوطني</th>
                     <th class="border border-gray-300 px-4 py-2">الجنس</th>
@@ -47,8 +50,9 @@ const modalStore = useModalStore()
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="hover:bg-gray-50">
+                  <tr class="hover:bg-gray-50 md:flex-row">
                     <td class="border border-gray-300 px-4 py-2">محمد</td>
+                    <td class="border border-gray-300 px-4 py-2">خالط</td>
                     <td class="border border-gray-300 px-4 py-2">أحمد</td>
                     <td class="border border-gray-300 px-4 py-2">123456789012</td>
                     <td class="border border-gray-300 px-4 py-2">ذكر</td>
@@ -65,9 +69,9 @@ const modalStore = useModalStore()
           </div>
         </div>
       </div>
-      <div class="w-4/12 bg-gray-100 flex h-screen">
-        <div class="w-full max-w-sm border bg-white my-auto rounded-lg shadow m-auto">
-          <button class="flex flex-col justify-end px-4 pt-4 absolute">
+      <div class="md:w-3/12 w-fit bg-gray-100 flex">
+        <div class="max-w-sm border bg-white my-auto rounded-lg shadow overflow-x-scroll m-auto">
+          <button class="flex flex-col justify-end px-4 pt-4 relative">
             <font-awesome-icon
               class="w-5 h-5 cursor-pointer"
               @click="modalStore.toggleModalEditMenu"
@@ -75,7 +79,7 @@ const modalStore = useModalStore()
             />
             <div
               :class="modalStore.isOpenEditMenu ? 'block' : 'hidden'"
-              class="z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+              class="z-10 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute top-10"
             >
               <ul class="py-2" aria-labelledby="dropdownButton">
                 <li @click="modalStore.toggleModalEditMenu">
@@ -86,7 +90,7 @@ const modalStore = useModalStore()
               </ul>
             </div>
           </button>
-          <div class="flex flex-col items-center py-10">
+          <div class="flex flex-col items-center py-10 bg-white">
             <img
               class="w-24 h-24 mb-3 rounded-full shadow-lg"
               src="../assets/person.png"
