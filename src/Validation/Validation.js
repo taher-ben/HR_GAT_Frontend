@@ -9,10 +9,10 @@ import {
   required,
   min,
   max,
+  length,
   email,
+  numeric,
   alpha_spaces as alphaSpaces,
-  max_value as maxVal,
-  min_value as minVal,
 } from '@vee-validate/rules'
 
 export default {
@@ -21,15 +21,16 @@ export default {
     app.component('VeeField', VeeField)
     app.component('ErrorMessage', ErrorMessage)
 
+    // تعريف القواعد
     defineRule('required', required)
-    defineRule('tos', required)
     defineRule('min', min)
     defineRule('max', max)
     defineRule('alpha_spaces', alphaSpaces)
     defineRule('email', email)
-    defineRule('min_value', minVal)
-    defineRule('max_value', maxVal)
+    defineRule('length', length)
+    defineRule('numeric', numeric)
 
+    // إعدادات عامة
     configure({
       generateMessage: (ctx) => {
         const messages = {
@@ -38,14 +39,10 @@ export default {
           max: `القيمة المدخلة طويلة جداً.`,
           alpha_spaces: `يجب أن يحتوي الحقل فقط على أحرف ومسافات.`,
           email: `يجب إدخال بريد إلكتروني صالح.`,
-          min_value: `القيمة المدخلة منخفضة جداً.`,
-          max_value: `القيمة المدخلة مرتفعة جداً.`,
-          excluded: `غير مسموح باستخدام هذه القيمة.`,
+          length: `يجب أن يكون الطول ${ctx.rule.params[0]}.`,
+          numeric: `يجب أن يحتوي الحقل على أرقام فقط.`,
         }
-        const message = messages[ctx.rule.name]
-          ? messages[ctx.rule.name]
-          : `الحقل ${ctx.field} غير صالح`
-        return message
+        return messages[ctx.rule.name] || `الحقل ${ctx.field} غير صالح.`
       },
       validateOnBlur: true,
       validateOnChange: true,
