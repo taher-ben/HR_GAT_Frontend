@@ -33,14 +33,14 @@ export default {
     configure({
       generateMessage: (ctx) => {
         const messages = {
-          required: `الحقل ${ctx.field} مطلوب.`,
-          min: `الحقل ${ctx.field} قصير جداً.`,
-          max: `الحقل ${ctx.field} طويل جداً.`,
-          alpha_spaces: `الحقل ${ctx.field} يجب أن يحتوي فقط على أحرف ومسافات.`,
-          email: `الحقل ${ctx.field} يجب أن يكون بريدًا إلكترونيًا صالحًا.`,
-          min_value: `الحقل ${ctx.field} منخفض جداً.`,
-          max_value: `الحقل ${ctx.field} مرتفع جداً.`,
-          excluded: `غير مسموح باستخدام هذه القيمة في الحقل ${ctx.field}.`,
+          required: `هذا الحقل مطلوب.`,
+          min: `القيمة المدخلة قصيرة جداً.`,
+          max: `القيمة المدخلة طويلة جداً.`,
+          alpha_spaces: `يجب أن يحتوي الحقل فقط على أحرف ومسافات.`,
+          email: `يجب إدخال بريد إلكتروني صالح.`,
+          min_value: `القيمة المدخلة منخفضة جداً.`,
+          max_value: `القيمة المدخلة مرتفعة جداً.`,
+          excluded: `غير مسموح باستخدام هذه القيمة.`,
         }
         const message = messages[ctx.rule.name]
           ? messages[ctx.rule.name]

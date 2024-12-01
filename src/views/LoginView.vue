@@ -10,33 +10,66 @@
           </div>
         </div>
         <div>
-          <form class="mb-4">
+          <form @submit.prevent="handleLogin" class="mb-4">
             <div class="grid gap-2">
               <div class="grid gap-1">
-                <label class="dark:text-zinc-500" for="email">اسم المستخدم</label>
+                <label class="dark:text-zinc-500" for="username">اسم المستخدم</label>
                 <input
-                  id="email"
-                  type="email"
+                  id="username"
+                  v-model="username"
+                  type="text"
                   placeholder="أسم المستخدم"
                   class="mb-3 h-full w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1"
                 />
                 <label class="dark:text-zinc-500 mt-2" for="password">كلمة المرور</label>
                 <input
                   id="password"
+                  v-model="password"
                   type="password"
                   placeholder="كلمة المرور"
                   class="mb-3 h-full w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1"
                 />
               </div>
               <button
+                type="submit"
                 class="mt-2 flex w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium text-blue-600 hover:bg-blue-600 hover:text-white transition duration-300 ease-in-out"
               >
                 تسجيل دخول
               </button>
             </div>
           </form>
+          <p v-if="authStore.error" class="text-red-500 text-center mt-4">{{ authStore.error }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
+
+export default {
+  setup() {
+    const authStore = useAuthStore()
+    const router = useRouter()
+    const username = ref('')
+    const password = ref('')
+
+    const handleLogin = async () => {
+      await authStore.login({ username: username.value, password: password.value })
+      if (authStore.isAuthenticated) {
+        router.push('/')
+      }
+    }
+
+    return {
+      authStore,
+      username,
+      password,
+      handleLogin,
+    }
+  },
+}
+</script>
