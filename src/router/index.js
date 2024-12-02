@@ -39,6 +39,12 @@ const router = createRouter({
       component: () => import('../views/AttendaceView.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/ManagemenSPEC',
+      name: 'ManagemenSPEC',
+      component: () => import('../views/ManagemenSPEC.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 

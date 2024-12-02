@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="bg-white md:h-screen h-fit w-full flex md:flex-row flex-col">
     <div class="w-full my-auto p-1 md:h-full h-screen overflow-x-hidden overflow-scroll">
       <VeeForm
@@ -251,4 +251,4 @@ img {
   border: 2px solid #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-</style>
+</style> -->

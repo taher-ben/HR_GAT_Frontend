@@ -46,30 +46,32 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 
 export default {
-  setup() {
-    const authStore = useAuthStore()
-    const router = useRouter()
-    const username = ref('')
-    const password = ref('')
-
-    const handleLogin = async () => {
-      await authStore.login({ username: username.value, password: password.value })
-      if (authStore.isAuthenticated) {
-        router.push('/')
-      }
-    }
-
+  name: 'LoginComponent',
+  data() {
     return {
-      authStore,
-      username,
-      password,
-      handleLogin,
+      username: '',
+      password: '',
     }
+  },
+  computed: {
+    authStore() {
+      return useAuthStore()
+    },
+  },
+  methods: {
+    async handleLogin() {
+      await this.authStore.login({ username: this.username, password: this.password })
+      if (this.authStore.isAuthenticated) {
+        this.$router.push('/')
+      }
+    },
+  },
+  created() {
+    this.router = useRouter()
   },
 }
 </script>

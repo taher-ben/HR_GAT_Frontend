@@ -116,6 +116,22 @@ const logout = () => {
                   <span class="font-medium px-3"> الخصومات والمكافآت </span>
                 </RouterLink>
               </li>
+              <li
+                v-if="authStore.isAuthenticated"
+                class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
+              >
+                <RouterLink
+                  to="/ManagemenSPEC"
+                  activeClass="text-blue-600"
+                  class="relative flex items-center"
+                >
+                  <font-awesome-icon
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4 hover:bg-gray-50"
+                    :icon="['fas', 'building']"
+                  />
+                  <span class="font-medium px-3"> الادارة والتخصصات </span>
+                </RouterLink>
+              </li>
               <li v-if="authStore.isAuthenticated" class="min-w-max py-2 mb-4 md:px-2 px-1">
                 <button
                   @click="logout"
@@ -235,7 +251,7 @@ const logout = () => {
         </div>
       </div>
       <div
-        class="w-full z-50"
+        class="w-full z-50 overscroll-none"
         :class="[modalStore.isOpen ? 'opacity-0 md:opacity-100' : 'opacity-100']"
       >
         <RouterView />
