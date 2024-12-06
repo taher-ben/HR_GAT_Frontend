@@ -17,7 +17,7 @@
             <input
               type="file"
               id="profile-picture"
-              v-bind="field"
+              v-bind="form.photoUrl"
               @change="handleFileUpload"
               class="hidden"
             />
@@ -27,7 +27,6 @@
             <img :src="previewUrl" alt="صورة الشخصية" class="w-24 h-24 rounded-full object-cover" />
           </div>
         </div>
-
         <div>
           <label> الرقم الوظيفي </label>
           <VeeField
@@ -73,6 +72,17 @@
           <ErrorMessage class="text-red-600" name="lastName" />
         </div>
         <div>
+          <label>رقم الوطني</label>
+          <VeeField
+            name="nationalId"
+            v-model="form.nationalId"
+            type="number"
+            placeholder="121"
+            class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
+          />
+          <ErrorMessage class="text-red-600" name="nationalId" />
+        </div>
+        <div>
           <label> الجنس </label>
           <VeeField
             name="gender"
@@ -111,7 +121,7 @@
           <label> نوع التوظيف</label>
           <VeeField
             name="gender"
-            v-model="form.gender"
+            v-model="form.contractType"
             as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
           >
@@ -125,7 +135,7 @@
           <label>القسم </label>
           <VeeField
             name="department"
-            v-model="form.department"
+            v-model="form.departmentDepartmentId"
             as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
           >
@@ -135,7 +145,7 @@
               :key="department.id"
               :value="department.id"
             >
-              {{ department.departmentName }}
+              {{ department.departmentId }}
             </option>
           </VeeField>
           <ErrorMessage class="text-red-600" name="department" />
@@ -160,6 +170,17 @@
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
           />
           <ErrorMessage class="text-red-600" name="hireDate" />
+        </div>
+        <div>
+          <label> الراتب الشهري </label>
+          <VeeField
+            name="salaryPeriod"
+            v-model="form.salaryPeriod "
+            type="text"
+            placeholder="الراتب الشهري"
+            class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
+          />
+          <ErrorMessage class="text-red-600" name="salaryPeriod" />
         </div>
         <div>
           <label> العنوان </label>
@@ -194,54 +215,63 @@ export default {
   data() {
     return {
       schema: {
+        salaryPeriod:'required',
         employeeId: 'required',
-        firstName: 'required|min:2|max:50|alpha_spaces',
-        middleName: 'required|min:2|max:50|alpha_spaces',
-        lastName: 'required|min:2|max:50|alpha_spaces',
+        firstName: 'required',
+        middleName: 'required',
+        lastName: 'required',
         dateOfBirth: 'required',
-        phone: 'required|numeric|length:10',
-        email: 'required|email|max:100',
+        phone: 'required',
+        email: 'required',
         hireDate: 'required',
-        address: 'required|min:5|max:100',
+        address: 'required',
         gender: 'required',
+        nationalId: 'required',
       },
       previewUrl: null,
       form: {
-        // employeeId: '',
-        // firstName: '',
-        // middleName: '',
-        // lastName: '',
-        // gender: '',
-        // dateOfBirth: '',
-        // phone: '',
-        // email: '',
-        // address: '',
-        // hireDate: '',
-        // profilePicture: null,
-        employeeId: '1212',
-        firstName: 'أحميد',
-        middleName: 'خايلد',
-        lastName: 'المصيري',
-        gender: 'ذكر',
-        dateOfBirth: '1990-05-15',
-        nationalId: '19900515123456',
-        phone: '0912345678',
-        email: 'ahmed.khaled@example.com',
-        address: 'طرابلس، شارع الاستقلال',
-        photoUrl:
-          'https://images.pexels.com/photos/2014773/pexels-photo-2014773.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        hireDate: '2022-03-01',
-        fingerprint: 'F12345',
-        contractType: 'full-time',
-        salaryPeriod: 'monthly',
-        positionPositionId: '10',
-        departmentDepartmentId: '5',
+        employeeId: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        gender: '',
+        dateOfBirth: '',
+        nationalId: "",
+        phone: '',
+        email: '',
+        address: '',
+        photoURL: '',
+        hireDate: '',
+        fingerprint: "",
+        contractType: "",
+        salaryPeriod: "شهر",
+        position: 1,
+        department: 2,
+        departmentDepartmentId:''
+        // employeeId: '123212',
+        // firstName: 'أحميد',
+        // middleName: 'خايلد',
+        // lastName: 'المصيري',
+        // gender: 'ذكر',
+        // dateOfBirth: '1990-05-15',
+        // nationalId: '19900515123456',
+        // phone: '0912345678',
+        // email: 'ahmed.khaled@example.com',
+        // address: 'طرابلس، شارع الاستقلال',
+        // photoUrl:'',
+        // hireDate: '2022-03-01',
+        // fingerprint: 'F12345',
+        // contractType: 'full-time',
+        // salaryPeriod: 'monthly',
+        // positionPositionId: '10',
+        // departmentDepartmentId: '5',
       },
     }
   },
   methods: {
     handleFileUpload(event) {
       const file = event.target.files[0]
+      console.log(file)
       if (file) {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
         if (!allowedTypes.includes(file.type)) {
@@ -273,6 +303,8 @@ export default {
             Authorization: `Bearer ${myToken}`,
           },
         })
+        console.log(formData),
+        console.log(response),
 
         alert('تم تسجيل الموظف بنجاح!')
       } catch (error) {
