@@ -6,7 +6,7 @@
     >
       <div class="md:w-10/12 w-full my-4 px-4">
         <div class="mx-auto max-w-screen-xl bg-white">
-          <h1 @click="registerEmployee" class="mt-20 mb-10 ml-5 text-3xl font-bold">
+          <h1 class="mt-20 mb-10 ml-5 text-3xl font-bold">
             البحث عن موضف
           </h1>
           <div class="bg-white py-2 px-3"></div>
@@ -14,21 +14,22 @@
         <div class="bg-gray-50">
           <div class="mx-auto px-2 py-10">
             <div class="mt-4 w-full">
-              <form
+              <div
                 class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
               >
                 <font-awesome-icon
                   class="w-4 h-4 absolute left-2 text-gray-500"
                   :icon="['fas', 'magnifying-glass']"
                 />
-                <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
+                <div  @click="registerEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</div>
                 <input
+                  v-model="sreach"
                   type="name"
                   name="search"
                   class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
                   placeholder="ادخل بيانات الموظف"
                 />
-              </form>
+            </div>
             </div>
             <div class="mt-6 rounded-xl bg-white shadow max-h-screen overflow-x-scroll">
               <table class="w-full table-auto border-collapse border border-gray-300">
@@ -151,10 +152,11 @@
 </template>
 <script>
 import axios from 'axios'
-import API_ENDPOINTS from '../stores/api'
+// import API_ENDPOINTS from '../stores/api'
 export default {
   data() {
     return {
+      // sreach:'252',
       myToken: localStorage.getItem('authToken'),
       response: '',
       isLoading: false,
@@ -164,14 +166,17 @@ export default {
   methods: {
     async registerEmployee() {
       try {
+        console.log(typeof(this.sreach))
         this.isLoading = true
-        const result = await axios.get(API_ENDPOINTS.employees, {
+
+        const result = await axios.get(`http://localhost:3000/api/employees`, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${this.myToken}`,
           },
         })
         this.response = result.data.data
+        console.log(this.response)
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تسجيل الموظف.'
         alert(errorMessage)
@@ -183,8 +188,8 @@ export default {
       this.selectedEmployee = employee
     },
   },
-  mounted() {
-    this.registerEmployee()
-  },
+  // mounted() {
+  //   this.registerEmployee()
+  // },
 }
 </script>
