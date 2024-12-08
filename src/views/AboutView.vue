@@ -1,19 +1,17 @@
 <script setup></script>
 <template>
-  <div class="about w-full z-50 bg-gray-50">
+  <div class="about  w-full z-50 bg-gray-50">
     <div
-      class="flex md:flex-row flex-col bg-white md:w-full w-screen h-screen overflow-y-scroll z-40"
+      class="bg-white relative w-full h-full  z-40"
     >
-      <div class="md:w-10/12 w-full my-4 px-4">
+      <div class="my-4 px-4">
         <div class="mx-auto max-w-screen-xl bg-white">
-          <h1 class="mt-20 mb-10 ml-5 text-3xl font-bold">
-            البحث عن موضف
-          </h1>
+          <h1 class="mt-20 mb-10 ml-5 text-3xl font-bold">البحث عن موضف</h1>
           <div class="bg-white py-2 px-3"></div>
         </div>
         <div class="bg-gray-50">
           <div class="mx-auto px-2 py-10">
-            <div class="mt-4 w-full">
+            <div class="mt-4 w-full flex justify-between items-center">
               <div
                 class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
               >
@@ -21,15 +19,27 @@
                   class="w-4 h-4 absolute left-2 text-gray-500"
                   :icon="['fas', 'magnifying-glass']"
                 />
-                <div  @click="registerEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</div>
+                <div
+                  @click="registerEmployee(sreach)"
+                  class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer"
+                >
+                  بحث
+                </div>
                 <input
                   v-model="sreach"
-                  type="name"
+                  type="text"
                   name="search"
                   class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
                   placeholder="ادخل بيانات الموظف"
                 />
-            </div>
+              </div>
+
+              <button
+                @click="getAllEmployees(sreach)"
+                class="px-4 py-4 my-auto bg-blue-500 rounded-xl text-white cursor-pointer h-full"
+              >
+                كل الموظفين
+              </button>
             </div>
             <div class="mt-6 rounded-xl bg-white shadow max-h-screen overflow-x-scroll">
               <table class="w-full table-auto border-collapse border border-gray-300">
@@ -85,8 +95,8 @@
           </div>
         </div>
       </div>
-      <div class="md:w-2/12 w-fit bg-gray-100 flex">
-        <div class="border mx-4 bg-white my-auto rounded-lg shadow m-auto">
+      <div class="flex absolute top-2/4 blur-2xl  -translate-y-2/4 -translate-x-2/4">
+        <div class="border mx-4 bg-white rounded-lg shadow ">
           <div class="flex flex-col items-center py-10 bg-white mx-4">
             <img
               class="w-24 h-24 mb-3 rounded-full shadow-lg"
@@ -100,47 +110,85 @@
             <div class="grid gap-4 grid-cols-2 w-full px-4 mt-4 md:mt-6">
               <div class="mb-3" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">الرقم الوظيفي</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.employeeId }}</p>
+                <input
+                  type="text"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.employeeId"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">الاسم الأول واسم الاب</p>
-                <p class="text-zinc-700 mt-1">
-                  {{ selectedEmployee.firstName }} {{ selectedEmployee.middleName }}
-                </p>
+                <input
+                  type="text"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.firstName"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">اسم العائلة</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.lastName }}</p>
+                <input
+                  type="text"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.lastName"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">الجنس</p>
-                <p class="text-zinc-700 mt-1">
-                  {{ selectedEmployee.gender === 'M' ? 'ذكر' : 'أنثى' }}
-                </p>
+                <select
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.gender"
+                >
+                  <option value="M">ذكر</option>
+                  <option value="F">أنثى</option>
+                </select>
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">تاريخ الميلاد</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.dateOfBirth }}</p>
+                <input
+                  type="date"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.dateOfBirth"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">الرقم الوطني</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.nationalId }}</p>
+                <input
+                  type="text"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.nationalId"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">البريد الإلكتروني</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.email }}</p>
+                <input
+                  type="email"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.email"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">العنوان</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.address }}</p>
+                <input
+                  type="text"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.address"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">تاريخ التعيين</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.hireDate }}</p>
+                <input
+                  type="date"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.hireDate"
+                />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">الهاتف</p>
-                <p class="text-zinc-700 mt-1">{{ selectedEmployee.phone }}</p>
+                <input
+                  type="text"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.phone"
+                />
               </div>
               <div class="text-center" v-else>الرجاء اختيار موظف لتعديل بياناته.</div>
             </div>
@@ -156,7 +204,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      // sreach:'252',
+      sreach: '',
       myToken: localStorage.getItem('authToken'),
       response: '',
       isLoading: false,
@@ -164,21 +212,42 @@ export default {
     }
   },
   methods: {
-    async registerEmployee() {
+    async getAllEmployees() {
       try {
-        console.log(typeof(this.sreach))
+        console.log(typeof this.sreach)
         this.isLoading = true
 
-        const result = await axios.get(`http://localhost:3000/api/employees`, {
+        const result = await axios.get(`http://localhost:8000/api/employees`, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${this.myToken}`,
           },
         })
         this.response = result.data.data
-        console.log(this.response)
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تسجيل الموظف.'
+        alert(errorMessage)
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async registerEmployee(sreach) {
+      try {
+        this.isLoading = true
+
+        const result = await axios.post(
+          'http://localhost:8000/api/employees/search',
+          { name: sreach },
+          {
+            headers: {
+              'Content-Type': 'application/json', // أو يمكن تركه، فإن axios يحدد النوع بشكل صحيح
+              Authorization: `Bearer ${this.myToken}`,
+            },
+          },
+        )
+        this.response = result.data.data
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
         alert(errorMessage)
       } finally {
         this.isLoading = false

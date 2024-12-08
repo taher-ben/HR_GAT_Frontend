@@ -283,7 +283,7 @@ export default {
           return
         }
         this.previewUrl = URL.createObjectURL(file)
-        this.form.profilePicture = file
+        this.form.photo = file
       }
     },
     async submitForm() {
