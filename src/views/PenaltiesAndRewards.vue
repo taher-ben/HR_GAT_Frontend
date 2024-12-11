@@ -5,24 +5,24 @@
       <div class="flex md:flex-row flex-col gap-4">
         <form
           class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center md:w-full w-fit"
+          @submit.prevent="fetchData"
         >
-          <font-awesome-icon
-            class="w-4 h-4 absolute left-2 text-gray-500"
-            :icon="['fas', 'magnifying-glass']"
-          />
-          <button @click="fetchData" class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
           <input
-            type="name"
-            name="search"
+            v-model="searchQuery"
+            type="text"
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
-            placeholder="ادخل بيانات الموظف"
+            placeholder="ادخل اسم الموظف"
           />
+          <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
         </form>
-        <select v-model="filterType" class="p-2 border rounded md:w-full xs:w-96">
-          <option value="">الكل</option>
+        <!-- <select v-model="filterType" class="p-2 border rounded md:w-full xs:w-96">
+          <option  value="">الكل</option>
           <option value="reward">مكافأة</option>
           <option value="penalty">عقوبة</option>
-        </select>
+        </select> -->
+        <div class="bg-red-500 px-3" @click="fetchData">
+          all
+        </div>
       </div>
     </header>
 
@@ -40,28 +40,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="record in filteredRecords" :key="record.RecordID" class="hover:bg-gray-50">
-            <td class="border border-gray-300 px-4 py-2">{{ record.RecordID }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ record.EmployeeName }}</td>
+          <tr v-for="record in filteredRecords" :key="record.recordId" class="hover:bg-gray-50">
+            <td class="border border-gray-300 px-4 py-2">{{ record.recordId }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ getEmployeeName(record.employeeEmployeeId) }}</td>
             <td class="border border-gray-300 px-4 py-2">
-              {{ record.Type === 'reward' ? 'مكافأة' : 'عقوبة' }}
+              {{ record.type === 'reward' ? 'مكافأة' : 'عقوبة' }}
             </td>
-            <td class="border border-gray-300 px-4 py-2">{{ record.Amount }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ record.Date }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ record.Reason }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ record.amount }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ record.date }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ record.reason }}</td>
             <td class="border border-gray-300 px-4 py-2 flex gap-2">
-              <button
-                @click="editRecord(record)"
-                class="bg-yellow-500 text-white px-2 py-1 rounded"
-              >
-                تعديل
-              </button>
-              <button
-                @click="deleteRecord(record.RecordID)"
-                class="bg-red-500 text-white px-2 py-1 rounded"
-              >
-                حذف
-              </button>
+              <button @click="editRecord(record)" class="bg-yellow-500 text-white px-2 py-1 rounded">تعديل</button>
+              <button @click="deleteRecord(record.recordId)" class="bg-red-500 text-white px-2 py-1 rounded">حذف</button>
             </td>
           </tr>
         </tbody>
@@ -69,68 +59,43 @@
     </section>
 
     <section>
-      <h2 class="text-xl font-bold mb-4">
-        {{ formMode === 'add' ? 'إضافة سجل جديد' : 'تعديل السجل' }}
-      </h2>
-      <form
-        @submit.prevent="submitForm"
-        class="flex flex-col md:grid grid-cols-2 gap-4 md:w-full xs:w-[50%]"
-      >
+      <h2 class="text-xl font-bold mb-4">{{ formMode === 'add' ? 'إضافة سجل جديد' : 'تعديل السجل' }}</h2>
+      <form @submit.prevent="submitForm" class="flex flex-col md:grid grid-cols-2 gap-4 md:w-full xs:w-[50%]">
         <div>
           <label class="block mb-1">الموظف:</label>
-          <select v-model="form.EmployeeID" class="p-2 border rounded md:w-full sm:w-96 w-24">
-            <option
-              v-for="employee in employees"
-              :key="employee.EmployeeID"
-              :value="employee.EmployeeID"
-            >
-              {{ employee.FirstName }} {{ employee.LastName }}
-            </option>
-          </select>
+          <input
+            v-model="form.employeeEmployeeId"
+            type="number"
+            class="p-2 border rounded md:w-full sm:w-96 w-fit"
+            placeholder="رقم الموظف"
+          />
         </div>
         <div>
           <label class="block mb-1">النوع:</label>
           <div class="flex gap-4">
             <label class="flex items-center">
-              <input type="radio" value="reward" v-model="form.Type" class="mr-2" />
-              مكافأة
+              <input type="radio" value="reward" v-model="form.type" class="mr-2" /> مكافأة
             </label>
             <label class="flex items-center">
-              <input type="radio" value="penalty" v-model="form.Type" class="mr-2" />
-              عقوبة
+              <input type="radio" value="penalty" v-model="form.type" class="mr-2" /> عقوبة
             </label>
           </div>
         </div>
         <div>
           <label class="block mb-1">المبلغ:</label>
-          <input
-            v-model="form.Amount"
-            type="number"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-          />
+          <input v-model="form.amount" type="number" class="p-2 border rounded md:w-full sm:w-96 w-fit" />
         </div>
         <div>
           <label class="block mb-1">التاريخ:</label>
-          <input
-            v-model="form.Date"
-            type="date"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-          />
+          <input v-model="form.date" type="date" class="p-2 border rounded md:w-full sm:w-96 w-fit" />
         </div>
         <div class="md:col-span-2">
           <label class="block mb-1">السبب:</label>
-          <textarea
-            v-model="form.Reason"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-          ></textarea>
+          <textarea v-model="form.reason" class="p-2 border rounded md:w-full sm:w-96 w-fit"></textarea>
         </div>
         <div class="col-span-2 flex justify-strat gap-4">
-          <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">
-            {{ formMode === 'add' ? 'إضافة' : 'تحديث' }}
-          </button>
-          <button @click="resetForm" type="button" class="bg-gray-500 text-white px-4 py-2 rounded">
-            إلغاء
-          </button>
+          <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">{{ formMode === 'add' ? 'إضافة' : 'تحديث' }}</button>
+          <button @click="resetForm" type="button" class="bg-gray-500 text-white px-4 py-2 rounded">إلغاء</button>
         </div>
       </form>
     </section>
@@ -138,112 +103,103 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      filteredRecords: [
-        {
-          RecordID: 1,
-          EmployeeName: 'أحمد علي',
-          Type: 'reward',
-          Amount: 500,
-          Date: '2024-11-01',
-          Reason: 'إتمام مشروع بنجاح',
-        },
-        {
-          RecordID: 2,
-          EmployeeName: 'سارة محمد',
-          Type: 'penalty',
-          Amount: 200,
-          Date: '2024-11-05',
-          Reason: 'تأخير في الحضور',
-        },
-        {
-          RecordID: 3,
-          EmployeeName: 'محمد أحمد',
-          Type: 'reward',
-          Amount: 750,
-          Date: '2024-11-10',
-          Reason: 'تحقيق هدف المبيعات',
-        },
-        {
-          RecordID: 4,
-          EmployeeName: 'ريم حسن',
-          Type: 'penalty',
-          Amount: 100,
-          Date: '2024-11-15',
-          Reason: 'تقصير في الأداء',
-        },
-        {
-          RecordID: 5,
-          EmployeeName: 'خالد يوسف',
-          Type: 'reward',
-          Amount: 300,
-          Date: '2024-11-20',
-          Reason: 'مبادرة ممتازة',
-        },
-      ],
-      searchQuery: '',
-      filterType: '',
+      searchQuery: "",
+      filterType: "",
       records: [],
-      employees: [],
       form: {
-        RecordID: null,
-        EmployeeID: '',
-        Type: 'reward',
-        Amount: '',
-        Date: '',
-        Reason: '',
+        recordId: null,
+        type: "",
+        amount: "",
+        date: "",
+        reason: "",
+        employeeEmployeeId: null,
       },
-      formMode: 'add', // يمكن أن تكون "add" أو "edit"
-    }
+      formMode: "add",
+      isLoading: false,
+    };
   },
   computed: {
-    // filteredRecords() {
-    //   return this.records.filter((record) => {
-    //     const matchesSearch = record.EmployeeName.includes(this.searchQuery)
-    //     const matchesType = this.filterType ? record.Type === this.filterType : true
-    //     return matchesSearch && matchesType
-    //   })
-    // },
+    filteredRecords() {
+      let filtered = this.records;
+      if (this.filterType) {
+        filtered = filtered.filter((record) => record.type === this.filterType);
+      }
+      if (this.searchQuery) {
+        filtered = filtered.filter((record) =>
+          this.getEmployeeName(record.employeeEmployeeId)
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
+        );
+      }
+      return filtered;
+    },
   },
   methods: {
-    fetchData() {
-      // جلب البيانات من API
-      // مثال: axios.get('/api/penalties_rewards')
-      console.log('Fetching data...')
-    },
-    submitForm() {
-      if (this.formMode === 'add') {
-        // إضافة سجل جديد
-        console.log('Adding record:', this.form)
-      } else {
-        // تحديث سجل موجود
-        console.log('Updating record:', this.form)
+    async fetchData() {
+      try {
+        const response = await axios.get("http://localhost:8000/api/penalty-and-reward/");
+        this.records = response.data.data.penaltyRewards[0];
+        console.log(this.records)
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
       }
-      this.resetForm()
     },
-    editRecord(record) {
-      this.form = { ...record }
-      this.formMode = 'edit'
-    },
-    deleteRecord(recordId) {
-      console.log('Deleting record:', recordId)
-    },
-    resetForm() {
-      this.form = {
-        RecordID: null,
-        EmployeeID: '',
-        Type: 'reward',
-        Amount: '',
-        Date: '',
-        Reason: '',
+    async submitForm() {
+      try {
+        const url = "http://localhost:8000/api/penalty-and-reward/";
+        const payload = { ...this.form };
+        if (this.formMode === "add") {
+          await axios.post(url, payload);
+        } else {
+          await axios.put(`${url}${this.form.recordId}/`, payload);
+        }
+        alert(this.formMode === "add" ? "تمت الإضافة بنجاح!" : "تم التحديث بنجاح!");
+        this.fetchData();
+        this.resetForm();
+      } catch (error) {
+        console.error("Error submitting form:", error.message);
       }
-      this.formMode = 'add'
-    },
-  },
+    }},
+  //   async deleteRecord(recordId) {
+  //     try {
+  //       await axios.delete(`http://localhost:8000/api/penalty-and-reward/${recordId}/`);
+  //       alert("تم الحذف بنجاح!");
+  //       this.fetchData();
+  //     } catch (error) {
+  //       console.error("Error deleting record:", error.message);
+  //     }
+  //   },
+  //   resetForm() {
+  //     this.form = {
+  //       recordId: null,
+  //       type: "",
+  //       amount: "",
+  //       date: "",
+  //       reason: "",
+  //       employeeEmployeeId: null,
+  //     };
+  //     this.formMode = "add";
+  //   },
+  //   editRecord(record) {
+  //     this.form = { ...record };
+  //     this.formMode = "edit";
+  //   },
+  //   getEmployeeName(employeeId) {
+  //     // هذه الدالة تحتاج إلى تعديل حسب البيانات المتوفرة لديك
+  //     return` الموظف ${employeeId}`;
+  //   },
+  // },
   mounted() {
-    this.fetchData()
+    this.fetchData();
   },
-}
+};
 </script>
+
+<style scoped>
+/* أضف تنسيقاتك هنا */
+</style>

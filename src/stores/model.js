@@ -4,6 +4,7 @@ export const useModalStore = defineStore('modal', {
   state: () => ({
     isOpen: false,
     isOpenEditMenu: false,
+    isOpenEditProfile: false,
   }),
   getters: {
     hiddenClass(state) {
@@ -11,6 +12,9 @@ export const useModalStore = defineStore('modal', {
     },
     hiddenClassEditMenu(state) {
       return !state.isOpenEditMenu ? 'hidden' : ''
+    },
+    hiddenEditProfile(state) {
+      return !state.isOpenEditProfile ? 'hidden' : ''
     },
   },
   actions: {
@@ -20,6 +24,12 @@ export const useModalStore = defineStore('modal', {
     toggleModalEditMenu() {
       this.isOpenEditMenu = !this.isOpenEditMenu
       console.log('Toggle menu:', this.isOpenEditMenu)
+    },
+    toggleModalEditProfile() {
+      this.isOpenEditProfile = !this.isOpenEditProfile
+      console.log(typeof this.isOpenEditProfile)  // سيظهر لك نوع المتغير
+      console.log(this.isOpenEditProfile)  // سيظهر لك القيمة الحقيقية
+
     },
   },
 })

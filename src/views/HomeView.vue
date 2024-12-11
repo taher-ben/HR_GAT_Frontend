@@ -125,9 +125,8 @@
             as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
           >
-            <option value="" disabled>اختر نوع التوظيف</option>
-            <option value="ذكر">عقد</option>
-            <option value="أنثى">تعين</option>
+            <option value="contract">عقد</option>
+            <option value="permanent">تعين</option>
           </VeeField>
           <ErrorMessage class="text-red-600" name="gender" />
         </div>
@@ -341,7 +340,6 @@ export default {
   },
 }
 </script>
-
 <style>
 /* تحسين مظهر النموذج */
 img {

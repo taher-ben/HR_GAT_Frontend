@@ -227,7 +227,7 @@ export default {
           formData.append(key, this.form[key])
         })
         const myToken = localStorage.getItem('authToken')
-        const response = await axios.post('http://localhost:3000/api/employees', formData, {
+        const response = await axios.post('http://localhost:8000/api/employees', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${myToken}`,
