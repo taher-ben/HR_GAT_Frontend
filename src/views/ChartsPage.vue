@@ -42,6 +42,7 @@
 
 <script>
 import { onMounted, ref } from 'vue'
+import axios from 'axios'
 import Chart from 'chart.js/auto'
 
 export default {
@@ -49,6 +50,8 @@ export default {
   setup() {
     const activeChart = ref('employeeBarChart')
     const chartInstances = ref({})
+    const chartData = ref({ departments: [], monthlyEvolution: [] })
+
     const chartTypes = [
       {
         id: 'employeeBarChart',
@@ -57,59 +60,35 @@ export default {
         createChart: createBarChart,
       },
       {
-        id: 'employeePieChart',
-        label: 'نسبة الأقسام',
-        canvasId: 'employeePieChart',
-        createChart: createPieChart,
-      },
-      {
         id: 'employeeLineChart',
         label: 'النمو الشهري في التوظيف',
         canvasId: 'employeeLineChart',
         createChart: createLineChart,
       },
-      {
-        id: 'employeeHorizontalBarChart',
-        label: 'التوزيع الأفقي للموظفين',
-        canvasId: 'employeeHorizontalBarChart',
-        createChart: createHorizontalBarChart,
-      },
-      {
-        id: 'employeeDoughnutChart',
-        label: 'تفاصيل النسبة حسب الأقسام',
-        canvasId: 'employeeDoughnutChart',
-        createChart: createDoughnutChart,
-      },
     ]
 
+    async function fetchDepartmentsStats() {
+      const { data } = await axios.get('/api/departments')
+      chartData.value.departments = data.data
+    }
+
+    async function fetchMonthlyHireEvolution() {
+      const { data } = await axios.get('/api/monthly-hire-evolution')
+      chartData.value.monthlyEvolution = data.data
+    }
+
     function createBarChart(ctx) {
+      const labels = chartData.value.departments.map((dept) => dept.departmentName)
+      const counts = chartData.value.departments.map((dept) => dept.count)
+
       return new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['قسم نساء وولادة', 'قسم الاشعة', 'قسم الموارد البشرية'],
+          labels,
           datasets: [
             {
               label: 'عدد الموظفين',
-              data: [12, 19, 7],
-              backgroundColor: ['#4bc0c0', '#36a2eb', '#ff6384'],
-              borderColor: ['#4bc0c0', '#36a2eb', '#ff6384'],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: { responsive: true },
-      })
-    }
-
-    function createPieChart(ctx) {
-      return new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: ['قسم التسويق', 'قسم المبيعات', 'قسم الموارد البشرية'],
-          datasets: [
-            {
-              label: 'نسبة الأقسام',
-              data: [12, 19, 7],
+              data: counts,
               backgroundColor: ['#4bc0c0', '#36a2eb', '#ff6384'],
               borderColor: ['#4bc0c0', '#36a2eb', '#ff6384'],
               borderWidth: 1,
@@ -121,14 +100,17 @@ export default {
     }
 
     function createLineChart(ctx) {
+      const labels = chartData.value.monthlyEvolution.map((item) => `الشهر ${item.month}`)
+      const counts = chartData.value.monthlyEvolution.map((item) => item.count)
+
       return new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+          labels,
           datasets: [
             {
               label: 'النمو الشهري في التوظيف',
-              data: [5, 10, 15, 20, 25, 30],
+              data: counts,
               backgroundColor: '#9966ff',
               borderColor: '#9966ff',
               borderWidth: 2,
@@ -140,45 +122,9 @@ export default {
       })
     }
 
-    function createHorizontalBarChart(ctx) {
-      return new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['قسم التسويق', 'قسم المبيعات', 'قسم الموارد البشرية'],
-          datasets: [
-            {
-              label: 'عدد الموظفين',
-              data: [12, 19, 7],
-              backgroundColor: ['#ffce56', '#4bc0c0', '#ff6384'],
-              borderColor: ['#ffce56', '#4bc0c0', '#ff6384'],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: { indexAxis: 'y', responsive: true },
-      })
-    }
+    onMounted(async () => {
+      await Promise.all([fetchDepartmentsStats(), fetchMonthlyHireEvolution()])
 
-    function createDoughnutChart(ctx) {
-      return new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['قسم التسويق', 'قسم المبيعات', 'قسم الموارد البشرية'],
-          datasets: [
-            {
-              label: 'نسبة الأقسام',
-              data: [12, 19, 7],
-              backgroundColor: ['#ff9f40', '#36a2eb', '#4bc0c0'],
-              borderColor: ['#ff9f40', '#36a2eb', '#4bc0c0'],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: { responsive: true },
-      })
-    }
-
-    onMounted(() => {
       chartTypes.forEach(({ canvasId, createChart }) => {
         const ctx = document.getElementById(canvasId).getContext('2d')
         chartInstances.value[canvasId] = createChart(ctx)

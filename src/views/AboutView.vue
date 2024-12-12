@@ -104,8 +104,10 @@ const modalStore = useModalStore()
                           تعديل
                         </span>
 
-                        <span @click="deleteEmployee(employee.employeeId)"
-                        class="bg-red-500 mx-1 text-white px-2 py-1 rounded cursor-pointer">
+                        <span
+                          @click="deleteEmployee(employee.employeeId)"
+                          class="bg-red-500 mx-1 text-white px-2 py-1 rounded cursor-pointer"
+                        >
                           حذف
                         </span>
                       </div>
@@ -131,9 +133,12 @@ const modalStore = useModalStore()
           <div class="flex flex-col items-center py-10 bg-white mx-4">
             <img
               class="w-24 h-24 mb-3 rounded-full shadow-lg"
-              src="../assets/person.png"
-              alt="Bonnie image"
+              :src="
+                selectedEmployee ? `http://localhost:8000/img/${selectedEmployee.photoUrl}` : ''
+              "
+              alt="صورة الموظف"
             />
+
             <h5 v-if="selectedEmployee" class="mb-1 text-xl font-medium text-gray-900">
               {{ selectedEmployee.firstName }} {{ selectedEmployee.lastName }}
             </h5>
@@ -282,6 +287,7 @@ const modalStore = useModalStore()
 <script>
 import axios from 'axios'
 import { format } from 'date-fns'
+import { LazyResult } from 'postcss';
 
 export default {
   data() {
@@ -308,6 +314,7 @@ export default {
           },
         })
         this.response = result.data.data
+        console.log(this.response[2].photoUrl)
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تسجيل الموظف.'
         alert(errorMessage)
@@ -373,9 +380,8 @@ export default {
       }
     },
     async deleteEmployee(employeeId) {
-      console.log('deleted emloyee',employeeId)
+      console.log('deleted emloyee', employeeId)
       if (!employeeId) {
-
         alert('الرجاء تحديد موظف لحذفه.')
         return
       }
