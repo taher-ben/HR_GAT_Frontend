@@ -213,6 +213,7 @@ export default {
   name: 'ProfilePictureUploader',
   data() {
     return {
+      dataFordepartments:[],
       schema: {
         salaryPeriod:'required',
         employeeId: 'required',

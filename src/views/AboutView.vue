@@ -287,8 +287,6 @@ const modalStore = useModalStore()
 <script>
 import axios from 'axios'
 import { format } from 'date-fns'
-import { LazyResult } from 'postcss';
-
 export default {
   data() {
     return {

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
 import axios from 'axios'
 import Chart from 'chart.js/auto'
 
@@ -67,19 +67,36 @@ export default {
       },
     ]
 
+    // جلب بيانات الأقسام
     async function fetchDepartmentsStats() {
-      const { data } = await axios.get('/api/departments')
-      chartData.value.departments = data.data
+      try {
+        const { data } = await axios.get('/api/departments')
+        chartData.value.departments = data.data
+      } catch (error) {
+        console.error('Error fetching departments stats:', error)
+      }
     }
 
+    // جلب بيانات النمو الشهري
     async function fetchMonthlyHireEvolution() {
-      const { data } = await axios.get('/api/monthly-hire-evolution')
-      chartData.value.monthlyEvolution = data.data
+      try {
+        const { data } = await axios.get('/api/monthly-hire-evolution')
+        chartData.value.monthlyEvolution = data.data
+      } catch (error) {
+        console.error('Error fetching monthly hire evolution:', error)
+      }
     }
 
+    // إنشاء الرسم البياني (Bar Chart)
     function createBarChart(ctx) {
-      const labels = chartData.value.departments.map((dept) => dept.departmentName)
-      const counts = chartData.value.departments.map((dept) => dept.count)
+      // تحقق من وجود البيانات قبل استخدام map()
+      const labels = chartData.value.departments && chartData.value.departments.length > 0
+        ? chartData.value.departments.map((dept) => dept.departmentName)
+        : []
+
+      const counts = chartData.value.departments && chartData.value.departments.length > 0
+        ? chartData.value.departments.map((dept) => dept.count)
+        : []
 
       return new Chart(ctx, {
         type: 'bar',
@@ -99,9 +116,15 @@ export default {
       })
     }
 
+    // إنشاء الرسم البياني (Line Chart)
     function createLineChart(ctx) {
-      const labels = chartData.value.monthlyEvolution.map((item) => `الشهر ${item.month}`)
-      const counts = chartData.value.monthlyEvolution.map((item) => item.count)
+      const labels = chartData.value.monthlyEvolution && chartData.value.monthlyEvolution.length > 0
+        ? chartData.value.monthlyEvolution.map((item) => `الشهر ${item.month}`)
+        : []
+
+      const counts = chartData.value.monthlyEvolution && chartData.value.monthlyEvolution.length > 0
+        ? chartData.value.monthlyEvolution.map((item) => item.count)
+        : []
 
       return new Chart(ctx, {
         type: 'line',
@@ -123,11 +146,27 @@ export default {
     }
 
     onMounted(async () => {
-      await Promise.all([fetchDepartmentsStats(), fetchMonthlyHireEvolution()])
+      try {
+        // انتظر جلب البيانات قبل تنفيذ إنشاء الرسوم البيانية
+        await Promise.all([fetchDepartmentsStats(), fetchMonthlyHireEvolution()])
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
 
+      // أنشئ الرسوم البيانية فقط إذا كانت العناصر موجودة في DOM
       chartTypes.forEach(({ canvasId, createChart }) => {
-        const ctx = document.getElementById(canvasId).getContext('2d')
-        chartInstances.value[canvasId] = createChart(ctx)
+        const canvasElement = document.getElementById(canvasId)
+        if (canvasElement) {
+          const ctx = canvasElement.getContext('2d')
+          chartInstances.value[canvasId] = createChart(ctx)
+        }
+      })
+    })
+
+    onBeforeUnmount(() => {
+      // تنظيف الرسوم البيانية عند مغادرة الصفحة
+      Object.keys(chartInstances.value).forEach((key) => {
+        chartInstances.value[key].destroy()
       })
     })
 
