@@ -141,10 +141,10 @@
             <option value="" disabled>اختر القسم</option>
             <option
               v-for="department in dataFordepartments"
-              :key="department.id"
-              :value="department.id"
+              :key="department.departmentId"
+              :value="department.departmentId"
             >
-              {{ department.departmentId }}
+              {{ department.departmentName }}
             </option>
           </VeeField>
           <ErrorMessage class="text-red-600" name="department" />
@@ -195,7 +195,7 @@
         <div>
           <button
             type="submit"
-            class="mt-5 w-full rounded-md bg-blue-600 p-2 text-center font-semibold text-white"
+            class="mt-5 w-full rounded-md bg-blue-600 p-2 text-center font-semibold text-white hover:bg-white hover:text-blue-500 border hover:border-blue-500 transition duration-150 ease-in-out"
           >
             تسجيل
           </button>
@@ -244,10 +244,10 @@ export default {
         hireDate: '',
         fingerprint: "",
         contractType: "",
-        salaryPeriod: "شهر",
+        salaryPeriod: "",
         position: 1,
         department: 2,
-        departmentDepartmentId:''
+        departmentDepartmentId:'9'
         // employeeId: '123212',
         // firstName: 'أحميد',
         // middleName: 'خايلد',
@@ -271,7 +271,6 @@ export default {
   methods: {
     handleFileUpload(event) {
       const file = event.target.files[0]
-      console.log(file)
       if (file) {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
         if (!allowedTypes.includes(file.type)) {
@@ -303,10 +302,8 @@ export default {
             Authorization: `Bearer ${myToken}`,
           },
         })
-        console.log(formData),
-        console.log(response),
-
         alert('تم تسجيل الموظف بنجاح!')
+        this.form = []
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تسجيل الموظف.'
         alert(errorMessage)
@@ -342,7 +339,6 @@ export default {
 }
 </script>
 <style>
-/* تحسين مظهر النموذج */
 img {
   border: 2px solid #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
