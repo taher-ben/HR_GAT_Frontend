@@ -70,8 +70,9 @@ export default {
     // جلب بيانات الأقسام
     async function fetchDepartmentsStats() {
       try {
-        const { data } = await axios.get('/api/departments')
+        const { data } = await axios.get('/stats/departments')
         chartData.value.departments = data.data
+        console.log('consolechart',chartData)
       } catch (error) {
         console.error('Error fetching departments stats:', error)
       }
@@ -80,8 +81,8 @@ export default {
     // جلب بيانات النمو الشهري
     async function fetchMonthlyHireEvolution() {
       try {
-        const { data } = await axios.get('/api/monthly-hire-evolution')
-        chartData.value.monthlyEvolution = data.data
+        const { data } = await axios.get('/stats/monthly-hire-evolution')
+        chartData.value.monthlyEvolution = data.Target
       } catch (error) {
         console.error('Error fetching monthly hire evolution:', error)
       }

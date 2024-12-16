@@ -197,9 +197,8 @@ export default {
       }
     },
     async editRecord(record) {
-      // إعداد النموذج ببيانات السجل الذي تم اختياره
       this.form = { ...record }
-      this.formMode = 'edit' // تغيير وضع النموذج إلى تعديل
+      this.formMode = 'edit'
       this.form.employeeEmployeeId = record.employee.employeeId
     },
 

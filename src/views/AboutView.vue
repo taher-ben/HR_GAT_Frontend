@@ -312,7 +312,6 @@ export default {
           },
         })
         this.response = result.data.data
-        console.log(this.response[2].photoUrl)
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تسجيل الموظف.'
         alert(errorMessage)

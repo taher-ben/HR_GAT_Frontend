@@ -12,8 +12,6 @@
     <div
       class="flex justify-center p-1 md:h-full overscroll-none overflow-x-hidden overflow-scroll"
     >
-
-
       <!-- عرض "إضافة قسم" -->
       <div v-if="isAddingDepartment">
         <VeeForm
@@ -54,7 +52,6 @@
           </div>
         </VeeForm>
       </div>
-
       <!-- عرض "الأقسام الموجودة" -->
       <div v-if="!isAddingDepartment">
         <div
@@ -71,7 +68,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 import API_ENDPOINTS from '../stores/api'

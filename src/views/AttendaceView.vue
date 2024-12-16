@@ -2,21 +2,53 @@
   <div class="h-screen overflow-hidden bg-white">
     <div class="md:w-full w-fit h-full overflow-scroll">
       <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold px-8">جدول الحضور</h1>
-      <form
-        class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mx-8 mt-8 md:w-full w-fit"
-      >
-        <font-awesome-icon
-          class="w-4 h-4 absolute left-2 text-gray-500"
-          :icon="['fas', 'magnifying-glass']"
-        />
-        <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
-        <input
-          type="name"
-          name="search"
-          class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
-          placeholder="ادخل بيانات الموظف"
-        />
-      </form>
+      <div class="mt-4 w-full flex justify-between items-center">
+        <div
+          class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
+        >
+          <font-awesome-icon
+            class="w-4 h-4 absolute left-2 text-gray-500"
+            :icon="['fas', 'magnifying-glass']"
+          />
+          <div
+            @click="registerEmployee(sreach)"
+            class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer"
+          >
+            بحث
+          </div>
+          <input
+            @input="registerEmployee(sreach)"
+            v-model="sreach"
+            type="text"
+            name="search"
+            class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
+            placeholder="ادخل بيانات الموظف"
+          />
+
+          <div
+            v-if="sreach.length > 0"
+            class="absolute top-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-lg w-full z-10"
+          >
+            <div
+              v-for="(item, index) in response"
+              :key="index"
+              class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out"
+            >
+
+              <div class="flex items-center space-x-3">
+                <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
+                <span class="text-gray-500">{{ item.firstName }}</span>
+              </div>
+
+              <button
+                class="text-sm text-blue-500 hover:text-blue-900 "
+              >
+                تفاصيل
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4">
         <div class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
           <!-- days of week  -->
@@ -71,10 +103,13 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'EmployeeCalendar',
   data() {
     return {
+      response: '',
+      sreach: '',
       // بيانات أيام الشهر
       monthDays: [
         { date: '2022-12-01', day: 1, currentMonth: true, isToday: false, events: [] },
@@ -112,7 +147,6 @@ export default {
           isToday: false,
           events: [{ id: 3, title: 'تسليم تقرير', description: 'الساعة 5:00 مساءً' }],
         },
-        // تكملة بقية الشهر
         { date: '2022-12-11', day: 11, currentMonth: true, isToday: false, events: [] },
         { date: '2022-12-12', day: 12, currentMonth: true, isToday: false, events: [] },
         { date: '2022-12-13', day: 13, currentMonth: true, isToday: false, events: [] },
@@ -136,6 +170,32 @@ export default {
         { date: '2022-12-31', day: 31, currentMonth: true, isToday: false, events: [] },
       ],
     }
+  },
+  methods: {
+    async registerEmployee(sreach) {
+      if(sreach.length > 0){
+        try {
+        this.isLoading = true
+
+        const result = await axios.post(
+          'http://localhost:8000/api/employees/search',
+          { name: sreach },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.myToken}`,
+            },
+          },
+        )
+        this.response = result.data.data
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
+        alert(errorMessage)
+      } finally {
+        this.isLoading = false
+      }
+      }
+    },
   },
 }
 </script>

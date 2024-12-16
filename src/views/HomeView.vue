@@ -134,7 +134,7 @@
           <label>القسم </label>
           <VeeField
             name="department"
-            v-model="form.departmentDepartmentId"
+            v-model="form.departmentId"
             as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
           >
@@ -247,7 +247,7 @@ export default {
         salaryPeriod: "",
         position: 1,
         department: 2,
-        departmentDepartmentId:'9'
+        departmentId:''
         // employeeId: '123212',
         // firstName: 'أحميد',
         // middleName: 'خايلد',
@@ -264,7 +264,7 @@ export default {
         // contractType: 'full-time',
         // salaryPeriod: 'monthly',
         // positionPositionId: '10',
-        // departmentDepartmentId: '5',
+        // departmentId: '5',
       },
     }
   },
@@ -325,6 +325,7 @@ export default {
         })
 
         this.dataFordepartments = response.data.data.departments
+        console.log(this.dataFordepartments)
       } catch (error) {
         console.error('حدث خطأ أثناء جلب البيانات:', error.response?.data?.message || error.message)
         this.dataFordepartments = []

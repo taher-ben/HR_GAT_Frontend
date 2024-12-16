@@ -1,16 +1,16 @@
 <template>
-  <div class="flex flex-col justify-center items-center bg-white h-full w-full">
+  <div class="flex background-login  flex-col justify-center items-center bg-white h-full w-full">
     <div class="mx-auto flex w-full flex-col justify-center px-5 pt-0 lg:px-6">
-      <div class="md:w-96 mx-auto my-auto shadow-2xl px-2 py-6 rounded-xl">
+      <div class="md:w-96 mx-auto my-auto shadow-2xl px-2 py-6 rounded-xl z-50 bg-white">
         <p class="text-[32px] font-bold text-blue-600">تسجيل دخول</p>
         <p class="mb-2.5 mt-2.5 font-normal text-zinc-400">من فضلك ادخل البيانات تسجيل الدخول</p>
-        <div class="relative my-4">
+        <div class="relative my-4 opacity-full">
           <div class="relative flex items-center py-1">
             <div class="grow border-t border-blue-100"></div>
           </div>
         </div>
         <div>
-          <form @submit.prevent="handleLogin" class="mb-4">
+          <form @submit.prevent="handleLogin" class="mb-4 ">
             <div class="grid gap-2">
               <div class="grid gap-1">
                 <label class="dark:text-zinc-500" for="username">اسم المستخدم</label>
@@ -75,3 +75,23 @@ export default {
   },
 }
 </script>
+<style>
+.background-login{
+  position: relative;
+  background-image: url(../assets/bg.jpg);
+  background-size: cover;
+  background-color: white;
+
+}
+.background-login::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: white;
+  opacity: 80%;
+}
+</style>
