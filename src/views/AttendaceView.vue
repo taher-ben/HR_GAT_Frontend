@@ -34,7 +34,6 @@
               :key="index"
               class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out"
             >
-
               <div class="flex items-center space-x-3">
                 <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
                 <span class="text-gray-500">{{ item.firstName }}</span>
@@ -49,9 +48,10 @@
           </div>
         </div>
       </div>
+
       <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4">
         <div class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
-          <!-- days of week  -->
+          <!-- days of week -->
           <div
             class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none"
           >
@@ -63,10 +63,11 @@
             <div class="flex justify-center bg-white py-2">السبت</div>
             <div class="flex justify-center bg-white py-2">الأحد</div>
           </div>
+
           <!-- 30 days of the month -->
           <div class="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
             <div class="w-full grid grid-cols-7 lg:grid-rows-6 gap-px">
-              <template v-for="day in monthDays" :key="day.date">
+              <template v-for="day in updatedMonthDays" :key="day.date">
                 <div
                   class="relative px-3 py-2"
                   :class="{
@@ -77,12 +78,14 @@
                   <time
                     :datetime="day.date"
                     :class="{
-                      'flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white':
-                        day.isToday,
+                      'flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white': day.isToday,
                     }"
                   >
                     {{ day.day }}
                   </time>
+                  <!-- عرض حالة الحضور هنا -->
+                  <p v-if="day.isPresent" class="text-sm font-medium text-green-500">{{ day.isPresent }}</p>
+
                   <ul v-if="day.events.length > 0" class="mt-2 mx-auto">
                     <li v-for="event in day.events" :key="event.id" class="mb-1 md:block hidden">
                       <p class="text-sm font-medium text-gray-900">{{ event.title }}</p>
@@ -103,14 +106,14 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+
 export default {
   name: 'EmployeeCalendar',
   data() {
     return {
       response: '',
       sreach: '',
-      // بيانات أيام الشهر
       monthDays: [
         { date: '2022-12-01', day: 1, currentMonth: true, isToday: false, events: [] },
         { date: '2022-12-02', day: 2, currentMonth: true, isToday: false, events: [] },
@@ -169,37 +172,67 @@ export default {
         { date: '2022-12-30', day: 30, currentMonth: true, isToday: false, events: [] },
         { date: '2022-12-31', day: 31, currentMonth: true, isToday: false, events: [] },
       ],
-    }
+      attendanceData: [],
+    };
+  },
+  computed: {
+    updatedMonthDays() {
+      return this.monthDays.map((day) => {
+        const attendance = this.attendanceData.find((item) => {
+          const date = new Date(item.lastAttendance);
+          const dayDate = new Date(day.date);
+          return (
+            date.getFullYear() === dayDate.getFullYear() &&
+            date.getMonth() === dayDate.getMonth() &&
+            date.getDate() === dayDate.getDate()
+          );
+        });
+
+        return {
+          ...day,
+          isPresent: attendance ? "حاضر" : null,
+        };
+      });
+    },
   },
   methods: {
     async registerEmployee(sreach) {
-      if(sreach.length > 0){
+      if (sreach.length > 0) {
         try {
-        this.isLoading = true
+          this.isLoading = true;
 
-        const result = await axios.post(
-          'http://localhost:8000/api/employees/search',
-          { name: sreach },
-          {
+          const result = await axios.post(
+            'http://localhost:8000/api/employees/search',
+            { name: sreach },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.myToken}`, // احرص على إضافة myToken هنا بشكل صحيح
+              },
+            }
+          );
+          this.response = result.data.data;
+
+          // جلب بيانات الحضور
+          const attendanceResult = await axios.get('http://localhost:8000/api/attendance', {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.myToken}`,
+              'Authorization': `Bearer ${this.myToken}`,
             },
-          },
-        )
-        this.response = result.data.data
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
-        alert(errorMessage)
-      } finally {
-        this.isLoading = false
-      }
+          });
+          this.attendanceData = attendanceResult.data.data; // تخزين بيانات الحضور
+        } catch (error) {
+          const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.';
+          alert(errorMessage);
+        } finally {
+          this.isLoading = false;
+        }
       }
     },
   },
-}
+};
 </script>
 
 <style>
-/* تنسيقات إضافية حسب الحاجة */
+/* أضف الأنماط هنا إذا لزم الأمر */
 </style>

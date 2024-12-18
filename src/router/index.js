@@ -22,6 +22,18 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/UploadExcel',
+      name: 'UploadExcel',
+      component: () => import('../views/UploadExcel.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/AttendanceAbsence',
+      name: 'AttendanceAbsence',
+      component: () => import('../views/AttendanceAbsence.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/PenaltiesAndRewards',
       name: 'PenaltiesAndRewards',
       component: () => import('../views/PenaltiesAndRewards.vue'),

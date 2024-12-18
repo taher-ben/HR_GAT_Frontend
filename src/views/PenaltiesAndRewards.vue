@@ -4,7 +4,7 @@
       <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold">إدارة الخصومات والمكافآت</h1>
       <div class="flex md:flex-row flex-col gap-4">
         <form
-          class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center md:w-full w-fit"
+          class="  bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex flex-row-reverse  md:max-w-2xl items-center md:w-full w-fit"
           @submit.prevent="fetchData"
         >
           <input
@@ -13,14 +13,13 @@
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
             placeholder="ادخل اسم الموظف"
           />
-          <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
+          <button class="px-4  py-4 me-1 bg-blue-500 text-white">بحث</button>
         </form>
         <!-- <select v-model="filterType" class="p-2 border rounded md:w-full xs:w-96">
           <option  value="">الكل</option>
           <option value="reward">مكافأة</option>
           <option value="penalty">عقوبة</option>
         </select> -->
-        <div class="bg-red-500 px-3" @click="fetchData">all</div>
       </div>
     </header>
 
@@ -69,25 +68,19 @@
     </section>
 
     <section>
-      <h2 class="text-xl font-bold mb-4">
+      <h2 class="text-xl font-bold  mb-4">
         {{ formMode === 'add' ? 'إضافة سجل جديد' : 'تعديل السجل' }}
       </h2>
       <form
         @submit.prevent="submitForm"
-        class="flex flex-col md:grid grid-cols-2 gap-4 md:w-full xs:w-[50%]"
+        class="flex flex-col md:grid grid-cols-2 gap-4 md:w-[100%] mx-auto xs:w-[50%]"
       >
-        <div>
-          <label class="block mb-1">الموظف:</label>
-          <input
-            v-model="form.employeeEmployeeId"
-            type="number"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-            placeholder="رقم الموظف"
-          />
+        <div v-if="form.recordId">
+          <label class="block font-bold mb-1">رقم السجل :</label>
+          <h3>{{ form.recordId }}</h3>
         </div>
-
         <div>
-          <label class="block mb-1">النوع:</label>
+          <label class="block font-bold mb-1">النوع:</label>
           <div class="flex gap-4">
             <label class="flex items-center">
               <input type="radio" value="reward" v-model="form.type" class="mr-2" /> مكافأة
@@ -98,16 +91,16 @@
           </div>
         </div>
         <div>
-          <label class="block mb-1">الموظف:</label>
+          <label class="block font-bold mb-1">الموظف:</label>
           <input
-            v-model="form.recordId"
+            v-model="form.employeeEmployeeId"
             type="number"
             class="p-2 border rounded md:w-full sm:w-96 w-fit"
             placeholder="رقم الموظف"
           />
         </div>
         <div>
-          <label class="block mb-1">المبلغ:</label>
+          <label class="block font-bold mb-1">المبلغ:</label>
           <input
             v-model="form.amount"
             type="number"
@@ -115,7 +108,7 @@
           />
         </div>
         <div>
-          <label class="block mb-1">التاريخ:</label>
+          <label class="block font-bold mb-1">التاريخ:</label>
           <input
             v-model="form.date"
             type="date"
@@ -123,7 +116,7 @@
           />
         </div>
         <div class="md:col-span-2">
-          <label class="block mb-1">السبب:</label>
+          <label class="block font-bold mb-1">السبب:</label>
           <textarea
             v-model="form.reason"
             class="p-2 border rounded md:w-full sm:w-96 w-fit"

@@ -6,7 +6,7 @@
       <VeeForm
         @submit="submitForm"
         :validation-schema="schema"
-        class="border border-gray-100 space-y-3 w-[100rem] mx-auto my-auto rounded-md bg-white p-6 shadow-xl lg:p-10 md:grid md:grid-cols-2 flex flex-col gap-4"
+        class="border border-gray-100 space-y-3  mx-auto my-auto rounded-md bg-white p-6 shadow-xl lg:p-10 md:grid md:grid-cols-2 flex flex-col gap-4"
       >
         <h1 class="mb-10 ml-5 text-3xl font-bold col-span-2">تسجيل بيانات الموظفين</h1>
         <div

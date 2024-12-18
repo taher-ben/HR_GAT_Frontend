@@ -40,6 +40,7 @@ const logout = () => {
                   class="cursor-pointer text-gray-500 hover:text-gray-700 size-5 mx-1 px-2"
                 />
               </li>
+
               <li
                 v-if="authStore.isAuthenticated"
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
@@ -50,6 +51,28 @@ const logout = () => {
                     :icon="['fas', 'user-plus']"
                   />
                   <span class="font-medium px-3">الموظفين</span>
+                </RouterLink>
+              </li>
+              <li
+                v-if="authStore.isAuthenticated"
+                class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
+              >
+                <RouterLink to="/UploadExcel" activeClass="text-blue-600" class="relative flex items-center">
+                  <font-awesome-icon
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
+                    :icon="['fas', 'cloud-arrow-up']"                  />
+                  <span class="font-medium px-3">رفع الملفات</span>
+                </RouterLink>
+              </li>
+              <li
+                v-if="authStore.isAuthenticated"
+                class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
+              >
+                <RouterLink to="/AttendanceAbsence" activeClass="text-blue-600" class="relative flex items-center">
+                  <font-awesome-icon
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
+                    :icon="['fas', 'cloud-arrow-up']"                  />
+                  <span class="font-medium px-3">رفع الملفات</span>
                 </RouterLink>
               </li>
               <li

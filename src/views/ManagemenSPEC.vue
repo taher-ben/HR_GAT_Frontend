@@ -52,7 +52,7 @@
           </div>
         </VeeForm>
       </div>
-      <!-- عرض "الأقسام الموجودة" -->
+
       <div v-if="!isAddingDepartment">
         <div
           class="border border-gray-100 space-y-3 w-[30rem] mx-auto my-auto rounded-md bg-white p-6 shadow-xl lg:p-10 flex flex-col gap-4"
@@ -60,8 +60,8 @@
           <h3 class="text-3xl font-bold text-center">الاقسام الموجودة</h3>
           <div v-if="departments.length === 0" class="text-gray-500">لا توجد أقسام حالياً.</div>
           <div v-for="department in departments" :key="department.id" class="mt-4 border-t pt-2">
-            <div><strong>اسم القسم: </strong>{{ department.departmentId }}</div>
-            <div><strong>رقم القسم: </strong>{{ department.departmentName }}</div>
+            <div><strong>اسم القسم: </strong>{{ department.departmentName }}</div>
+            <div><strong>رقم القسم: </strong>{{ department.departmentId }}</div>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default {
       },
       departments: [],
       isLoading: false,
-      isAddingDepartment: true, // إضافة قسم تكون مُفعلة بشكل افتراضي
+      isAddingDepartment: true,
     }
   },
   methods: {
