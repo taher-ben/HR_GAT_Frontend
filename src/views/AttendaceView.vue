@@ -11,13 +11,15 @@
             :icon="['fas', 'magnifying-glass']"
           />
           <div
-            @click="registerEmployee()"
+            @click="searchEmployee(sreach)"
+           @typing="searchEmployee(sreach)"
             class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer"
           >
             بحث
           </div>
           <input
             v-model="sreach"
+           @typing="searchEmployee(sreach)"
             type="text"
             name="search"
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
@@ -35,10 +37,15 @@
               <div class="flex items-center space-x-3">
                 <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
                 <span class="text-gray-500">{{ item.firstName }}</span>
+                <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
               </div>
-              <button class="text-sm text-blue-500 hover:text-blue-900">تفاصيل</button>
+              <button @click="registerEmployee(item.employeeId)" class="text-sm text-blue-500 hover:text-blue-900">تفاصيل</button>
             </div>
           </div>
+        </div>
+        <div>
+          <input class="datebyyear"  type="text">
+          <input class="datebyday"  type="text">
         </div>
       </div>
       <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4">
@@ -47,13 +54,13 @@
           <div
             class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none"
           >
+          <div class="flex justify-center bg-white py-2">الأحد</div>
             <div class="flex justify-center bg-white py-2">الإثنين</div>
             <div class="flex justify-center bg-white py-2">الثلاثاء</div>
             <div class="flex justify-center bg-white py-2">الأربعاء</div>
             <div class="flex justify-center bg-white py-2">الخميس</div>
             <div class="flex justify-center bg-white py-2">الجمعة</div>
             <div class="flex justify-center bg-white py-2">السبت</div>
-            <div class="flex justify-center bg-white py-2">الأحد</div>
           </div>
           <!-- 30 days of the month -->
           <div class="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
@@ -76,10 +83,15 @@
                     {{ day.day }}
                   </time>
                   <!-- عرض حالة الحضور هنا -->
-                  <p v-if="day.isPresent" class="text-sm font-medium text-green-500">
-                    {{ day.isPresent }}
-
-                  </p>
+                  <div v-if="day.checks.length > 0">
+                    <p
+                      v-for="(check, index) in day.checks"
+                      :key="index"
+                      class="text-sm text-gray-600"
+                    >
+                      {{ check }} - بصمة
+                    </p>
+                  </div>
                 </div>
               </template>
             </div>
@@ -96,70 +108,119 @@ import axios from 'axios'
 export default {
   name: 'EmployeeCalendar',
   data() {
-  return {
-    response: [],
-    sreach: '',
-    month: 12, // الشهر الحالي
-    year: 2024, // السنة الحالية
-    attendanceData: [],
-    myToken: localStorage.getItem('authToken'),
-    updatedMonthDays: [],  // إضافة هذه الخاصية
-    attedacedays:[]
-  }
-},
-methods: {
-  // طريقة لتحديث `updatedMonthDays` بناءً على الشهر والسنة الحالية
-  updateMonthDays() {
-    this.updatedMonthDays = this.generateMonthDays(this.month, this.year)
+    return {
+      response: [],
+      sreach: '',
+      month: 12,
+      year: 2024,
+      attendanceData: [],
+      myToken: localStorage.getItem('authToken'),
+      updatedMonthDays: [],
+      attedacedays: [],
+    }
   },
-  async registerEmployee() {
-    try {
-      const attendanceResult = await axios.get('http://localhost:8000/api/attendance/1', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.myToken}`,
-        },
+  methods: {
+    async searchEmployee(sreach) {
+      try {
+        this.isLoading = true
+
+        const result = await axios.post(
+          'http://localhost:8000/api/employees/search',
+          { name: sreach },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.myToken}`,
+            },
+          },
+        )
+        this.response = result.data.data
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
+        alert(errorMessage)
+      } finally {
+        this.isLoading = false
+      }
+    },
+    updateMonthDays() {
+      this.updatedMonthDays = this.generateMonthDays(this.month, this.year)
+    },
+    async registerEmployee(empid) {
+      try {
+        const attendanceResult = await axios.get(
+          `http://localhost:8000/api/attendance/${empid}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.myToken}`,
+            },
+          },
+        )
+        this.attendanceData = attendanceResult.data.data
+        this.filterAttendace()
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
+        alert(errorMessage)
+      }
+    },
+    generateMonthDays(month, year) {
+      const days = []
+      const lastDay = new Date(year, month, 0).getDate() // استخدام 0 ليتم الحصول على آخر يوم في الشهر السابق
+      const firstDayOfMonth = new Date(year, month - 1, 1).getDay() // إصلاح خطأ الحساب في الأيام
+
+      // إضافة الفراغات في الأيام التي تسبق اليوم الأول من الشهر
+      for (let i = 0; i < firstDayOfMonth; i++) {
+        days.push({ date: null, day: null, currentMonth: false, isToday: false, checks: [] })
+      }
+
+      // إضافة أيام الشهر الفعلي
+      for (let i = 1; i <= lastDay; i++) {
+        const date = new Date(year, month - 1, i)
+        days.push({
+          date: date.toISOString().split('T')[0],
+          day: i,
+          currentMonth: true,
+          isToday: date.toLocaleDateString() === new Date().toLocaleDateString(),
+          events: [],
+          checks: [],
+        })
+      }
+      return days
+    },
+    filterAttendace() {
+      const mappedAttendance = this.attendanceData.reduce((acc, item) => {
+        // تعديل التاريخ لإنقاص يوم واحد
+        const adjustedDate = new Date(item.date)
+        adjustedDate.setDate(adjustedDate.getDate() - 0)
+        const dateKey = adjustedDate.toISOString().split('T')[0] // تنسيق التاريخ لضمان التوافق
+
+        acc[dateKey] = {
+          checks: item.checks.map((check) => {
+            const adjustedCheck = new Date(check)
+            adjustedCheck.setDate(adjustedCheck.getDate() - 1)
+            return adjustedCheck.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }),
+        }
+        return acc
+      }, {})
+
+      this.updatedMonthDays = this.updatedMonthDays.map((day) => {
+        if (!day.date) {
+          return { ...day, checks: [] }
+        }
+        const dayKey = day.date // لا نعدل اليوم الحالي نفسه، فقط نقارنه مع اليوم المخزن
+        const attendanceInfo = mappedAttendance[dayKey]
+        return {
+          ...day,
+          checks: attendanceInfo ? attendanceInfo.checks : [],
+        }
       })
-      this.attendanceData = attendanceResult.data.data
-      this.filterAttendace()  // تحديث بيانات الحضور بعد جلبها
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
-      alert(errorMessage)
-    }
+    },
   },
-  // نفس دالة generateMonthDays كما هي
-  generateMonthDays(month, year) {
-    const days = []
-    const lastDay = new Date(year, month, 0).getDate()
-    const firstDayOfMonth = new Date(year, month - 1, 0).getDay()
-
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push({ date: null, day: null, currentMonth: false, isToday: false })
-    }
-
-    for (let i = 1; i <= lastDay; i++) {
-      const date = new Date(year, month - 1, i)
-      days.push({
-        date: date.toISOString().split('T')[0],
-        day: i,
-        currentMonth: true,
-        isToday: date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0],
-        events: [],
-      })
-    }
-    return days
+  mounted() {
+    this.updateMonthDays()
+    this.filterAttendace()
   },
-  // دالة لتصفية الحضور
-  filterAttendace() {
-    this.attendanceData
-  },
-},
-mounted() {
-  // عند تحميل المكون، نقوم بتحديث أيام الشهر
-  this.updateMonthDays()
-  this.filterAttendace()
-}
-
 
   // computed: {
   //   // updatedMonthDays() {

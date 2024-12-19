@@ -46,8 +46,20 @@
               <td class="border border-gray-300 px-4 py-2">{{ attendance.employee_firstName }}</td>
               <td class="border border-gray-300 px-4 py-2">{{ attendance.employee_lastName }}</td>
               <td class="border border-gray-300 px-4 py-2">{{ attendance.employee_employeeId }}</td>
-              <td class="border border-gray-300 px-4 py-2">{{ formatDate(attendance.date) }}</td>
-              <td class="border border-gray-300 px-4 py-2">{{ formatTime(attendance.date) }}</td>
+              <td class="border border-gray-300 px-4 py-2">
+                <ul>
+                  <li v-for="(check, idx) in attendance.checks" :key="idx">
+                    {{ formatDate(check) }}
+                  </li>
+                </ul>
+              </td>
+              <td class="border border-gray-300 px-4 py-2">
+                <ul>
+                  <li v-for="(check, idx) in attendance.checks" :key="idx">
+                    {{ formatTime(check) }}
+                  </li>
+                </ul>
+              </td>
             </tr>
           </tbody>
         </table>
