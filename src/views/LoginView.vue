@@ -1,5 +1,6 @@
 <template>
-  <div class="flex background-login  flex-col justify-center items-center bg-white h-full w-full">
+  <div class=" w-full bg-white h-full">
+    <div class="flex background-login  flex-col justify-center items-center bg-white h-full md:w-[50%] w-full">
     <div class="mx-auto flex w-full flex-col justify-center px-5 pt-0 lg:px-6">
       <div class="md:w-96 mx-auto my-auto shadow-2xl px-2 py-6 rounded-xl z-50 bg-white">
         <p class="text-[32px] font-bold text-blue-600">تسجيل دخول</p>
@@ -43,6 +44,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -78,7 +80,8 @@ export default {
 <style>
 .background-login{
   position: relative;
-  background-image: url(../assets/bg.jpg);
+  margin: auto auto;
+  background-image: url(../assets/bg.jpeg);
   background-size: cover;
   background-color: white;
 

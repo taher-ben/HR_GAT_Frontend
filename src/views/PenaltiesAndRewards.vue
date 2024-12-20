@@ -4,7 +4,7 @@
       <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold">إدارة الخصومات والمكافآت</h1>
       <div class="flex md:flex-row flex-col gap-4">
         <form
-          class="  bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex flex-row-reverse  md:max-w-2xl items-center md:w-full w-fit"
+          class="bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex flex-row-reverse md:max-w-2xl items-center md:w-full w-fit"
           @submit.prevent="fetchData"
         >
           <input
@@ -13,16 +13,10 @@
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
             placeholder="ادخل اسم الموظف"
           />
-          <button class="px-4  py-4 me-1 bg-blue-500 text-white">بحث</button>
+          <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
         </form>
-        <!-- <select v-model="filterType" class="p-2 border rounded md:w-full xs:w-96">
-          <option  value="">الكل</option>
-          <option value="reward">مكافأة</option>
-          <option value="penalty">عقوبة</option>
-        </select> -->
       </div>
     </header>
-
     <section class="mb-6 overflow-y-scroll">
       <table class="md:w-full w-fit table-auto border-collapse border border-gray-300">
         <thead>
@@ -38,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="record in filteredRecords" :key="record.recordId" class="hover:bg-gray-50">
+          <tr v-for="record in allRecords" :key="record.recordId" class="hover:bg-gray-50">
             <td class="border border-gray-300 px-4 py-2">{{ record.recordId }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ record.employee.firstName }}</td>
             <td class="border border-gray-300 px-4 py-2">
@@ -68,7 +62,7 @@
     </section>
 
     <section>
-      <h2 class="text-xl font-bold  mb-4">
+      <h2 class="text-xl font-bold mb-4">
         {{ formMode === 'add' ? 'إضافة سجل جديد' : 'تعديل السجل' }}
       </h2>
       <form
@@ -91,13 +85,45 @@
           </div>
         </div>
         <div>
-          <label class="block font-bold mb-1">الموظف:</label>
-          <input
-            v-model="form.employeeEmployeeId"
-            type="number"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-            placeholder="رقم الموظف"
-          />
+          <div class="relative flex items-end">
+            <div>
+              <label class="block font-bold mb-1">الموظف:</label>
+              <input
+                v-model="sreach"
+                type="text"
+                class="p-2 border rounded md:w-full sm:w-96 w-fit"
+                placeholder="رقم الموظف"
+              />
+            </div>
+            <div
+              class="px-4 py-2 cursor-pointer bg-blue-500 mx-2 text-white"
+              @click="searchEmployee(sreach)"
+            >
+              بحث
+            </div>
+          </div>
+          <div
+            v-if="sreach.length > 0"
+            class="absolute px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-lg z-10"
+          >
+            <div
+              v-for="(item, index) in responseid"
+              :key="index"
+              class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
+                <span class="text-gray-500">{{ item.firstName }}</span>
+                <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
+              </div>
+              <button
+                @click="selectedId(item.employeeId)"
+                class="text-sm text-blue-500 hover:text-blue-900"
+              >
+                اختيار
+              </button>
+            </div>
+          </div>
         </div>
         <div>
           <label class="block font-bold mb-1">المبلغ:</label>
@@ -148,51 +174,78 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      allRecords:'',
       searchQuery: '',
+      responseid: '',
+      sreach: '',
       filterType: '',
       records: [],
+      originalRecords: [],
       form: {
         recordId: null,
         type: '',
         amount: '',
         date: '',
         reason: '',
-        employeeEmployeeId: null,
+        employeeId: null,
       },
       formMode: 'add',
       isLoading: false,
     }
   },
-  computed: {
-    filteredRecords() {
-      let filtered = this.records
-      if (this.filterType) {
-        filtered = filtered.filter((record) => record.type === this.filterType)
-      }
-      if (this.searchQuery) {
-        filtered = filtered.filter((record) =>
-          this.getEmployeeName(record.employeeEmployeeId)
-            .toLowerCase()
-            .includes(this.searchQuery.toLowerCase()),
-        )
-      }
-      return filtered
-    },
-  },
+
   methods: {
-    async fetchData() {
+    selectedId(x) {
+      this.form.employeeId = x
+      this.sreach = this.form.employeeId
+    },
+    async searchEmployee(sreach) {
       try {
-        const response = await axios.get('http://localhost:8000/api/penalty-and-reward/')
-        this.records = response.data.data.penaltyRewards
-        console.log(this.records)
+        this.isLoading = true
+
+        const result = await axios.post(
+          'http://localhost:8000/api/employees/search',
+          { name: sreach },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.myToken}`,
+            },
+          },
+        )
+        this.responseid = result.data.data
       } catch (error) {
-        console.error('Error fetching data:', error.message)
+        const errorMessage = error.responseid?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
+        alert(errorMessage)
+      } finally {
+        this.isLoading = false
       }
     },
+    async fetchData() {
+    try {
+      const response = await axios.get('http://localhost:8000/api/penalty-and-reward/');
+      this.allRecords = response.data.data.penaltyRewards;
+
+      // فلترة البيانات حسب اسم الموظف أو الرقم
+
+      this.records = this.allRecords.filter((record) => {
+        const employeeName = `${record.employee.firstName} ${record.employee.lastName}`;
+        return (
+          employeeName.includes(this.searchQuery) || // البحث عن الاسم
+          record.employee.employeeId.toString().includes(this.searchQuery) // البحث عن الرقم
+        );
+      });
+      this.allRecords = this.records
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+      alert('حدث خطأ أثناء جلب البيانات. الرجاء المحاولة لاحقًا.');
+    }
+  },
     async editRecord(record) {
       this.form = { ...record }
       this.formMode = 'edit'
-      this.form.employeeEmployeeId = record.employee.employeeId
+      this.sreach = record.employee.employeeId
+      this.form.employeeId = record.employee.employeeId
     },
 
     async submitForm() {
@@ -235,12 +288,11 @@ export default {
         amount: '',
         date: '',
         reason: '',
-        employeeEmployeeId: null,
+        employeeId: null,
       }
-      this.formMode = 'add'
+      ;(this.sreach = ''), (this.formMode = 'add')
     },
     getEmployeeName(employeeId) {
-      // هذه الدالة تحتاج إلى تعديل حسب البيانات المتوفرة لديك
       return ` الموظف ${employeeId}`
     },
   },
@@ -250,6 +302,4 @@ export default {
 }
 </script>
 
-<style scoped>
-/* أضف تنسيقاتك هنا */
-</style>
+<style scoped></style>

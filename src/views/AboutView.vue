@@ -361,14 +361,13 @@ export default {
           {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.myToken}`, // تمرير التوكن للمصادقة
+              Authorization: `Bearer ${this.myToken}`,
             },
           },
         )
-        // عرض رسالة تأكيد أو تحديث البيانات في الواجهة
         alert('تم تحديث بيانات الموظف بنجاح')
-        this.modalStore.toggleModalEditProfile() // إغلاق الـ modal بعد التحديث
-        this.getAllEmployees() // إعادة تحميل البيانات بعد التحديث
+        this.modalStore.toggleModalEditProfile()
+        this.getAllEmployees()
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تحديث البيانات.'
         alert(errorMessage)

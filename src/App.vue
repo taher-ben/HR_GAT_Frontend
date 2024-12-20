@@ -14,7 +14,7 @@ const logout = () => {
 
 <template>
   <div dir="rtl">
-    <div class="flex">
+    <div class="flex overflow-hidden">
       <div
         :class="[
           modalStore.isOpen
@@ -72,7 +72,7 @@ const logout = () => {
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'cloud-arrow-up']"                  />
-                  <span class="font-medium px-3">رفع الملفات</span>
+                  <span class="font-medium px-3">الحضور والانصراف </span>
                 </RouterLink>
               </li>
               <li

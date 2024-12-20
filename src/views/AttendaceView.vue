@@ -2,7 +2,7 @@
   <div class="h-screen overflow-hidden bg-white">
     <div class="md:w-full w-fit h-full overflow-scroll">
       <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold px-8">جدول الحضور</h1>
-      <div class="mt-4 w-full flex justify-between items-center">
+      <div class="mt-4 w-full flex flex-row justify-between md:px-8 px-4 items-center">
         <div
           class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
         >
@@ -43,9 +43,29 @@
             </div>
           </div>
         </div>
-        <div>
-          <input class="datebyyear"  type="text">
-          <input class="datebyday"  type="text">
+        <div class="flex items-center space-x-4">
+          <div>
+            <label for="month" class="block text-sm font-medium text-gray-700">الشهر</label>
+            <select
+              id="month"
+              v-model="month"
+              @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
+            </select>
+          </div>
+          <div>
+            <label for="year" class="block text-sm font-medium text-gray-700">السنة</label>
+            <select
+              id="year"
+              v-model="year"
+              @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option v-for="y in yearsRange" :key="y" :value="y">{{ y }}</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4">
@@ -111,13 +131,20 @@ export default {
     return {
       response: [],
       sreach: '',
-      month: 12,
-      year: 2024,
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
       attendanceData: [],
       myToken: localStorage.getItem('authToken'),
       updatedMonthDays: [],
       attedacedays: [],
     }
+  },
+  computed: {
+    yearsRange() {
+      const startYear = 2020;
+      const endYear = 2100;
+      return Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index);
+    },
   },
   methods: {
     async searchEmployee(sreach) {
@@ -158,6 +185,7 @@ export default {
         )
         this.attendanceData = attendanceResult.data.data
         this.filterAttendace()
+        this.sreach = ''
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
         alert(errorMessage)
