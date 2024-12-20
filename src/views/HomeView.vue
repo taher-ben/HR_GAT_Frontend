@@ -6,7 +6,7 @@
       <VeeForm
         @submit="submitForm"
         :validation-schema="schema"
-        class="border border-gray-100 space-y-3  mx-auto my-auto rounded-md bg-white p-6 shadow-xl lg:p-10 md:grid md:grid-cols-2 flex flex-col gap-4"
+        class="border border-gray-100 space-y-3 mx-auto my-auto rounded-md bg-white p-6 shadow-xl lg:p-10 md:grid md:grid-cols-2 flex flex-col gap-4"
       >
         <h1 class="mb-10 ml-5 text-3xl font-bold col-span-2">تسجيل بيانات الموظفين</h1>
         <div
@@ -174,7 +174,7 @@
           <label> الراتب الشهري </label>
           <VeeField
             name="salaryPeriod"
-            v-model="form.salaryPeriod "
+            v-model="form.salaryPeriod"
             type="text"
             placeholder="الراتب الشهري"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2"
@@ -203,6 +203,34 @@
       </VeeForm>
     </div>
   </div>
+  <div
+    class="relative bottom-24 right-6 text-white text-xl z-10 w-fit px-4 py-2 bg-blue-700 rounded-full"
+  >
+    <div
+      @click="toggleText"
+      class="cursor-pointer transition duration-150 ease-in-out flex items-center space-x-2"
+    >
+      <div
+        :class="[isTextVisible ? 'rotate-45' : 'rotate-0']"
+        class="transition duration-150 ease-in-out font-extrabold"
+      >
+        +
+      </div>
+    </div>
+    <transition
+      name="fade-slide"
+      enter-active-class="transition duration-300 ease-out"
+      leave-active-class="transition duration-300 ease-in"
+    >
+      <div
+      @click="toggleText"
+        v-show="isTextVisible"
+        class="mt-2 bg-white absolute -top-28 text-black px-4 py-2 rounded shadow"
+      >
+        <router-link to="ManagemenSPEC"> إضافة قسم </router-link>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -213,9 +241,10 @@ export default {
   name: 'ProfilePictureUploader',
   data() {
     return {
-      dataFordepartments:[],
+      isTextVisible: false,
+      dataFordepartments: [],
       schema: {
-        salaryPeriod:'required',
+        salaryPeriod: 'required',
         employeeId: 'required',
         firstName: 'required',
         middleName: 'required',
@@ -236,18 +265,18 @@ export default {
         lastName: '',
         gender: '',
         dateOfBirth: '',
-        nationalId: "",
+        nationalId: '',
         phone: '',
         email: '',
         address: '',
         photoURL: '',
         hireDate: '',
-        fingerprint: "",
-        contractType: "",
-        salaryPeriod: "",
+        fingerprint: '',
+        contractType: '',
+        salaryPeriod: '',
         position: 1,
         department: 2,
-        departmentId:''
+        departmentId: '',
         // employeeId: '123212',
         // firstName: 'أحميد',
         // middleName: 'خايلد',
@@ -269,6 +298,9 @@ export default {
     }
   },
   methods: {
+    toggleText() {
+      this.isTextVisible = !this.isTextVisible
+    },
     handleFileUpload(event) {
       const file = event.target.files[0]
       if (file) {
@@ -343,5 +375,23 @@ export default {
 img {
   border: 2px solid #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+</style>
+<style scoped>
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.fade-slide-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 </style>

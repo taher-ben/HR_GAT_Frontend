@@ -28,7 +28,8 @@ import {
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faBuilding,
-  faCloudArrowUp
+  faCloudArrowUp,
+  faRightToBracket,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -48,8 +49,8 @@ library.add(
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faBuilding,
-  faCloudArrowUp
-
+  faCloudArrowUp,
+  faRightToBracket
 )
 const app = createApp(App)
 app.component('FontAwesomeIcon', FontAwesomeIcon)

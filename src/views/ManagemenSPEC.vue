@@ -67,6 +67,34 @@
       </div>
     </div>
   </div>
+  <div
+    class="relative bottom-24 right-6 text-white text-xl z-10 w-fit px-4 py-2 bg-blue-700 rounded-full"
+  >
+    <div
+      @click="toggleText"
+      class="cursor-pointer transition duration-150 ease-in-out flex items-center space-x-2"
+    >
+      <div
+        :class="[isTextVisible ? 'rotate-45' : 'rotate-0']"
+        class="transition duration-150 ease-in-out font-extrabold"
+      >
+        +
+      </div>
+    </div>
+    <transition
+      name="fade-slide"
+      enter-active-class="transition duration-300 ease-out"
+      leave-active-class="transition duration-300 ease-in"
+    >
+      <div
+      @click="toggleText"
+        v-show="isTextVisible"
+        class="mt-2 bg-white absolute -top-28 text-black px-4 py-2 rounded shadow"
+      >
+        <router-link to="/"> إضافة موظف </router-link>
+      </div>
+    </transition>
+  </div>
 </template>
 <script>
 import axios from 'axios'
@@ -75,6 +103,7 @@ import API_ENDPOINTS from '../stores/api'
 export default {
   data() {
     return {
+      isTextVisible: false,
       form: {
         departmentName: '',
         managerId: '',
@@ -89,6 +118,9 @@ export default {
     }
   },
   methods: {
+    toggleText() {
+      this.isTextVisible = !this.isTextVisible
+    },
     async submitForm() {
       if (this.isLoading) return
       this.isLoading = true
@@ -146,3 +178,21 @@ export default {
   },
 }
 </script>
+<style scoped>
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.fade-slide-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+</style>

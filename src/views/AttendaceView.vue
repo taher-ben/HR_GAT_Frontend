@@ -44,19 +44,19 @@
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <div>
-            <label for="month" class="block text-sm font-medium text-gray-700">الشهر</label>
+          <div class=" mx-2">
+            <label for="month" class="block text-sm font-medium text-gray-700 ">الشهر</label>
             <select
               id="month"
               v-model="month"
               @change="updateMonthDays"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-800 outline-black  shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             >
               <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
             </select>
           </div>
           <div>
-            <label for="year" class="block text-sm font-medium text-gray-700">السنة</label>
+            <label for="year" class="block text-sm font-medium text-gray-700  ">السنة</label>
             <select
               id="year"
               v-model="year"

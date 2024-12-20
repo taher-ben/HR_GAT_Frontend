@@ -6,7 +6,7 @@
       </div>
     </div>
     <div>
-      <div class="mt-4 w-full flex justify-between items-center">
+      <div class="mt-4  w-full flex justify-between items-center">
         <div
           class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
         >
@@ -15,22 +15,80 @@
             :icon="['fas', 'magnifying-glass']"
           />
           <div
-            @click="fetchAttendance(sreach)"
+            @click="searchEmployee(sreachAll)"
+            @typing="searchEmployee(sreachAll)"
             class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer"
           >
             بحث
           </div>
           <input
-            @keyup.enter="fetchAttendance(sreach)"
-            v-model="sreach"
+          @typing="searchEmployee(sreachAll)"
+            v-model="sreachAll"
             type="text"
             name="search"
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
             placeholder="ادخل بيانات الموظف"
           />
+          <div
+            v-if="sreachAll.length > 1"
+            class="absolute top-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-lg w-full z-10"
+          >
+            <div
+              v-for="(item, index) in response"
+              :key="index"
+              class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
+                <span class="text-gray-500">{{ item.firstName }}</span>
+                <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
+              </div>
+              <button @click="fetchAttendance(item.employeeId)" class="text-sm text-blue-500 hover:text-blue-900">أختيار</button>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+                    <div>
+            <label for="day" class="block text-sm font-medium text-gray-700">اليوم</label>
+            <select
+              id="day"
+              v-model="day"
+              @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
+            </select>
+          </div>
+          <div class=" mx-2">
+            <label for="month" class="block text-sm font-medium text-gray-700 ">الشهر</label>
+            <select
+              id="month"
+              v-model="month"
+              @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-800 outline-black  shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
+            </select>
+          </div>
+          <div>
+            <label for="year" class="block text-sm font-medium text-gray-700  ">السنة</label>
+            <select
+              id="year"
+              v-model="year"
+              @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option v-for="y in yearsRange" :key="y" :value="y">{{ y }}</option>
+            </select>
+          </div>
+
         </div>
       </div>
       <div class="mt-6 rounded-xl bg-white shadow px-12 py-4 mx-3 max-h-screen overflow-x-scroll">
+
+        <div @click="searchMonth('2024','12','11')">
+          click me
+        </div>
         <table class="w-full table-auto border-collapse border border-gray-300">
           <thead>
             <tr class="bg-gray-100">
@@ -75,12 +133,88 @@ import { format } from 'date-fns'
 export default {
   data() {
     return {
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
+      day:1,
+      days:[],
       attendances: [],
       myToken: localStorage.getItem('authToken'),
       sreach: '',
+      sreachAll: '',
     }
   },
+  computed:{
+    yearsRange() {
+      const startYear = 2020;
+      const endYear = 2100;
+      return Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index);
+    },
+  },
   methods: {
+    updateMonthDays() {
+      const daysInMonth = new Date(this.year, this.month, 0).getDate();
+      this.days = Array.from({ length: daysInMonth }, (_, index) => index + 1);
+    },
+   async searchDay(year,month,day){
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+
+        const response = await axios.get(
+          `http://localhost:8000/api/attendance?date=${year}-${month}-${day}`,
+          config,
+        )
+        this.attendances = response.data.data
+        this.sreachAll = ''
+      } catch (error) {
+        console.error('Error fetching attendance data:', error)
+      }
+    },
+    async searchMonth(year,month){
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+
+        const response = await axios.get(
+          `http://localhost:8000/api/attendance?month=${month}&year=${year}`,
+          config,
+        )
+        this.attendances = response.data.data
+        this.sreachAll = ''
+      } catch (error) {
+        console.error('Error fetching attendance data:', error)
+      }
+    },
+    async searchEmployee(sreachAll) {
+      try {
+        this.isLoading = true
+
+        const result = await axios.post(
+          'http://localhost:8000/api/employees/search',
+          { name: sreachAll },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.myToken}`,
+            },
+          },
+        )
+        this.response = result.data.data
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
+        alert(errorMessage)
+      } finally {
+        this.isLoading = false
+      }
+    },
     formatDate(date) {
       if (date) {
         return format(new Date(date), 'yyyy-MM-dd')
@@ -93,7 +227,7 @@ export default {
       }
       return ''
     },
-    async fetchAttendance() {
+    async fetchAttendance(id) {
       try {
         const config = {
           headers: {
@@ -103,18 +237,26 @@ export default {
         }
 
         const response = await axios.get(
-          `http://localhost:8000/api/attendance/${this.sreach}`,
+          `http://localhost:8000/api/attendance/${id}`,
           config,
         )
         this.attendances = response.data.data
-        console.log(this.attendances)
+        this.sreachAll = ''
       } catch (error) {
         console.error('Error fetching attendance data:', error)
       }
     },
   },
-  mounted() {
-    // this.fetchAttendance();
+watch: {
+  month() {
+    this.updateMonthDays();
   },
+  year() {
+    this.updateMonthDays();
+  },
+},
+mounted() {
+  this.updateMonthDays();
+},
 }
 </script>
