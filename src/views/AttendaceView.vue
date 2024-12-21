@@ -12,14 +12,12 @@
           />
           <div
             @click="searchEmployee(sreach)"
-           @typing="searchEmployee(sreach)"
             class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer"
           >
             بحث
           </div>
           <input
             v-model="sreach"
-           @typing="searchEmployee(sreach)"
             type="text"
             name="search"
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
@@ -39,24 +37,29 @@
                 <span class="text-gray-500">{{ item.firstName }}</span>
                 <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
               </div>
-              <button @click="registerEmployee(item.employeeId)" class="text-sm text-blue-500 hover:text-blue-900">تفاصيل</button>
+              <button
+                @click="registerEmployee(item.employeeId)"
+                class="text-sm text-blue-500 hover:text-blue-900"
+              >
+                تفاصيل
+              </button>
             </div>
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <div class=" mx-2">
-            <label for="month" class="block text-sm font-medium text-gray-700 ">الشهر</label>
+          <div class="mx-2">
+            <label for="month" class="block text-sm font-medium text-gray-700">الشهر</label>
             <select
               id="month"
               v-model="month"
               @change="updateMonthDays"
-              class="mt-1 block w-full rounded-md border-gray-800 outline-black  shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-800 outline-black shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             >
               <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
             </select>
           </div>
           <div>
-            <label for="year" class="block text-sm font-medium text-gray-700  ">السنة</label>
+            <label for="year" class="block text-sm font-medium text-gray-700">السنة</label>
             <select
               id="year"
               v-model="year"
@@ -74,7 +77,7 @@
           <div
             class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none"
           >
-          <div class="flex justify-center bg-white py-2">الأحد</div>
+            <div class="flex justify-center bg-white py-2">الأحد</div>
             <div class="flex justify-center bg-white py-2">الإثنين</div>
             <div class="flex justify-center bg-white py-2">الثلاثاء</div>
             <div class="flex justify-center bg-white py-2">الأربعاء</div>
@@ -102,15 +105,17 @@
                   >
                     {{ day.day }}
                   </time>
-                  <!-- عرض حالة الحضور هنا -->
                   <div v-if="day.checks.length > 0">
                     <p
                       v-for="(check, index) in day.checks"
                       :key="index"
-                      class="text-sm text-gray-600"
+                      class="text-sm text-green-500 mt-1"
                     >
                       {{ check }} - بصمة
                     </p>
+                  </div>
+                  <div v-if="day.isOnLeave" class="text-sm text-red-500 font-bold mt-2">
+                    قيد الإجازة
                   </div>
                 </div>
               </template>
@@ -121,7 +126,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 
@@ -136,14 +140,14 @@ export default {
       attendanceData: [],
       myToken: localStorage.getItem('authToken'),
       updatedMonthDays: [],
-      attedacedays: [],
+      leaves: [], // لتخزين بيانات الإجازات
     }
   },
   computed: {
     yearsRange() {
-      const startYear = 2020;
-      const endYear = 2100;
-      return Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index);
+      const startYear = 2020
+      const endYear = 2100
+      return Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index)
     },
   },
   methods: {
@@ -174,16 +178,14 @@ export default {
     },
     async registerEmployee(empid) {
       try {
-        const attendanceResult = await axios.get(
-          `http://localhost:8000/api/attendance/${empid}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.myToken}`,
-            },
+        const attendanceResult = await axios.get(`http://localhost:8000/api/attendance/${empid}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.myToken}`,
           },
-        )
+        })
         this.attendanceData = attendanceResult.data.data
+        this.leaves = attendanceResult.data.leaves // جلب بيانات الإجازات
         this.filterAttendace()
         this.sreach = ''
       } catch (error) {
@@ -193,12 +195,19 @@ export default {
     },
     generateMonthDays(month, year) {
       const days = []
-      const lastDay = new Date(year, month, 0).getDate() // استخدام 0 ليتم الحصول على آخر يوم في الشهر السابق
-      const firstDayOfMonth = new Date(year, month - 1, 1).getDay() // إصلاح خطأ الحساب في الأيام
+      const lastDay = new Date(year, month, 0).getDate()
+      const firstDayOfMonth = new Date(year, month - 1, 1).getDay()
 
       // إضافة الفراغات في الأيام التي تسبق اليوم الأول من الشهر
       for (let i = 0; i < firstDayOfMonth; i++) {
-        days.push({ date: null, day: null, currentMonth: false, isToday: false, checks: [] })
+        days.push({
+          date: null,
+          day: null,
+          currentMonth: false,
+          isToday: false,
+          checks: [],
+          isOnLeave: false,
+        })
       }
 
       // إضافة أيام الشهر الفعلي
@@ -209,69 +218,63 @@ export default {
           day: i,
           currentMonth: true,
           isToday: date.toLocaleDateString() === new Date().toLocaleDateString(),
-          events: [],
           checks: [],
+          isOnLeave: false,
         })
       }
       return days
     },
     filterAttendace() {
       const mappedAttendance = this.attendanceData.reduce((acc, item) => {
-        // تعديل التاريخ لإنقاص يوم واحد
         const adjustedDate = new Date(item.date)
         adjustedDate.setDate(adjustedDate.getDate() - 0)
-        const dateKey = adjustedDate.toISOString().split('T')[0] // تنسيق التاريخ لضمان التوافق
+        const dateKey = adjustedDate.toISOString().split('T')[0]
 
         acc[dateKey] = {
           checks: item.checks.map((check) => {
             const adjustedCheck = new Date(check)
             adjustedCheck.setDate(adjustedCheck.getDate() - 1)
-            return adjustedCheck.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            return adjustedCheck.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })
           }),
         }
         return acc
       }, {})
 
+      const leaveDays = this.leaves.flatMap((leave) => {
+        if (leave.startDate && leave.endDate) {
+          const start = new Date(leave.startDate)
+          const end = new Date(leave.endDate)
+          const days = []
+          while (start <= end) {
+            days.push(new Date(start).toISOString().split('T')[0])
+            start.setDate(start.getDate() + 1)
+          }
+          return days
+        }
+        return []
+      })
+
       this.updatedMonthDays = this.updatedMonthDays.map((day) => {
         if (!day.date) {
-          return { ...day, checks: [] }
+          return { ...day, checks: [], isOnLeave: false }
         }
-        const dayKey = day.date // لا نعدل اليوم الحالي نفسه، فقط نقارنه مع اليوم المخزن
+        const dayKey = day.date
         const attendanceInfo = mappedAttendance[dayKey]
+        const isOnLeave = leaveDays.includes(dayKey)
+
         return {
           ...day,
           checks: attendanceInfo ? attendanceInfo.checks : [],
+          isOnLeave,
         }
       })
     },
   },
   mounted() {
     this.updateMonthDays()
-    this.filterAttendace()
   },
-
-  // computed: {
-  //   // updatedMonthDays() {
-  //   //   return this.generateMonthDays(this.month, this.year).map((day) => {
-  //   //     const attendance = this.attendanceData.find((item) => {
-  //   //       const date = new Date(item.lastAttendance)
-  //   //       const dayDate = new Date(day.date)
-  //   //       return (
-  //   //         date.getFullYear() === dayDate.getFullYear() &&
-  //   //         date.getMonth() === dayDate.getMonth() &&
-  //   //         date.getDate() === dayDate.getDate()
-  //   //       )
-  //   //     })
-  //   //     return {
-  //   //       ...day,
-  //   //       isPresent: attendance ? 'حاضر' : null,
-  //   //     }
-  //   //   })
-  //   // },
-  // },
 }
 </script>
-
-<style>
-/* أضف الأنماط هنا إذا لزم الأمر */
-</style>

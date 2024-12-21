@@ -6,8 +6,8 @@
       </div>
     </div>
     <div>
-      <div class="mt-4  w-full flex justify-between items-center">
-        <div
+      <div class="mt-4 w-full flex justify-between items-center">
+        <!-- <div
           class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
         >
           <font-awesome-icon
@@ -22,7 +22,7 @@
             بحث
           </div>
           <input
-          @typing="searchEmployee(sreachAll)"
+            @typing="searchEmployee(sreachAll)"
             v-model="sreachAll"
             type="text"
             name="search"
@@ -43,12 +43,17 @@
                 <span class="text-gray-500">{{ item.firstName }}</span>
                 <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
               </div>
-              <button @click="fetchAttendance(item.employeeId)" class="text-sm text-blue-500 hover:text-blue-900">أختيار</button>
+              <button
+                @click="fetchAttendance(item.employeeId)"
+                class="text-sm text-blue-500 hover:text-blue-900"
+              >
+                أختيار
+              </button>
             </div>
           </div>
-        </div>
-        <div class="flex items-center space-x-4">
-                    <div>
+        </div> -->
+        <div class="flex items-center mx-12 space-x-4">
+          <div>
             <label for="day" class="block text-sm font-medium text-gray-700">اليوم</label>
             <select
               id="day"
@@ -56,22 +61,23 @@
               @change="updateMonthDays"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             >
+            <option :value="day" disabled>0</option>
               <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
             </select>
           </div>
-          <div class=" mx-2">
-            <label for="month" class="block text-sm font-medium text-gray-700 ">الشهر</label>
+          <div class="mx-2">
+            <label for="month" class="block text-sm font-medium text-gray-700">الشهر</label>
             <select
               id="month"
               v-model="month"
               @change="updateMonthDays"
-              class="mt-1 block w-full rounded-md border-gray-800 outline-black  shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              class="mt-1 block w-full rounded-md border-gray-800 outline-black shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             >
               <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
             </select>
           </div>
           <div>
-            <label for="year" class="block text-sm font-medium text-gray-700  ">السنة</label>
+            <label for="year" class="block text-sm font-medium text-gray-700">السنة</label>
             <select
               id="year"
               v-model="year"
@@ -81,14 +87,18 @@
               <option v-for="y in yearsRange" :key="y" :value="y">{{ y }}</option>
             </select>
           </div>
-
+          <div>
+            <button v-if="day === 0" class="bg-blue-500 my-auto px-3 py-1 text-white rounded-md
+            " @click="searchMonth(this.year,this.month)">
+              بحث بتاريخ
+            </button>
+            <button v-else @click="searchDay(this.year,this.month,this.day)">
+              بحث بتاريخ
+            </button>
+          </div>
         </div>
       </div>
       <div class="mt-6 rounded-xl bg-white shadow px-12 py-4 mx-3 max-h-screen overflow-x-scroll">
-
-        <div @click="searchMonth('2024','12','11')">
-          click me
-        </div>
         <table class="w-full table-auto border-collapse border border-gray-300">
           <thead>
             <tr class="bg-gray-100">
@@ -135,27 +145,27 @@ export default {
     return {
       month: new Date().getMonth() + 1,
       year: new Date().getFullYear(),
-      day:1,
-      days:[],
+      day: 0,
+      days: [],
       attendances: [],
       myToken: localStorage.getItem('authToken'),
       sreach: '',
       sreachAll: '',
     }
   },
-  computed:{
+  computed: {
     yearsRange() {
-      const startYear = 2020;
-      const endYear = 2100;
-      return Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index);
+      const startYear = 2020
+      const endYear = 2100
+      return Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index)
     },
   },
   methods: {
     updateMonthDays() {
-      const daysInMonth = new Date(this.year, this.month, 0).getDate();
-      this.days = Array.from({ length: daysInMonth }, (_, index) => index + 1);
+      const daysInMonth = new Date(this.year, this.month, 0).getDate()
+      this.days = Array.from({ length: daysInMonth }, (_, index) => index + 1)
     },
-   async searchDay(year,month,day){
+    async searchDay(year, month, day) {
       try {
         const config = {
           headers: {
@@ -166,7 +176,11 @@ export default {
 
         const response = await axios.get(
           `http://localhost:8000/api/attendance?date=${year}-${month}-${day}`,
-          config,
+          config,{
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+          }
+        }
         )
         this.attendances = response.data.data
         this.sreachAll = ''
@@ -174,7 +188,7 @@ export default {
         console.error('Error fetching attendance data:', error)
       }
     },
-    async searchMonth(year,month){
+    async searchMonth(year, month) {
       try {
         const config = {
           headers: {
@@ -185,7 +199,11 @@ export default {
 
         const response = await axios.get(
           `http://localhost:8000/api/attendance?month=${month}&year=${year}`,
-          config,
+          config,{
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+          }
+        }
         )
         this.attendances = response.data.data
         this.sreachAll = ''
@@ -236,10 +254,11 @@ export default {
           },
         }
 
-        const response = await axios.get(
-          `http://localhost:8000/api/attendance/${id}`,
-          config,
-        )
+        const response = await axios.get(`http://localhost:8000/api/attendance/${id}`, config,{
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+          }
+        })
         this.attendances = response.data.data
         this.sreachAll = ''
       } catch (error) {
@@ -247,16 +266,16 @@ export default {
       }
     },
   },
-watch: {
-  month() {
-    this.updateMonthDays();
+  watch: {
+    month() {
+      this.updateMonthDays()
+    },
+    year() {
+      this.updateMonthDays()
+    },
   },
-  year() {
-    this.updateMonthDays();
+  mounted() {
+    this.updateMonthDays()
   },
-},
-mounted() {
-  this.updateMonthDays();
-},
 }
 </script>

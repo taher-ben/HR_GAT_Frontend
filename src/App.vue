@@ -112,7 +112,7 @@ const logout = () => {
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
               >
                 <RouterLink
-                  to="/ChartsPage"
+                  to="/LeavesView"
                   activeClass="text-blue-600"
                   class="relative flex items-center"
                 >
@@ -120,7 +120,7 @@ const logout = () => {
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'chart-simple']"
                   />
-                  <span class="font-medium px-3">التخطيط</span>
+                  <span class="font-medium px-3">الاجازات</span>
                 </RouterLink>
               </li>
               <li
@@ -144,7 +144,7 @@ const logout = () => {
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
               >
                 <RouterLink
-                  to="/ManagemenSPEC"
+                  to="/AuditLog"
                   activeClass="text-blue-600"
                   class="relative flex items-center"
                 >
@@ -152,7 +152,7 @@ const logout = () => {
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4 hover:bg-gray-50"
                     :icon="['fas', 'building']"
                   />
-                  <span class="font-medium px-3"> الادارة والتخصصات </span>
+                  <span class="font-medium px-3"> سجل عمليات</span>
                 </RouterLink>
               </li>
               <li v-if="authStore.isAuthenticated" class="min-w-max py-2 mb-4 md:px-2 px-1">

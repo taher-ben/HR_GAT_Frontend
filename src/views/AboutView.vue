@@ -91,7 +91,7 @@ const modalStore = useModalStore()
                     <td class="border border-gray-300 px-4 py-2">{{ employee.phone }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.email }}</td>
                     <td class="border border-gray-300 px-4 py-2">
-                      <div>
+                      <div class=" flex items-center">
                         <span
                           @click="
                             () => {
@@ -133,9 +133,7 @@ const modalStore = useModalStore()
           <div class="flex flex-col items-center py-10 bg-white mx-4">
             <img
               class="w-24 h-24 mb-3 rounded-full shadow-lg"
-              :src="
-                selectedEmployee ? `http://localhost:8000/img/${selectedEmployee.photoUrl}` : ''
-              "
+              src="../assets/person.png"
               alt="صورة الموظف"
             />
 
@@ -154,11 +152,19 @@ const modalStore = useModalStore()
                 />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
-                <p class="text-blue-500 font-bold">الاسم الأول واسم الاب</p>
+                <p class="text-blue-500 font-bold">الاسم الأول</p>
                 <input
                   type="text"
                   class="border border-gray-300 rounded w-full p-2 mt-1"
                   v-model="selectedEmployee.firstName"
+                />
+              </div>
+              <div class="mb-2" v-if="selectedEmployee">
+                <p class="text-blue-500 font-bold"> اسم الاب </p>
+                <input
+                  type="text"
+                  class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.lastName"
                 />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
@@ -239,17 +245,17 @@ const modalStore = useModalStore()
                   <option value="permanent">تعين</option>
                 </select>
               </div>
-
+                <!-- d -->
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">القسم</p>
                 <select
                   class="border border-gray-300 rounded w-full p-2 mt-1"
                   v-model="selectedEmployee.department"
                 >
-                  <option value="HR">الموارد البشرية</option>
-                  <option value="Finance">المالية</option>
-                  <option value="IT">تكنولوجيا المعلومات</option>
-                  <!-- Add other departments as necessary -->
+                  <option v-for="(department , key) in departments" :key="key.departmentId" :value="key.departmentId">
+                     {{ department.departmentName }}
+                    </option>
+                  <!-- Add other departments as nec essary -->
                 </select>
               </div>
 
@@ -287,6 +293,8 @@ const modalStore = useModalStore()
 <script>
 import axios from 'axios'
 import { format } from 'date-fns'
+import API_ENDPOINTS from '../stores/api'
+
 export default {
   data() {
     return {
@@ -295,9 +303,26 @@ export default {
       response: '',
       isLoading: false,
       selectedEmployee: null,
+      departments:[]
     }
   },
   methods: {
+    async fetchDepartments() {
+      try {
+        const myToken = localStorage.getItem('authToken')
+
+        const response = await axios.get(API_ENDPOINTS.departments, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${myToken}`,
+          },
+        })
+        this.departments = response.data.data.departments
+        console.log('departments',this.departments)
+      } catch (error) {
+        console.error('حدث خطأ أثناء جلب الأقسام:', error)
+      }
+    },
     formatDate(date) {
       return format(new Date(date), 'yyyy-MM-dd')
     },
@@ -354,7 +379,6 @@ export default {
       try {
         this.isLoading = true
 
-        // تحديث بيانات الموظف عبر axios باستخدام HTTP PATCH
         const result = await axios.patch(
           `http://localhost:8000/api/employees/${this.selectedEmployee.employeeId}`,
           this.selectedEmployee, // البيانات التي تم تعديلها
@@ -410,5 +434,8 @@ export default {
       }
     },
   },
+  mounted(){
+    this.fetchDepartments()
+  }
 }
 </script>

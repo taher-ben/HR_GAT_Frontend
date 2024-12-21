@@ -5,14 +5,10 @@
       <div class="flex md:flex-row flex-col gap-4">
         <form
           class="bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex flex-row-reverse md:max-w-2xl items-center md:w-full w-fit"
-          @submit.prevent="fetchData"
-        >
-          <input
-            v-model="searchQuery"
-            type="text"
+          @submit.prevent="fetchData">
+          <input v-model="searchQuery" type="text"
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
-            placeholder="ادخل اسم الموظف"
-          />
+            placeholder="ادخل اسم الموظف" />
           <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
         </form>
       </div>
@@ -43,16 +39,10 @@
             <td class="border border-gray-300 px-4 py-2">{{ record.date }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ record.reason }}</td>
             <td class="border border-gray-300 px-4 py-2 flex gap-2">
-              <button
-                @click="editRecord(record)"
-                class="bg-yellow-500 text-white px-2 py-1 rounded"
-              >
+              <button @click="editRecord(record)" class="bg-yellow-500 text-white px-2 py-1 rounded">
                 تعديل
               </button>
-              <button
-                @click="deleteRecord(record.recordId)"
-                class="bg-red-500 text-white px-2 py-1 rounded"
-              >
+              <button @click="deleteRecord(record.recordId)" class="bg-red-500 text-white px-2 py-1 rounded">
                 حذف
               </button>
             </td>
@@ -65,10 +55,7 @@
       <h2 class="text-xl font-bold mb-4">
         {{ formMode === 'add' ? 'إضافة سجل جديد' : 'تعديل السجل' }}
       </h2>
-      <form
-        @submit.prevent="submitForm"
-        class="flex flex-col md:grid grid-cols-2 gap-4 md:w-[100%] mx-auto xs:w-[50%]"
-      >
+      <form @submit.prevent="submitForm" class="flex flex-col md:grid grid-cols-2 gap-4 md:w-[100%] mx-auto xs:w-[50%]">
         <div v-if="form.recordId">
           <label class="block font-bold mb-1">رقم السجل :</label>
           <h3>{{ form.recordId }}</h3>
@@ -88,38 +75,23 @@
           <div class="relative flex items-end">
             <div>
               <label class="block font-bold mb-1">الموظف:</label>
-              <input
-                v-model="sreach"
-                type="text"
-                class="p-2 border rounded md:w-full sm:w-96 w-fit"
-                placeholder="رقم الموظف"
-              />
+              <input v-model="sreach" type="text" class="p-2 border rounded md:w-full sm:w-96 w-fit"
+                placeholder="رقم الموظف" />
             </div>
-            <div
-              class="px-4 py-2 cursor-pointer bg-blue-500 mx-2 text-white"
-              @click="searchEmployee(sreach)"
-            >
+            <div class="px-4 py-2 cursor-pointer bg-blue-500 mx-2 text-white" @click="searchEmployee(sreach)">
               بحث
             </div>
           </div>
-          <div
-            v-if="sreach.length > 0"
-            class="absolute px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-lg z-10"
-          >
-            <div
-              v-for="(item, index) in responseid"
-              :key="index"
-              class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out"
-            >
+          <div v-if="sreach.length > 0"
+            class="absolute px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+            <div v-for="(item, index) in responseid" :key="index"
+              class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out">
               <div class="flex items-center space-x-3">
                 <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
                 <span class="text-gray-500">{{ item.firstName }}</span>
                 <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
               </div>
-              <button
-                @click="selectedId(item.employeeId)"
-                class="text-sm text-blue-500 hover:text-blue-900"
-              >
+              <button @click="selectedId(item.employeeId)" class="text-sm text-blue-500 hover:text-blue-900">
                 اختيار
               </button>
             </div>
@@ -127,33 +99,18 @@
         </div>
         <div>
           <label class="block font-bold mb-1">المبلغ:</label>
-          <input
-            v-model="form.amount"
-            type="number"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-          />
+          <input v-model="form.amount" type="number" class="p-2 border rounded md:w-full sm:w-96 w-fit" />
         </div>
         <div>
           <label class="block font-bold mb-1">التاريخ:</label>
-          <input
-            v-model="form.date"
-            type="date"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-          />
+          <input v-model="form.date" type="date" class="p-2 border rounded md:w-full sm:w-96 w-fit" />
         </div>
         <div class="md:col-span-2">
           <label class="block font-bold mb-1">السبب:</label>
-          <textarea
-            v-model="form.reason"
-            class="p-2 border rounded md:w-full sm:w-96 w-fit"
-          ></textarea>
+          <textarea v-model="form.reason" class="p-2 border rounded md:w-full sm:w-96 w-fit"></textarea>
         </div>
-        <div class="col-span-2 flex justify-strat gap-4">
-          <button
-            v-if="formMode === 'add'"
-            type="submit"
-            class="bg-green-500 text-white px-4 py-2 rounded"
-          >
+        <div class="col-span-2 flex flex-row justify-strat gap-4">
+          <button v-if="formMode === 'add'" type="submit" class="bg-green-500 text-white px-4 py-2 rounded">
             {{ formMode === 'add' ? 'إضافة' : 'تحديث' }}
           </button>
           <button v-else type="submit" class="bg-green-500 text-white px-4 py-2 rounded">
@@ -174,7 +131,8 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      allRecords:'',
+      allRecords: '',
+      myToken: localStorage.getItem('authToken'),
       searchQuery: '',
       responseid: '',
       sreach: '',
@@ -222,30 +180,34 @@ export default {
       }
     },
     async fetchData() {
-    try {
-      const response = await axios.get('http://localhost:8000/api/penalty-and-reward/');
-      this.allRecords = response.data.data.penaltyRewards;
-
-      // فلترة البيانات حسب اسم الموظف أو الرقم
-
-      this.records = this.allRecords.filter((record) => {
-        const employeeName = `${record.employee.firstName} ${record.employee.lastName}`;
-        return (
-          employeeName.includes(this.searchQuery) || // البحث عن الاسم
-          record.employee.employeeId.toString().includes(this.searchQuery) // البحث عن الرقم
+      try {
+        const response = await axios.get('http://localhost:8000/api/penalty-and-reward/', {
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+          }
+        },
         );
-      });
-      this.allRecords = this.records
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
-      alert('حدث خطأ أثناء جلب البيانات. الرجاء المحاولة لاحقًا.');
-    }
-  },
+        this.allRecords = response.data.data.penaltyRewards;
+
+        this.records = this.allRecords.filter((record) => {
+          const employeeName = `${record.employee.firstName} ${record.employee.lastName}`;
+          return (
+            employeeName.includes(this.searchQuery) || // البحث عن الاسم
+            record.employee.employeeId.toString().includes(this.searchQuery) // البحث عن الرقم
+          );
+        });
+        this.allRecords = this.records
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+        alert('حدث خطأ أثناء جلب البيانات. الرجاء المحاولة لاحقًا.');
+      }
+    },
     async editRecord(record) {
       this.form = { ...record }
       this.formMode = 'edit'
       this.sreach = record.employee.employeeId
       this.form.employeeId = record.employee.employeeId
+      this.resetForm()
     },
 
     async submitForm() {
@@ -255,15 +217,22 @@ export default {
 
         if (this.formMode === 'add') {
           // إضافة سجل جديد
-          await axios.post(url, payload)
+          await axios.post(url, payload,{
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+          }
+        })
           alert('تمت الإضافة بنجاح!')
         } else if (this.formMode === 'edit') {
           // تعديل سجل موجود
-          await axios.patch(`${url}${this.form.recordId}/`, payload)
+          await axios.patch(`${url}${this.form.recordId}/`, payload,{
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+          }
+        })
           alert('تم التحديث بنجاح!')
         }
 
-        // إعادة تحميل البيانات وإعادة ضبط النموذج
         this.fetchData()
         this.resetForm()
       } catch (error) {
@@ -274,7 +243,11 @@ export default {
 
     async deleteRecord(recordId) {
       try {
-        await axios.delete(`http://localhost:8000/api/penalty-and-reward/${recordId}/`)
+        await axios.delete(`http://localhost:8000/api/penalty-and-reward/${recordId}/`,{
+          headers: {
+            Authorization: `Bearer ${this.myToken}`,
+          }
+        })
         alert('تم الحذف بنجاح!')
         this.fetchData()
       } catch (error) {
@@ -290,7 +263,7 @@ export default {
         reason: '',
         employeeId: null,
       }
-      ;(this.sreach = ''), (this.formMode = 'add')
+        ; (this.sreach = ''), (this.formMode = 'add')
     },
     getEmployeeName(employeeId) {
       return ` الموظف ${employeeId}`

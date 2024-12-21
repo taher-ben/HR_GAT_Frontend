@@ -57,6 +57,7 @@ export default {
     return {
       isDragging: false,
       uploadMessage: '',
+      myToken: localStorage.getItem('authToken'),
     }
   },
   methods: {
@@ -87,6 +88,7 @@ export default {
         const response = await axios.post('http://localhost:8000/api/attendance/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${this.myToken}`,
           },
         })
         this.uploadMessage = 'تم رفع الملف بنجاح!'

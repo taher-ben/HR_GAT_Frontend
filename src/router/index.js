@@ -28,6 +28,18 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/LeavesView',
+      name: 'LeavesView',
+      component: () => import('../views/LeavesView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/AuditLog',
+      name: 'AuditLog',
+      component: () => import('../views/AuditLog.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/AttendanceAbsence',
       name: 'AttendanceAbsence',
       component: () => import('../views/AttendanceAbsence.vue'),
