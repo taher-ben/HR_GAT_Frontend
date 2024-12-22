@@ -8,20 +8,19 @@
           <div
             class="relative mx-8 bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center my-8 md:w-full w-fit">
             <font-awesome-icon class="w-4 h-4 absolute left-2 text-gray-500" :icon="['fas', 'magnifying-glass']" />
-            <div @click="searchEmployee(sreach)" @typing="searchEmployee(sreach)"
-              class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
+            <div @click="searchEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
               بحث
             </div>
-            <input v-model="sreach" @typing="searchEmployee(sreach)" type="text" name="search"
+            <input v-model="sreach" type="text" name="search"
               class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
               placeholder="ادخل بيانات الموظف" />
-            <div v-if="sreach.length > 0"
+            <div v-if="searchResult.length > 0"
               class="absolute top-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-lg w-full z-10">
-              <div v-for="(item, index) in response" :key="index"
+              <div v-for="(item, index) in searchResult" :key="index"
                 class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out">
                 <div class="flex items-center space-x-3">
                   <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
-                  <span class="text-gray-500">{{ item.firstName }}</span>
+                  <span class="text-gray-500 px-2">{{ item.firstName }}</span>
                   <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
                 </div>
                 <button @click="addId(item.employeeId)" class="text-sm text-blue-500 hover:text-blue-900">
@@ -198,6 +197,7 @@ import Swal from 'sweetalert2'
 export default {
   data() {
     return {
+      searchResult:[],
       selectedType: '',
       searchByType: '',
       leaves: [],
@@ -258,33 +258,36 @@ export default {
       this.form.employeeId = id
       console.log(this.form.employeeId)
     },
-    async searchEmployee(sreach) {
-      try {
-        this.isLoading = true
-        const result = await axios.post(
-          'http://localhost:8000/api/employees/search',
-          { name: sreach },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.myToken}`,
-            },
-          },
-        )
-        this.response = result.data.data
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
-        Swal.fire({
-          position: "center-center",
-          icon: "error",
-          title: errorMessage,
-          showConfirmButton: false,
-          timer: 1500
-        });
-      } finally {
-        this.isLoading = false
+    async searchEmployee(x) {
+  try {
+    this.isLoading = true;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const result = await axios.post(
+      'http://localhost:8000/api/employees/search',
+      { name: x },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.myToken}`,
+        },
       }
-    },
+    );
+    this.searchResult = result.data.data;
+    console.log(this.searchResult);
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.';
+    Swal.fire({
+      position: 'center',
+      icon: 'error',
+      title: errorMessage,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  } finally {
+    this.isLoading = false;
+  }
+},
     async fetchLeaves() {
       try {
         const result = await axios.get('http://localhost:8000/api/leaves', {

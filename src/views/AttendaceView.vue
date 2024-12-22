@@ -153,7 +153,7 @@ export default {
           },
         })
         this.attendanceData = attendanceResult.data.data
-        this.leaves = attendanceResult.data.leaves // جلب بيانات الإجازات
+        this.leaves = attendanceResult.data.leaves
         this.filterAttendace()
         this.sreach = ''
       } catch (error) {
@@ -171,8 +171,6 @@ export default {
       const days = []
       const lastDay = new Date(year, month, 0).getDate()
       const firstDayOfMonth = new Date(year, month - 1, 1).getDay()
-
-      // إضافة الفراغات في الأيام التي تسبق اليوم الأول من الشهر
       for (let i = 0; i < firstDayOfMonth; i++) {
         days.push({
           date: null,
@@ -183,8 +181,6 @@ export default {
           isOnLeave: false,
         })
       }
-
-      // إضافة أيام الشهر الفعلي
       for (let i = 1; i <= lastDay; i++) {
         const date = new Date(year, month - 1, i)
         days.push({
