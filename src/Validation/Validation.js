@@ -21,7 +21,6 @@ export default {
     app.component('VeeField', VeeField)
     app.component('ErrorMessage', ErrorMessage)
 
-    // تعريف القواعد
     defineRule('required', required)
     defineRule('min', min)
     defineRule('max', max)
@@ -30,7 +29,6 @@ export default {
     defineRule('length', length)
     defineRule('numeric', numeric)
 
-    // إعدادات عامة
     configure({
       generateMessage: (ctx) => {
         const messages = {

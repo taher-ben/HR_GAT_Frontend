@@ -243,7 +243,6 @@ export default {
           },
         })
         this.departments = response.data.data.departments
-        console.log('departments', this.departments)
       } catch (error) {
         console.error('حدث خطأ أثناء جلب الأقسام:', error)
       }
@@ -343,19 +342,12 @@ export default {
         this.getAllEmployees()
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تحديث البيانات.'
-        Swal.fire({
-          position: "center-center",
-          icon: "error",
-          title: errorMessage,
-          showConfirmButton: false,
-          timer: 1500
-        });
+        console.log(errorMessage)
       } finally {
         this.isLoading = false
       }
     },
     async deleteEmployee(employeeId) {
-      console.log('deleted employee', employeeId);
       if (!employeeId) {
         Swal.fire({
           position: "center",

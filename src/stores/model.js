@@ -23,13 +23,9 @@ export const useModalStore = defineStore('modal', {
     },
     toggleModalEditMenu() {
       this.isOpenEditMenu = !this.isOpenEditMenu
-      console.log('Toggle menu:', this.isOpenEditMenu)
     },
     toggleModalEditProfile() {
       this.isOpenEditProfile = !this.isOpenEditProfile
-      console.log(typeof this.isOpenEditProfile)  // سيظهر لك نوع المتغير
-      console.log(this.isOpenEditProfile)  // سيظهر لك القيمة الحقيقية
-
     },
   },
 })
