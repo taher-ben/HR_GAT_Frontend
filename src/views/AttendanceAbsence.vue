@@ -55,44 +55,32 @@
         <div class="flex items-center mx-12 space-x-4">
           <div>
             <label for="day" class="block text-sm font-medium text-gray-700">اليوم</label>
-            <select
-              id="day"
-              v-model="day"
-              @change="updateMonthDays"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            >
-            <option :value="day" disabled>0</option>
+            <select id="day" v-model="day" @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+              <option :value="day" disabled>0</option>
               <option v-for="d in days" :key="d" :value="d">{{ d }}</option>
             </select>
           </div>
           <div class="mx-2">
             <label for="month" class="block text-sm font-medium text-gray-700">الشهر</label>
-            <select
-              id="month"
-              v-model="month"
-              @change="updateMonthDays"
-              class="mt-1 block w-full rounded-md border-gray-800 outline-black shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            >
+            <select id="month" v-model="month" @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-800 outline-black shadow-xl focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
               <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
             </select>
           </div>
           <div>
             <label for="year" class="block text-sm font-medium text-gray-700">السنة</label>
-            <select
-              id="year"
-              v-model="year"
-              @change="updateMonthDays"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            >
+            <select id="year" v-model="year" @change="updateMonthDays"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
               <option v-for="y in yearsRange" :key="y" :value="y">{{ y }}</option>
             </select>
           </div>
           <div>
             <button v-if="day === 0" class="bg-blue-500 my-auto px-3 py-1 text-white rounded-md
-            " @click="searchMonth(this.year,this.month)">
+            " @click="searchMonth(this.year, this.month)">
               بحث بتاريخ
             </button>
-            <button v-else @click="searchDay(this.year,this.month,this.day)">
+            <button v-else @click="searchDay(this.year, this.month, this.day)">
               بحث بتاريخ
             </button>
           </div>
@@ -139,6 +127,7 @@
 <script>
 import axios from 'axios'
 import { format } from 'date-fns'
+import Swal from 'sweetalert2'
 
 export default {
   data() {
@@ -176,7 +165,7 @@ export default {
 
         const response = await axios.get(
           `http://localhost:8000/api/attendance?date=${year}-${month}-${day}`,
-          config,{
+          config, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }
@@ -199,7 +188,7 @@ export default {
 
         const response = await axios.get(
           `http://localhost:8000/api/attendance?month=${month}&year=${year}`,
-          config,{
+          config, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }
@@ -228,7 +217,13 @@ export default {
         this.response = result.data.data
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
-        alert(errorMessage)
+        Swal.fire({
+          position: "center-center",
+          icon: "error",
+          title: errorMessage,
+          showConfirmButton: false,
+          timer: 1500
+        });
       } finally {
         this.isLoading = false
       }
@@ -254,7 +249,7 @@ export default {
           },
         }
 
-        const response = await axios.get(`http://localhost:8000/api/attendance/${id}`, config,{
+        const response = await axios.get(`http://localhost:8000/api/attendance/${id}`, config, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }

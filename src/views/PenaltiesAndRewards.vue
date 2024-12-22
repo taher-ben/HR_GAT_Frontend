@@ -127,6 +127,7 @@
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default {
   data() {
@@ -174,7 +175,13 @@ export default {
         this.responseid = result.data.data
       } catch (error) {
         const errorMessage = error.responseid?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
-        alert(errorMessage)
+        Swal.fire({
+          position: "center-center",
+          icon: "error",
+          title: errorMessage,
+          showConfirmButton: false,
+          timer: 2300
+        });
       } finally {
         this.isLoading = false
       }
@@ -199,15 +206,20 @@ export default {
         this.allRecords = this.records
       } catch (error) {
         console.error('Error fetching data:', error.message);
-        alert('حدث خطأ أثناء جلب البيانات. الرجاء المحاولة لاحقًا.');
+        Swal.fire({
+          position: "center-center",
+          icon: "error",
+          title: 'حدث خطأ أثناء جلب البيانات. الرجاء المحاولة لاحقًا.',
+          showConfirmButton: false,
+          timer: 2300
+        });
       }
     },
     async editRecord(record) {
-      this.form = { ...record }
-      this.formMode = 'edit'
-      this.sreach = record.employee.employeeId
-      this.form.employeeId = record.employee.employeeId
-      this.resetForm()
+      this.form = { ...record }; // نسخ البيانات من السجل المحدد إلى النموذج
+      this.formMode = 'edit'; // تغيير وضع النموذج إلى تعديل
+      this.sreach = record.employee.employeeId; // تعيين رقم الموظف في الحقل المناسب
+      this.form.employeeId = record.employee.employeeId; // تعيين الرقم الوظيفي في النموذج
     },
 
     async submitForm() {
@@ -217,38 +229,62 @@ export default {
 
         if (this.formMode === 'add') {
           // إضافة سجل جديد
-          await axios.post(url, payload,{
-          headers: {
-            Authorization: `Bearer ${this.myToken}`,
-          }
-        })
-          alert('تمت الإضافة بنجاح!')
+          await axios.post(url, payload, {
+            headers: {
+              Authorization: `Bearer ${this.myToken}`,
+            }
+          })
+          Swal.fire({
+            position: "center-center",
+            icon: "success",
+            title: 'تمت الإضافة بنجاح!',
+            showConfirmButton: false,
+            timer: 1500
+          });
         } else if (this.formMode === 'edit') {
           // تعديل سجل موجود
-          await axios.patch(`${url}${this.form.recordId}/`, payload,{
-          headers: {
-            Authorization: `Bearer ${this.myToken}`,
-          }
-        })
-          alert('تم التحديث بنجاح!')
+          await axios.patch(`${url}${this.form.recordId}/`, payload, {
+            headers: {
+              Authorization: `Bearer ${this.myToken}`,
+            }
+          })
+          Swal.fire({
+            position: "center-center",
+            icon: "success",
+            title: 'تم التحديث بنجاح!',
+            showConfirmButton: false,
+            timer: 1500
+          });
         }
 
         this.fetchData()
         this.resetForm()
       } catch (error) {
         console.error('Error submitting form:', error.message)
-        alert('حدث خطأ أثناء إرسال البيانات. الرجاء المحاولة مرة أخرى.')
+        Swal.fire({
+          position: "center-center",
+          icon: "error",
+          title: 'حدث خطأ أثناء إرسال البيانات. الرجاء المحاولة مرة أخرى.',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
     },
 
     async deleteRecord(recordId) {
       try {
-        await axios.delete(`http://localhost:8000/api/penalty-and-reward/${recordId}/`,{
+        await axios.delete(`http://localhost:8000/api/penalty-and-reward/${recordId}/`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }
         })
-        alert('تم الحذف بنجاح!')
+        Swal.fire({
+          position: "center-center",
+          icon: "success",
+          title: 'تم الحذف بنجاح!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.fetchData()
       } catch (error) {
         console.error('Error deleting record:', error.message)

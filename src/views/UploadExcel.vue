@@ -7,39 +7,23 @@
       <h3 class="mb-8 text-blue-500 font-bold text-xl">
         ارفع الملف الخاص ببيانات حضور وانصراف الموظفين
       </h3>
-      <div
-        class="flex items-center justify-center w-full"
-        @dragover.prevent="onDragOver"
-        @dragleave.prevent="onDragLeave"
-        @drop.prevent="onDrop"
-      >
-        <label
-          for="dropzone-file"
-          :class="[
-            'flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50',
-            isDragging
-              ? 'bg-blue-50 dark:bg-blue-700 border-blue-300 dark:border-blue-500'
-              : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700',
-            'hover:bg-gray-100 dark:hover:bg-gray-600',
-          ]"
-        >
+      <div class="flex items-center justify-center w-full" @dragover.prevent="onDragOver"
+        @dragleave.prevent="onDragLeave" @drop.prevent="onDrop">
+        <label for="dropzone-file" :class="[
+          'flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50',
+          isDragging
+            ? 'bg-blue-50 dark:bg-blue-700 border-blue-300 dark:border-blue-500'
+            : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700',
+          'hover:bg-gray-100 dark:hover:bg-gray-600',
+        ]">
           <div class="flex flex-col items-center justify-center pt-5 pb-6">
-            <font-awesome-icon
-              class="text-blue-500 text-4xl mb-8"
-              :icon="['fas', 'cloud-arrow-up']"
-            />
+            <font-awesome-icon class="text-blue-500 text-4xl mb-8" :icon="['fas', 'cloud-arrow-up']" />
             <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
               <span class="font-semibold">انقر للرفع</span> أو اسحب الملف وأفلته هنا
             </p>
             <p class="text-xs text-gray-500 dark:text-gray-400">الملفات المسموح بها: Excel فقط</p>
           </div>
-          <input
-            id="dropzone-file"
-            type="file"
-            class="hidden"
-            accept=".xls,.xlsx"
-            @change="onFileChange"
-          />
+          <input id="dropzone-file" type="file" class="hidden" accept=".xls,.xlsx" @change="onFileChange" />
         </label>
       </div>
       <div v-if="uploadMessage" class="mt-4 text-green-500">
@@ -51,7 +35,7 @@
 
 <script>
 import axios from 'axios'
-
+import Swal from 'sweetalert2'
 export default {
   data() {
     return {
@@ -92,10 +76,24 @@ export default {
           },
         })
         this.uploadMessage = 'تم رفع الملف بنجاح!'
+        Swal.fire({
+          position: "center-center",
+          icon: "success",
+          title: 'تم رفع الملف بنجاح!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         console.log('Upload response:', response.data)
       } catch (error) {
         console.error('Error uploading file:', error)
         this.uploadMessage = 'حدث خطأ أثناء رفع الملف.'
+        Swal.fire({
+          position: "center-center",
+          icon: "error",
+          title:'حدث خطأ أثناء رفع الملف.',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
     },
   },
