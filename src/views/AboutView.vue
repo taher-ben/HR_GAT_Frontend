@@ -33,7 +33,7 @@ const modalStore = useModalStore()
                 كل الموظفين
               </button>
             </div>
-            <div class="mt-6 rounded-xl bg-white shadow max-h-screen overflow-x-scroll">
+            <div class="mt-6 rounded-xl bg-white shadow h-full overflow-y-auto overflow-x-auto">
               <table class="w-full table-auto border-collapse border border-gray-300">
                 <thead>
                   <tr class="bg-gray-100">
@@ -42,17 +42,20 @@ const modalStore = useModalStore()
                     <th class="border border-gray-300 px-4 py-2">اللقب</th>
                     <th class="border border-gray-300 px-4 py-2">الرقم الوطني</th>
                     <th class="border border-gray-300 px-4 py-2">الجنس</th>
+                    <th class="border border-gray-300 px-4 py-2">نوع التوظيف </th>
+                    <th class="border border-gray-300 px-4 py-2">القسم </th>
                     <th class="border border-gray-300 px-4 py-2">الرقم الوظيفي</th>
                     <th class="border border-gray-300 px-4 py-2">تاريخ التوظيف</th>
                     <th class="border border-gray-300 px-4 py-2">العنوان</th>
                     <th class="border border-gray-300 px-4 py-2">تاريخ الميلاد</th>
                     <th class="border border-gray-300 px-4 py-2">الهاتف</th>
+                    <th class="border border-gray-300 px-4 py-2">الراتب الشهري</th>
                     <th class="border border-gray-300 px-4 py-2">البريد الإلكتروني</th>
                     <th class="border border-gray-300 px-4 py-2">الإجراءات</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr v-for="employee in response" :key="employee.id" class="hover:bg-gray-50">
+                <tbody >
+                  <tr  v-for="employee in response" :key="employee.id" class="hover:bg-gray-50">
                     <td class="border border-gray-300 px-4 py-2">{{ employee.firstName }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.middleName }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.lastName }}</td>
@@ -61,6 +64,8 @@ const modalStore = useModalStore()
                       ذكر
                     </td>
                     <td class="border border-gray-300 px-4 py-2" v-else>انثى</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ employee.contractType }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ employee.department.departmentName }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.employeeId }}</td>
                     <td class="border border-gray-300 px-4 py-2">
                       {{ formatDate(employee.hireDate) }}
@@ -72,8 +77,10 @@ const modalStore = useModalStore()
                     </td>
 
                     <td class="border border-gray-300 px-4 py-2">{{ employee.phone }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ employee.salary }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.email }}</td>
-                    <td class="border border-gray-300 px-4 py-2">
+                    <td
+                    class="border border-gray-300 px-4 py-2">
                       <div class=" flex items-center">
                         <span @click="() => {
                           modalStore.toggleModalEditProfile()
@@ -96,9 +103,9 @@ const modalStore = useModalStore()
           </div>
         </div>
       </div>
-      <div class="flex absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4"
+      <div class="flex overscroll-y-auto absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4"
         :class="[modalStore.isOpenEditProfile ? 'absolute' : 'hidden']">
-        <div class="border h-screen overflow-scroll relative mx-4 bg-white rounded-lg shadow">
+        <div class="border overscroll-y-auto relative mx-4 bg-white rounded-lg shadow">
           <div
             class="absolute top-5 right-5 font-bold text-2xl text-white cursor-pointer bg-red-500 px-3 py-1 rounded-full"
             @click="modalStore.toggleModalEditProfile">
@@ -124,7 +131,7 @@ const modalStore = useModalStore()
                   v-model="selectedEmployee.firstName" />
               </div>
               <div class="mb-2" v-if="selectedEmployee">
-                <p class="text-blue-500 font-bold"> اسم الاب </p>
+                <p class="text-blue-500 font-bold"> اسم الأب</p>
                 <input type="text" class="border border-gray-300 rounded w-full p-2 mt-1"
                   v-model="selectedEmployee.middleName" />
               </div>
@@ -165,35 +172,39 @@ const modalStore = useModalStore()
                 <input type="date" class="border border-gray-300 rounded w-full p-2 mt-1"
                   v-model="selectedEmployee.hireDate" />
               </div>
+              <!-- ...; -->
+              <div class="mb-2" v-if="selectedEmployee">
+                <p class="text-blue-500 font-bold">تاريخ التعيين</p>
+                <input type="date" class="border border-gray-300 rounded w-full p-2 mt-1"
+                  v-model="selectedEmployee.hireDate" />
+              </div>
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">الهاتف</p>
                 <input type="text" class="border border-gray-300 rounded w-full p-2 mt-1"
                   v-model="selectedEmployee.phone" />
               </div>
 
-              <!-- New fields -->
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">نوع التوظيف</p>
                 <select class="border border-gray-300 rounded w-full p-2 mt-1" v-model="selectedEmployee.contractType">
-                  <option value="contract">عقد</option>
-                  <option value="permanent">تعين</option>
+                  <option value="عقد">عقد</option>
+                  <option value="تعين">تعين</option>
                 </select>
               </div>
-              <!-- d -->
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">القسم</p>
                 <select class="border border-gray-300 rounded w-full p-2 mt-1" v-model="selectedEmployee.department">
-                  <option v-for="(department, key) in departments" :key="key.departmentId" :value="key.departmentId">
+                  <option v-for="(department, key) in departments" :key="key.departmentId"
+                    :value="department.departmentId">
                     {{ department.departmentName }}
                   </option>
-                  <!-- Add other departments as nec essary -->
                 </select>
               </div>
 
               <div class="mb-2" v-if="selectedEmployee">
                 <p class="text-blue-500 font-bold">الراتب الشهري</p>
                 <input type="number" class="border border-gray-300 rounded w-full p-2 mt-1"
-                  v-model="selectedEmployee.salary" />
+                  v-model="selectedEmployee.salaryPeriod" />
               </div>
 
               <div class="my-auto mx-auto" v-if="selectedEmployee">

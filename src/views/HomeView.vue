@@ -4,114 +4,121 @@
       <VeeForm @submit="submitForm" :validation-schema="schema"
         class="border border-gray-100 space-y-3 mx-auto my-auto rounded-md bg-white p-6 shadow-xl lg:p-10 md:grid md:grid-cols-2 flex flex-col gap-4">
         <h1 class="mb-10 ml-5 text-3xl font-bold col-span-2">تسجيل بيانات الموظفين</h1>
-        <div
-          class="mt-1 w-fit rounded-md bg-blue-600 py-2 px-1 text-center font-semibold text-white cursor-pointer col-span-2">
-          <label for="profile-picture" class="form-label cursor-pointer">صورة الشخصية</label>
-          <VeeField name="profilePicture">
-            <input type="file" id="profile-picture" v-bind="form.photoUrl" @change="handleFileUpload" class="hidden" />
-          </VeeField>
-          <ErrorMessage class="text-red-600" name="profilePicture" />
-          <div v-if="previewUrl" class="mt-2">
-            <img :src="previewUrl" alt="صورة الشخصية" class="w-24 h-24 rounded-full object-cover" />
-          </div>
-        </div>
+
         <div>
-          <label> الرقم الوظيفي </label>
+          <label>الرقم الوظيفي</label>
           <VeeField name="employeeId" v-model="form.employeeId" type="text" placeholder="رقم الموظف"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="employeeId" />
         </div>
+
         <div>
-          <label> الاسم الأول </label>
+          <label>الاسم الأول</label>
           <VeeField name="firstName" v-model="form.firstName" type="text" placeholder="أحمد"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="firstName" />
         </div>
+
         <div>
-          <label> اسم الأب </label>
+          <label>اسم الأب</label>
           <VeeField name="middleName" v-model="form.middleName" type="text" placeholder="خالد"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="middleName" />
         </div>
+
         <div>
-          <label> اسم العائلة </label>
+          <label>اسم العائلة</label>
           <VeeField name="lastName" v-model="form.lastName" type="text" placeholder="المصري"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="lastName" />
         </div>
+
         <div>
-          <label>رقم الوطني</label>
-          <VeeField name="nationalId" v-model="form.nationalId" type="number" placeholder="121"
+          <label>الرقم الوطني</label>
+          <VeeField name="nationalId" v-model="form.nationalId" type="number" placeholder="120000000000"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="nationalId" />
         </div>
+
         <div>
-          <label> الجنس </label>
+          <label>الجنس</label>
           <VeeField name="gender" v-model="form.gender" as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2">
-            <option value="" disabled>اختر الجنس</option>
             <option value="ذكر">ذكر</option>
             <option value="أنثى">أنثى</option>
           </VeeField>
           <ErrorMessage class="text-red-600" name="gender" />
         </div>
+
         <div>
-          <label> تاريخ الميلاد </label>
+          <label>تاريخ الميلاد</label>
           <VeeField name="dateOfBirth" v-model="form.dateOfBirth" type="date"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="dateOfBirth" />
         </div>
+
         <div>
-          <label> رقم الهاتف </label>
+          <label>رقم الهاتف</label>
           <VeeField name="phone" v-model="form.phone" type="text" placeholder="0912345678"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="phone" />
         </div>
+
         <div>
-          <label> نوع التوظيف</label>
-          <VeeField name="gender" v-model="form.contractType" as="select"
+          <label>نوع التوظيف</label>
+          <VeeField name="contractType" v-model="form.contractType" as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2">
-            <option value="contract">عقد</option>
-            <option value="permanent">تعين</option>
+            <option value="عقد">عقد</option>
+            <option value="تعيين"> تعيين </option>
           </VeeField>
-          <ErrorMessage class="text-red-600" name="gender" />
+          <ErrorMessage class="text-red-600" name="contractType" />
         </div>
         <div>
-          <label>القسم </label>
+          <label> القسم </label>
           <VeeField name="department" v-model="form.departmentId" as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2">
-            <option value="" disabled>اختر القسم</option>
+            <option disabled>اختر القسم</option>
             <option v-for="department in dataFordepartments" :key="department.departmentId"
               :value="department.departmentId">
               {{ department.departmentName }}
             </option>
           </VeeField>
-          <ErrorMessage class="text-red-600" name="department" />
         </div>
         <div>
-          <label> البريد الإلكتروني </label>
+          <label>البريد الإلكتروني</label>
           <VeeField name="email" v-model="form.email" type="email" placeholder="example@example.com"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="email" />
         </div>
+
         <div>
-          <label> تاريخ التعيين </label>
+          <label>تاريخ التعيين</label>
           <VeeField name="hireDate" v-model="form.hireDate" type="date"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="hireDate" />
         </div>
+
         <div>
-          <label> الراتب الشهري </label>
+          <label>شهري أو سنوي</label>
           <VeeField name="salaryPeriod" v-model="form.salaryPeriod" type="text" placeholder="الراتب الشهري"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="salaryPeriod" />
         </div>
+
         <div>
-          <label> العنوان </label>
+          <label>قيمة الراتب الشهري</label>
+          <VeeField name="salary" v-model="form.salary" type="text" placeholder="الراتب الشهري"
+            class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
+          <ErrorMessage class="text-red-600" name="salary" />
+        </div>
+
+        <div>
+          <label>العنوان</label>
           <VeeField name="address" v-model="form.address" type="text" placeholder="عنوان الموظف"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="address" />
         </div>
+
         <div>
           <button type="submit"
             class="mt-5 w-full rounded-md bg-blue-600 p-2 text-center font-semibold text-white hover:bg-white hover:text-blue-500 border hover:border-blue-500 transition duration-150 ease-in-out">
@@ -121,6 +128,7 @@
       </VeeForm>
     </div>
   </div>
+
   <div class="relative bottom-24 right-6 text-white text-xl z-10 w-fit px-4 py-2 bg-blue-700 rounded-full">
     <div @click="toggleText" class="cursor-pointer transition duration-150 ease-in-out flex items-center space-x-2">
       <div :class="[isTextVisible ? 'rotate-45' : 'rotate-0']"
@@ -132,12 +140,11 @@
       leave-active-class="transition duration-300 ease-in">
       <div @click="toggleText" v-show="isTextVisible"
         class="mt-2 bg-white absolute -top-28 text-black px-4 py-2 rounded shadow">
-        <router-link to="ManagemenSPEC"> إضافة قسم </router-link>
+        <router-link to="ManagemenSPEC">إضافة قسم</router-link>
       </div>
     </transition>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 import API_ENDPOINTS from '../stores/api'
@@ -157,7 +164,8 @@ export default {
         lastName: 'required',
         dateOfBirth: 'required',
         phone: 'required',
-        email: 'required',
+        email: '',
+        salary: '',
         hireDate: 'required',
         address: 'required',
         gender: 'required',
@@ -179,9 +187,9 @@ export default {
         hireDate: '',
         fingerprint: '',
         contractType: '',
+        salary: '',
         salaryPeriod: '',
-        position: 1,
-        department: 2,
+        position: '',
         departmentId: ''
       },
     }
@@ -227,7 +235,6 @@ export default {
         Object.keys(this.form).forEach((key) => {
           formData.append(key, this.form[key])
         })
-
         const myToken = localStorage.getItem('authToken')
         const response = await axios.post(API_ENDPOINTS.employees, formData, {
           headers: {
@@ -235,6 +242,7 @@ export default {
             Authorization: `Bearer ${myToken}`,
           },
         })
+        console.log(this.form.contractType);
         response;
         Swal.fire({
           position: "center-center",

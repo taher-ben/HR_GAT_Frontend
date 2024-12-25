@@ -25,9 +25,7 @@
               <td class="border px-4 py-2">{{ new Date(log.actionDate).toLocaleString() }}</td>
               <td class="border px-4 py-2">{{ getActionType(log.actionType) }}</td>
               <td class="border px-4 py-2">
-                <button
-                  @click="toggleDetails(log.logId)"
-                  class="text-blue-500 hover:underline">
+                <button @click="toggleDetails(log.logId)" class="text-blue-500 hover:underline">
                   عرض التفاصيل
                 </button>
                 <div v-if="log.showDetails" class="bg-gray-50 p-2 rounded mt-2">
@@ -39,7 +37,7 @@
                         <strong>{{ translateKey(key) }}:</strong>
                         <span>{{ typeof value === 'object' ? JSON.stringify(value, null, 2) : value }}</span>
                       </li>
-                      <li v-if="!log.oldValue">لا توجد قيمة قديمة</li>
+                      <li class="text-red-400" v-if="!log.oldValue">لا توجد قيمة قديمة</li>
                     </ul>
                   </div>
                   <div>
@@ -47,9 +45,17 @@
                     <ul class="text-sm">
                       <li v-for="(value, key) in log.newValue || {}" :key="'new-' + key">
                         <strong>{{ translateKey(key) }}:</strong>
-                        <span>{{ typeof value === 'object' ? JSON.stringify(value, null, 2) : value }}</span>
+                        <div v-if="typeof value === 'object' && value !== null">
+                          <ul class="ml-4">
+                            <li v-for="(subValue, subKey) in value" :key="'sub-' + subKey">
+                              <strong class="px-1">{{ translateKey(subKey) }}:</strong>
+                              <span>{{ subValue }}</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <span v-else>{{ value }}</span>
                       </li>
-                      <li v-if="!log.newValue">لا توجد قيمة جديدة</li>
+                      <li class="text-red-400" v-if="!log.newValue">لا توجد قيمة جديدة</li>
                     </ul>
                   </div>
                 </div>
@@ -106,9 +112,9 @@ export default {
         Users: 'المستخدمون',
         Employees: 'الموظفون',
         Attendance: 'الحضور',
-        PenaltiesAndRewards:'العقوبات والمكافآت',
-        Leaves:'الإجازات',
-        Departments:'الاقسام',
+        PenaltiesAndRewards: 'العقوبات والمكافآت',
+        Leaves: 'الإجازات',
+        Departments: 'الاقسام',
       };
       return translations[tableName] || tableName;
     },
@@ -129,6 +135,23 @@ export default {
         nationalId: 'الرقم الوطني',
         fingerprint: 'البصمة',
         checkDate: 'تاريخ الحضور',
+        employee: 'الموظف',
+        reason: 'السبب',
+        type: 'النوع',
+        department: 'الاقسام',
+        leaveId: 'رقم العملية',
+        startDate: 'تاريخ بداية الاجازة',
+        endDate: 'تاريخ نهاية الاجازة',
+        gender: 'الجنس',
+        contractType: 'نوع التوظيف',
+        salaryPeriod: 'رابت الشهري',
+        date: 'التاريخ',
+        attendanceId: 'معرف الحضور',
+        amount: 'الفيمة',
+        departmentName:'اسم القسم',
+        departmentId:'رقم القسم',
+        photoUrl:' ',
+        annual:'تعب'
       };
       return translations[key] || key;
     },
