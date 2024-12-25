@@ -5,8 +5,8 @@ const modalStore = useModalStore()
 </script>
 <template>
   <div class="about w-full z-50 bg-gray-50 h-screen overflow-hidden">
-    <div class="bg-white relative w-full h-full z-40">
-      <div class="my-4 px-4 transition duration-75 ease-out hover:ease-in xl:h-full md:h:[50vh]" :class="{
+    <div class="bg-white overflow-auto relative w-full h-full z-40">
+      <div class="my-4 px-4  transition duration-75 ease-out hover:ease-in xl:h-full md:h:[70vh]" :class="{
         'blur-2xl': modalStore.isOpenEditProfile,
         'blur-none': !modalStore.isOpenEditProfile,
       }">
@@ -14,8 +14,8 @@ const modalStore = useModalStore()
           <h1 class="mb-10 ml-5 text-3xl font-bold">البحث عن موضف</h1>
           <div class="bg-white py-2 px-3"></div>
         </div>
-        <div class="bg-gray-50">
-          <div class="mx-auto px-2 py-10">
+        <div class=" w-[95%]">
+          <div class="mx-auto px-2 py-10 overflow-auto">
             <div class="mt-4 w-full flex justify-between items-center">
               <div
                 class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit">
@@ -23,7 +23,7 @@ const modalStore = useModalStore()
                 <div @click="registerEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
                   بحث
                 </div>
-                <input @keyup.enter="registerEmployee(search)" v-model="sreach" type="text" name="search"
+                <input  v-model="sreach" type="text" name="search"
                   class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
                   placeholder="ادخل بيانات الموظف" />
               </div>
@@ -65,7 +65,7 @@ const modalStore = useModalStore()
                     </td>
                     <td class="border border-gray-300 px-4 py-2" v-else>انثى</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.contractType }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ employee.department.departmentName }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ employee.department?.departmentName || 'غير محدد' }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.employeeId }}</td>
                     <td class="border border-gray-300 px-4 py-2">
                       {{ formatDate(employee.hireDate) }}
@@ -103,9 +103,9 @@ const modalStore = useModalStore()
           </div>
         </div>
       </div>
-      <div class="flex overscroll-y-auto absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4"
+      <div class="flex  absolute top-3/4 left-2/4 -translate-y-2/4 -translate-x-2/4"
         :class="[modalStore.isOpenEditProfile ? 'absolute' : 'hidden']">
-        <div class="border overscroll-y-auto relative mx-4 bg-white rounded-lg shadow">
+        <div class="border relative mx-4 bg-white rounded-lg shadow">
           <div
             class="absolute top-5 right-5 font-bold text-2xl text-white cursor-pointer bg-red-500 px-3 py-1 rounded-full"
             @click="modalStore.toggleModalEditProfile">
@@ -300,6 +300,7 @@ export default {
           },
         )
         this.response = result.data.data
+        console.log(this.response);
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
         Swal.fire({

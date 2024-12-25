@@ -164,6 +164,7 @@ export default {
         lastName: 'required',
         dateOfBirth: 'required',
         phone: 'required',
+        department: 'required',
         email: '',
         salary: '',
         hireDate: 'required',
