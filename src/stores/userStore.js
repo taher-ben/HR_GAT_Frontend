@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', {
     userData: null,
     isLoading: false,
     error: null,
+
   }),
   actions: {
     async fetchUserData(userId) {

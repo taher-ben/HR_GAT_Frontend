@@ -17,6 +17,7 @@ export const useAuthStore = defineStore('auth', {
         const response = await axios.post('http://localhost:8000/api/users/login', credentials)
         if (response.data.token) {
           this.isAuthenticated = true
+          // this.username = response.data.user.username
           localStorage.setItem('authToken', response.data.token)
           this.error = null
         } else {

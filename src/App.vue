@@ -1,26 +1,31 @@
 <script setup>
-import { useModalStore } from '@/stores/model'
-import { useAuthStore } from '@/stores/authStore'
-import { RouterLink, RouterView } from 'vue-router'
+import { useModalStore } from '@/stores/model' // لإدارة فتح وإغلاق الشريط الجانبي
+import { useAuthStore } from '@/stores/authStore' // لإدارة تسجيل الدخول والخروج
+import { RouterLink, RouterView } from 'vue-router' // الروابط وعرض الصفحات
 
-const modalStore = useModalStore()
-const authStore = useAuthStore()
+const modalStore = useModalStore() // إنشاء instance للـ Modal store
+const authStore = useAuthStore() // إنشاء instance للـ Auth store
 
+// وظيفة لتسجيل الخروج وإعادة التوجيه لصفحة تسجيل الدخول
 const logout = () => {
   authStore.logout()
   window.location.href = '/Login'
 }
 </script>
-
+<script>
+export default {
+  data(){
+    return{
+      username: sessionStorage.getItem('nameuser')
+  }
+  }
+}
+</script>
 <template>
   <div dir="rtl">
     <div class="flex overflow-hidden">
       <div
-        :class="[
-          modalStore.isOpen
-            ? 'md:w-60 w-full md:static absolute top-0 right-0 z-50'
-            : 'md:w-16 w-14',
-        ]"
+        :class="[modalStore.isOpen ? 'md:w-60 w-full md:static absolute top-0 right-0 z-50' : 'md:w-16 w-14']"
         class="sidebar min-h-screen bg-gray-100 transition-all md:duration-150 duration-150"
       >
         <div class="flex h-screen flex-col justify-between pt-2 pb-6">
@@ -41,6 +46,24 @@ const logout = () => {
                 />
               </li>
 
+              <!-- اسم المستخدم -->
+              <li
+                v-if="authStore.isAuthenticated"
+                class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
+              >
+                <div class="relative flex items-center">
+                  <font-awesome-icon
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
+                    :icon="['fas', 'user']"
+                  />
+                  <span v-if="this.username == 'admin' " class="font-medium px-3">
+                    مرحبًا، المستخدم الرئيسي                  </span>
+                    <span v-else class="font-medium px-3">
+                      مرحبًا، {{this.username }}                  </span>
+                </div>
+              </li>
+
+              <!-- الروابط -->
               <li
                 v-if="authStore.isAuthenticated"
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
@@ -60,7 +83,8 @@ const logout = () => {
                 <RouterLink to="/UploadExcel" activeClass="text-blue-600" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
-                    :icon="['fas', 'cloud-arrow-up']"                  />
+                    :icon="['fas', 'cloud-arrow-up']"
+                  />
                   <span class="font-medium px-3">رفع ملفات البصمة</span>
                 </RouterLink>
               </li>
@@ -71,19 +95,16 @@ const logout = () => {
                 <RouterLink to="/AttendanceAbsence" activeClass="text-blue-600" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
-                    :icon="['fas', 'right-to-bracket']" />
-                  <span class="font-medium px-3">الحضور والانصراف </span>
+                    :icon="['fas', 'right-to-bracket']"
+                  />
+                  <span class="font-medium px-3">الحضور والانصراف</span>
                 </RouterLink>
               </li>
               <li
                 v-if="authStore.isAuthenticated"
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
               >
-                <RouterLink
-                  to="/about"
-                  activeClass="text-blue-600"
-                  class="relative flex items-center"
-                >
+                <RouterLink to="/about" activeClass="text-blue-600" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'gear']"
@@ -95,66 +116,52 @@ const logout = () => {
                 v-if="authStore.isAuthenticated"
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
               >
-                <RouterLink
-                  to="/AttendaceView"
-                  activeClass="text-blue-600"
-                  class="relative flex items-center"
-                >
+                <RouterLink to="/AttendaceView" activeClass="text-blue-600" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'clipboard-user']"
                   />
-                  <span class="font-medium px-3"> الحضور اليومي</span>
+                  <span class="font-medium px-3">الحضور اليومي</span>
                 </RouterLink>
               </li>
               <li
                 v-if="authStore.isAuthenticated"
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
               >
-                <RouterLink
-                  to="/LeavesView"
-                  activeClass="text-blue-600"
-                  class="relative flex items-center"
-                >
+                <RouterLink to="/LeavesView" activeClass="text-blue-600" class="relative flex items-center">
                   <font-awesome-icon
                     class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'chart-simple']"
                   />
-                  <span class="font-medium px-3">الاجازات</span>
+                  <span class="font-medium px-3">الإجازات</span>
                 </RouterLink>
               </li>
               <li
                 v-if="authStore.isAuthenticated"
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
               >
-                <RouterLink
-                  to="/PenaltiesAndRewards"
-                  activeClass="text-blue-600"
-                  class="relative flex items-center"
-                >
+                <RouterLink to="/PenaltiesAndRewards" activeClass="text-blue-600" class="relative flex items-center">
                   <font-awesome-icon
-                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4 hover:bg-gray-50"
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'hand-holding-dollar']"
                   />
-                  <span class="font-medium px-3"> الخصومات والمكافآت </span>
+                  <span class="font-medium px-3">الخصومات والمكافآت</span>
                 </RouterLink>
               </li>
               <li
                 v-if="authStore.isAuthenticated"
                 class="min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50"
               >
-                <RouterLink
-                  to="/AuditLog"
-                  activeClass="text-blue-600"
-                  class="relative flex items-center"
-                >
+                <RouterLink to="/AuditLog" activeClass="text-blue-600" class="relative flex items-center">
                   <font-awesome-icon
-                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4 hover:bg-gray-50"
+                    class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
                     :icon="['fas', 'building']"
                   />
-                  <span class="font-medium px-3"> سجل عمليات</span>
+                  <span class="font-medium px-3">سجل العمليات</span>
                 </RouterLink>
               </li>
+
+              <!-- زر تسجيل الخروج -->
               <li v-if="authStore.isAuthenticated" class="min-w-max py-2 mb-4 md:px-2 px-1">
                 <button
                   @click="logout"
@@ -167,6 +174,8 @@ const logout = () => {
                   <span class="font-medium px-3">تسجيل الخروج</span>
                 </button>
               </li>
+
+              <!-- زر تسجيل الدخول -->
               <li v-else class="min-w-max py-2 mb-4 md:px-2 px-1">
                 <RouterLink to="/Login" class="relative flex items-center">
                   <font-awesome-icon

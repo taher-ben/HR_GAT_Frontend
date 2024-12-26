@@ -69,8 +69,13 @@ const router = createRouter({
       component: () => import('../views/ManagemenSPEC.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
 })
+
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()

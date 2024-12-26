@@ -67,6 +67,7 @@ export default {
   methods: {
     async handleLogin() {
       await this.authStore.login({ username: this.username, password: this.password })
+      sessionStorage.setItem('nameuser',this.username)
       if (this.authStore.isAuthenticated) {
         this.$router.push('/')
       }

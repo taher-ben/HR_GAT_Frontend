@@ -49,6 +49,7 @@ const modalStore = useModalStore()
                     <th class="border border-gray-300 px-4 py-2">العنوان</th>
                     <th class="border border-gray-300 px-4 py-2">تاريخ الميلاد</th>
                     <th class="border border-gray-300 px-4 py-2">الهاتف</th>
+                    <!-- <th class="border border-gray-300 px-4 py-2">شهري أو سنوي</th> -->
                     <th class="border border-gray-300 px-4 py-2">الراتب الشهري</th>
                     <th class="border border-gray-300 px-4 py-2">البريد الإلكتروني</th>
                     <th class="border border-gray-300 px-4 py-2">الإجراءات</th>
@@ -65,7 +66,7 @@ const modalStore = useModalStore()
                     </td>
                     <td class="border border-gray-300 px-4 py-2" v-else>انثى</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.contractType }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ employee.department?.departmentName || 'غير محدد' }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ employee.department.departmentName || 'غير محدد' }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.employeeId }}</td>
                     <td class="border border-gray-300 px-4 py-2">
                       {{ formatDate(employee.hireDate) }}
@@ -77,6 +78,7 @@ const modalStore = useModalStore()
                     </td>
 
                     <td class="border border-gray-300 px-4 py-2">{{ employee.phone }}</td>
+                    <!-- <td class="border border-gray-300 px-4 py-2">{{ employee.salaryPeriod }}</td> -->
                     <td class="border border-gray-300 px-4 py-2">{{ employee.salary }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.email }}</td>
                     <td
@@ -331,7 +333,6 @@ export default {
 
       try {
         this.isLoading = true
-
         const result = await axios.patch(
           `http://localhost:8000/api/employees/${this.selectedEmployee.employeeId}`,
           this.selectedEmployee,

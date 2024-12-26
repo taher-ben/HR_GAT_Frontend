@@ -2,6 +2,15 @@
   <div class="w-full h-full bg-white">
     <h2 class="font-bold text-2xl py-4 mx-8">تتبع جميع عمليات المستخدمين</h2>
     <div class="w-[90%] shadow-xl border-xl mx-auto p-4">
+      <div class="px-2 py-2 bg-blue-400">
+        <div class="font-bold mb-2 ">اسم الجدول</div>
+        <select v-model="selectedTable" class="p-2 rounded border">
+          <option value="">جميع الجداول</option>
+          <option v-for="(translation, key) in translations" :key="key" :value="key">
+            {{ translation }}
+          </option>
+        </select>
+      </div>
       <div class="overflow-x-auto">
         <table class="table-auto w-full border-collapse border border-gray-200 text-right">
           <thead>
@@ -17,7 +26,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(log, index) in record" :key="log.logId">
+            <tr v-for="(log, index) in filteredRecords" :key="log.logId">
               <td class="border px-4 py-2">{{ index + 1 }}</td>
               <td class="border px-4 py-2">{{ log.logId }}</td>
               <td class="border px-4 py-2">{{ translateTableName(log.tableName) }}</td>
@@ -77,7 +86,24 @@ export default {
     return {
       myToken: localStorage.getItem('authToken'),
       record: [],
+      selectedTable: '',
+      translations: {
+        Users: "المستخدمون",
+        Employees: "الموظفون",
+        Attendance: "الحضور",
+        PenaltiesAndRewards: "العقوبات والمكافآت",
+        Leaves: "الإجازات",
+        Departments: "الاقسام",
+      },
     };
+  },
+  computed: {
+    filteredRecords() {
+      if (!this.selectedTable) {
+        return this.record;
+      }
+      return this.record.filter(log => log.tableName === this.selectedTable);
+    },
   },
   methods: {
     async fetchData() {

@@ -3,39 +3,39 @@
     <div class="flex justify-center p-1 md:h-full overscroll-none overflow-x-hidden overflow-scroll">
       <VeeForm @submit="submitForm" :validation-schema="schema"
         class="border border-gray-100 space-y-3 mx-auto my-auto rounded-md bg-white p-6 shadow-xl lg:p-10 md:grid md:grid-cols-2 flex flex-col gap-4">
-        <h1 class="mb-10 ml-5 text-3xl font-bold col-span-2">تسجيل بيانات الموظفين</h1>
+        <h1 class="mb-10 ml-5 text-3xl font-bold col-span-2">تسجيل بيانات الموظف</h1>
 
         <div>
           <label>الرقم الوظيفي</label>
-          <VeeField name="employeeId" v-model="form.employeeId" type="text" placeholder="رقم الموظف"
+          <VeeField name="employeeId" v-model="form.employeeId" type="text" placeholder="أدخل الرقم الوظيفي"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="employeeId" />
         </div>
 
         <div>
           <label>الاسم الأول</label>
-          <VeeField name="firstName" v-model="form.firstName" type="text" placeholder="أحمد"
+          <VeeField name="firstName" v-model="form.firstName" type="text" placeholder="أدخل الاسم الأول"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="firstName" />
         </div>
 
         <div>
           <label>اسم الأب</label>
-          <VeeField name="middleName" v-model="form.middleName" type="text" placeholder="خالد"
+          <VeeField name="middleName" v-model="form.middleName" type="text" placeholder="أدخل اسم الأب"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="middleName" />
         </div>
 
         <div>
           <label>اسم العائلة</label>
-          <VeeField name="lastName" v-model="form.lastName" type="text" placeholder="المصري"
+          <VeeField name="lastName" v-model="form.lastName" type="text" placeholder="أدخل اسم العائلة"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="lastName" />
         </div>
 
         <div>
           <label>الرقم الوطني</label>
-          <VeeField name="nationalId" v-model="form.nationalId" type="number" placeholder="120000000000"
+          <VeeField name="nationalId" v-model="form.nationalId" type="number" placeholder="أدخل الرقم الوطني"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="nationalId" />
         </div>
@@ -59,7 +59,7 @@
 
         <div>
           <label>رقم الهاتف</label>
-          <VeeField name="phone" v-model="form.phone" type="text" placeholder="0912345678"
+          <VeeField name="phone" v-model="form.phone" type="text" placeholder="أدخل رقم الهاتف"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="phone" />
         </div>
@@ -69,12 +69,13 @@
           <VeeField name="contractType" v-model="form.contractType" as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2">
             <option value="عقد">عقد</option>
-            <option value="تعيين"> تعيين </option>
+            <option value="تعيين">تعيين</option>
           </VeeField>
           <ErrorMessage class="text-red-600" name="contractType" />
         </div>
+
         <div>
-          <label> القسم </label>
+          <label>القسم</label>
           <VeeField name="department" v-model="form.departmentId" as="select"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2">
             <option disabled>اختر القسم</option>
@@ -84,9 +85,10 @@
             </option>
           </VeeField>
         </div>
+
         <div>
           <label>البريد الإلكتروني</label>
-          <VeeField name="email" v-model="form.email" type="email" placeholder="example@example.com"
+          <VeeField name="email" v-model="form.email" type="email" placeholder="أدخل البريد الإلكتروني"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="email" />
         </div>
@@ -100,21 +102,23 @@
 
         <div>
           <label>شهري أو سنوي</label>
-          <VeeField name="salaryPeriod" v-model="form.salaryPeriod" type="text" placeholder="الراتب الشهري"
+          <VeeField name="salaryPeriod" v-model="form.salaryPeriod" type="text" placeholder="أدخل نوع الراتب"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="salaryPeriod" />
         </div>
 
         <div>
           <label>قيمة الراتب الشهري</label>
-          <VeeField name="salary" v-model="form.salary" type="text" placeholder="الراتب الشهري"
+          <VeeField name="salary" v-model="form.salary" type="text"
+            placeholder="أدخل قيمة الراتب الشهري بالدينار الليبي"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="salary" />
         </div>
 
+
         <div>
           <label>العنوان</label>
-          <VeeField name="address" v-model="form.address" type="text" placeholder="عنوان الموظف"
+          <VeeField name="address" v-model="form.address" type="text" placeholder="أدخل عنوان الموظف"
             class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
           <ErrorMessage class="text-red-600" name="address" />
         </div>
@@ -128,23 +132,8 @@
       </VeeForm>
     </div>
   </div>
-
-  <div class="relative bottom-24 right-6 text-white text-xl z-10 w-fit px-4 py-2 bg-blue-700 rounded-full">
-    <div @click="toggleText" class="cursor-pointer transition duration-150 ease-in-out flex items-center space-x-2">
-      <div :class="[isTextVisible ? 'rotate-45' : 'rotate-0']"
-        class="transition duration-150 ease-in-out font-extrabold">
-        +
-      </div>
-    </div>
-    <transition name="fade-slide" enter-active-class="transition duration-300 ease-out"
-      leave-active-class="transition duration-300 ease-in">
-      <div @click="toggleText" v-show="isTextVisible"
-        class="mt-2 bg-white absolute -top-28 text-black px-4 py-2 rounded shadow">
-        <router-link to="ManagemenSPEC">إضافة قسم</router-link>
-      </div>
-    </transition>
-  </div>
 </template>
+
 <script>
 import axios from 'axios'
 import API_ENDPOINTS from '../stores/api'
