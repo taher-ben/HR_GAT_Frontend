@@ -75,7 +75,7 @@
             <ErrorMessage class="text-red-600" name="endDate" />
           </div>
           <div>
-            <label>الرقم الوظيفي للموظف</label>
+            <label>رقم تعريف البصمة للموظف</label>
             <VeeField name="employeeId" v-model="form.employeeId" type="text" placeholder="12345"
               class="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 focus:outline-none focus:ring-sky-600 focus:ring-2" />
             <ErrorMessage class="text-red-600" name="employeeId" />
@@ -129,10 +129,16 @@
               </div>
             </div>
           </div>
-          <div
-            class="px-2 py-4 bg-blue-500 font-bold w-fit text-white my-2 cursor-pointer rounded-xl hover:bg-white hover:border-blue-500 hover:border hover:text-blue-500"
-            @click="showEdite()">
-            <div>تسجيل إجازة جديدة</div>
+          <div class="flex gap-4">
+            <div
+              class="px-2 py-4 bg-blue-500 font-bold w-fit text-white my-2 cursor-pointer rounded-xl hover:bg-white hover:border-blue-500 hover:border hover:text-blue-500"
+              @click="showEdite()">
+              <div>تسجيل إجازة جديدة</div>
+            </div>
+            <button @click="printTable"
+              class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+              طباعة
+            </button>
           </div>
         </div>
         <div class="flex items-start">
@@ -147,7 +153,7 @@
             الكل
           </div>
         </div>
-        <table class="table-auto w-full border-collapse border border-gray-200">
+        <table class="table-auto w-full border-collapse border border-gray-200 main-tabale">
           <thead>
             <tr class="bg-gray-100">
               <th class="border px-4 py-2">#</th>
@@ -157,7 +163,7 @@
               <th class="border px-4 py-2">تاريخ النهاية</th>
               <th class="border px-4 py-2">اسم الموظف</th>
               <th class="border px-4 py-2">الحالة</th>
-              <th class="border px-4 py-2">الإجراءات</th>
+              <th class="border px-4 py-2 bootmes">الإجراءات</th>
             </tr>
           </thead>
           <tbody>
@@ -173,7 +179,7 @@
                 {{ leave.employee.firstName }} {{ leave.employee.lastName }}
               </td>
               <td class="border px-4 py-2">قيد الاجازة</td>
-              <td class="border px-4 py-2">
+              <td class="border px-4 py-2 bootmes">
                 <button @click="editLeave(leave)" class="text-blue-600 hover:underline">
                   تعديل
                 </button>
@@ -197,7 +203,7 @@ import Swal from 'sweetalert2'
 export default {
   data() {
     return {
-      searchResult:[],
+      searchResult: [],
       selectedType: '',
       searchByType: '',
       leaves: [],
@@ -245,6 +251,39 @@ export default {
     }
   },
   methods: {
+    printTable() {
+      const table = document.querySelector('.main-tabale');
+      const newWindow = window.open('', '_blank');
+      newWindow.document.write(`
+      <html>
+      <head>
+        <title>طباعة الجدول</title>
+        <style>
+        .bootmes{
+        display: none;
+        }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+        </style>
+      </head>
+      <body>
+        ${table.outerHTML}
+      </body>
+      </html>
+    `);
+      newWindow.document.close(); // إغلاق المستند لبدء الطباعة
+      newWindow.print(); // أمر الطباعة
+    },
     formatDate(date) {
       if (date) {
         return format(new Date(date), 'yyyy-MM-dd')
@@ -259,35 +298,35 @@ export default {
       console.log(this.form.employeeId)
     },
     async searchEmployee(x) {
-  try {
-    this.isLoading = true;
-    await new Promise((resolve) => setTimeout(resolve, 500));
+      try {
+        this.isLoading = true;
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const result = await axios.post(
-      'http://localhost:8000/api/employees/search',
-      { name: x },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.myToken}`,
-        },
+        const result = await axios.post(
+          'http://localhost:8000/api/employees/search',
+          { name: x },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.myToken}`,
+            },
+          }
+        );
+        this.searchResult = result.data.data;
+        console.log(this.searchResult);
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.';
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: errorMessage,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } finally {
+        this.isLoading = false;
       }
-    );
-    this.searchResult = result.data.data;
-    console.log(this.searchResult);
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.';
-    Swal.fire({
-      position: 'center',
-      icon: 'error',
-      title: errorMessage,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  } finally {
-    this.isLoading = false;
-  }
-},
+    },
     async fetchLeaves() {
       try {
         const result = await axios.get('http://localhost:8000/api/leaves', {

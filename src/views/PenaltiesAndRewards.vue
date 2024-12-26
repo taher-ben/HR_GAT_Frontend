@@ -3,18 +3,24 @@
     <header class="flex flex-col flex-end mb-6 w-fit">
       <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold">إدارة الخصومات والمكافآت</h1>
       <div class="flex md:flex-row flex-col gap-4">
-        <form
-          class="bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex flex-row-reverse md:max-w-2xl items-center md:w-full w-fit"
-          @submit.prevent="fetchData">
-          <input v-model="searchQuery" type="text"
-            class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
-            placeholder="ادخل اسم الموظف" />
-          <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
-        </form>
+        <div class="flex gap-4">
+          <form
+            class="bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex flex-row-reverse md:max-w-2xl items-center md:w-full w-fit"
+            @submit.prevent="fetchData">
+            <input v-model="searchQuery" type="text"
+              class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
+              placeholder="ادخل اسم الموظف" />
+            <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
+          </form>
+          <button @click="printTable"
+            class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+            طباعة
+          </button>
+        </div>
       </div>
     </header>
     <section class="mb-6 overflow-y-scroll">
-      <table class="md:w-full w-fit table-auto border-collapse border border-gray-300">
+      <table class="md:w-full w-fit table-auto border-collapse border border-gray-300 main-tabale">
         <thead>
           <tr class="bg-gray-100">
             <th class="border border-gray-300 px-4 py-2">رقم السجل</th>
@@ -24,7 +30,7 @@
             <th class="border border-gray-300 px-4 py-2">المبلغ</th>
             <th class="border border-gray-300 px-4 py-2">التاريخ</th>
             <th class="border border-gray-300 px-4 py-2">السبب</th>
-            <th class="border border-gray-300 px-4 py-2">إجراءات</th>
+            <th class="border border-gray-300 px-4 py-2 bootmes">إجراءات</th>
           </tr>
         </thead>
         <tbody>
@@ -36,9 +42,9 @@
             </td>
             <td class="border border-gray-300 px-4 py-2">{{ record.employee.employeeId }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ record.amount }}</td>
-            <td class="border border-gray-300 px-4 py-2">{{ record.date }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ formatDate(record.date) }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ record.reason }}</td>
-            <td class="border border-gray-300 px-4 py-2 flex gap-2">
+            <td class="border border-gray-300 px-4 py-2 flex gap-2 bootmes">
               <button @click="editRecord(record)" class="bg-yellow-500 text-white px-2 py-1 rounded">
                 تعديل
               </button>
@@ -128,6 +134,7 @@
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { format } from 'date-fns'
 
 export default {
   data() {
@@ -154,6 +161,45 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      if (date) {
+        return format(new Date(date), 'yyyy-MM-dd')
+      }
+      return ''
+    },
+    printTable() {
+      const table = document.querySelector('.main-tabale');
+      const newWindow = window.open('', '_blank');
+      newWindow.document.write(`
+      <html>
+      <head>
+        <title>طباعة الجدول</title>
+        <style>
+        .bootmes{
+        display: none;
+        }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+        </style>
+      </head>
+      <body>
+        ${table.outerHTML}
+      </body>
+      </html>
+    `);
+      newWindow.document.close();
+      newWindow.print();
+    },
     selectedId(x) {
       this.form.employeeId = x
       this.sreach = this.form.employeeId
@@ -216,10 +262,10 @@ export default {
       }
     },
     async editRecord(record) {
-      this.form = { ...record }; // نسخ البيانات من السجل المحدد إلى النموذج
-      this.formMode = 'edit'; // تغيير وضع النموذج إلى تعديل
-      this.sreach = record.employee.employeeId; // تعيين رقم الموظف في الحقل المناسب
-      this.form.employeeId = record.employee.employeeId; // تعيين الرقم الوظيفي في النموذج
+      this.form = { ...record };
+      this.formMode = 'edit';
+      this.sreach = record.employee.employeeId;
+      this.form.employeeId = record.employee.employeeId;
     },
 
     async submitForm() {
@@ -228,7 +274,6 @@ export default {
         const payload = { ...this.form }
 
         if (this.formMode === 'add') {
-          // إضافة سجل جديد
           await axios.post(url, payload, {
             headers: {
               Authorization: `Bearer ${this.myToken}`,
@@ -242,7 +287,6 @@ export default {
             timer: 1500
           });
         } else if (this.formMode === 'edit') {
-          // تعديل سجل موجود
           await axios.patch(`${url}${this.form.recordId}/`, payload, {
             headers: {
               Authorization: `Bearer ${this.myToken}`,

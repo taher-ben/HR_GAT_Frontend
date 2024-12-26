@@ -7,51 +7,6 @@
     </div>
     <div>
       <div class="mt-4 w-full flex justify-between items-center">
-        <!-- <div
-          class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit"
-        >
-          <font-awesome-icon
-            class="w-4 h-4 absolute left-2 text-gray-500"
-            :icon="['fas', 'magnifying-glass']"
-          />
-          <div
-            @click="searchEmployee(sreachAll)"
-            @typing="searchEmployee(sreachAll)"
-            class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer"
-          >
-            بحث
-          </div>
-          <input
-            @typing="searchEmployee(sreachAll)"
-            v-model="sreachAll"
-            type="text"
-            name="search"
-            class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
-            placeholder="ادخل بيانات الموظف"
-          />
-          <div
-            v-if="sreachAll.length > 1"
-            class="absolute top-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-lg w-full z-10"
-          >
-            <div
-              v-for="(item, index) in response"
-              :key="index"
-              class="flex items-center justify-between py-2 px-3 border-b last:border-none hover:bg-gray-100 transition duration-150 ease-in-out"
-            >
-              <div class="flex items-center space-x-3">
-                <span class="font-semibold text-gray-700">{{ item.lastName }}</span>
-                <span class="text-gray-500">{{ item.firstName }}</span>
-                <span class="text-gray-500 px-2">{{ item.employeeId }}</span>
-              </div>
-              <button
-                @click="fetchAttendance(item.employeeId)"
-                class="text-sm text-blue-500 hover:text-blue-900"
-              >
-                أختيار
-              </button>
-            </div>
-          </div>
-        </div> -->
         <div class="flex items-center mx-12 space-x-4">
           <div>
             <label for="day" class="block text-sm font-medium text-gray-700">اليوم</label>
@@ -76,14 +31,22 @@
             </select>
           </div>
           <div>
-            <button v-if="day === 0" class="bg-blue-500 my-auto px-3 py-1 text-white rounded-md
-            " @click="searchMonth(this.year, this.month)">
+            <button v-if="day === 0" class="bg-blue-500 my-auto px-3 py-1 text-white rounded-md"
+              @click="searchMonth(this.year, this.month)">
               بحث بتاريخ
             </button>
             <button v-else @click="searchDay(this.year, this.month, this.day)">
               بحث بتاريخ
             </button>
           </div>
+        </div>
+        <div>
+          <button
+            class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition duration-200"
+            @click="printTable"
+          >
+            طباعة الجدول
+          </button>
         </div>
       </div>
       <div class="mt-6 rounded-xl bg-white shadow px-12 py-4 mx-3 max-h-screen overflow-x-scroll">
@@ -92,7 +55,7 @@
             <tr class="bg-gray-100">
               <th class="border border-gray-300 px-4 py-2">الاسم</th>
               <th class="border border-gray-300 px-4 py-2">اسم العائلة</th>
-              <th class="border border-gray-300 px-4 py-2">الرقم الوظيفي</th>
+              <th class="border border-gray-300 px-4 py-2">رقم تعريف البصمة</th>
               <th class="border border-gray-300 px-4 py-2">آخر حضور (تاريخ)</th>
               <th class="border border-gray-300 px-4 py-2">آخر حضور (ساعات)</th>
             </tr>
@@ -125,9 +88,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { format } from 'date-fns'
-import Swal from 'sweetalert2'
+import axios from "axios";
+import { format } from "date-fns";
 
 export default {
   data() {
@@ -137,44 +99,39 @@ export default {
       day: 0,
       days: [],
       attendances: [],
-      myToken: localStorage.getItem('authToken'),
-      sreach: '',
-      sreachAll: '',
-    }
+      myToken: localStorage.getItem("authToken"),
+    };
   },
   computed: {
     yearsRange() {
-      const startYear = 2020
-      const endYear = 2100
-      return Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index)
+      const startYear = 2020;
+      const endYear = 2100;
+      return Array.from(
+        { length: endYear - startYear + 1 },
+        (_, index) => startYear + index
+      );
     },
   },
   methods: {
     updateMonthDays() {
-      const daysInMonth = new Date(this.year, this.month, 0).getDate()
-      this.days = Array.from({ length: daysInMonth }, (_, index) => index + 1)
+      const daysInMonth = new Date(this.year, this.month, 0).getDate();
+      this.days = Array.from({ length: daysInMonth }, (_, index) => index + 1);
     },
     async searchDay(year, month, day) {
       try {
         const config = {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
-            'Content-Type': 'application/json',
           },
-        }
+        };
 
         const response = await axios.get(
           `http://localhost:8000/api/attendance?date=${year}-${month}-${day}`,
-          config, {
-          headers: {
-            Authorization: `Bearer ${this.myToken}`,
-          }
-        }
-        )
-        this.attendances = response.data.data
-        this.sreachAll = ''
+          config
+        );
+        this.attendances = response.data.data;
       } catch (error) {
-        console.error('Error fetching attendance data:', error)
+        console.error("Error fetching attendance data:", error);
       }
     },
     async searchMonth(year, month) {
@@ -182,95 +139,60 @@ export default {
         const config = {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
-            'Content-Type': 'application/json',
           },
-        }
+        };
 
         const response = await axios.get(
           `http://localhost:8000/api/attendance?month=${month}&year=${year}`,
-          config, {
-          headers: {
-            Authorization: `Bearer ${this.myToken}`,
-          }
-        }
-        )
-        this.attendances = response.data.data
-        this.sreachAll = ''
+          config
+        );
+        this.attendances = response.data.data;
       } catch (error) {
-        console.error('Error fetching attendance data:', error)
-      }
-    },
-    async searchEmployee(sreachAll) {
-      try {
-        this.isLoading = true
-
-        const result = await axios.post(
-          'http://localhost:8000/api/employees/search',
-          { name: sreachAll },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.myToken}`,
-            },
-          },
-        )
-        this.response = result.data.data
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء البحث عن الموظف.'
-        Swal.fire({
-          position: "center-center",
-          icon: "error",
-          title: errorMessage,
-          showConfirmButton: false,
-          timer: 1500
-        });
-      } finally {
-        this.isLoading = false
+        console.error("Error fetching attendance data:", error);
       }
     },
     formatDate(date) {
-      if (date) {
-        return format(new Date(date), 'yyyy-MM-dd')
-      }
-      return ''
+      return date ? format(new Date(date), "yyyy-MM-dd") : "";
     },
     formatTime(date) {
-      if (date) {
-        return format(new Date(date), 'hh:mm:ss a')
-      }
-      return ''
+      return date ? format(new Date(date), "hh:mm:ss a") : "";
     },
-    async fetchAttendance(id) {
-      try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${this.myToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-
-        const response = await axios.get(`http://localhost:8000/api/attendance/${id}`, config, {
-          headers: {
-            Authorization: `Bearer ${this.myToken}`,
-          }
-        })
-        this.attendances = response.data.data
-        this.sreachAll = ''
-      } catch (error) {
-        console.error('Error fetching attendance data:', error)
-      }
-    },
-  },
-  watch: {
-    month() {
-      this.updateMonthDays()
-    },
-    year() {
-      this.updateMonthDays()
+    printTable() {
+      const printContent = document.querySelector("table").outerHTML;
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>طباعة الجدول</title>
+            <style>
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                font-size: 16px;
+                text-align: left;
+              }
+              th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+              }
+              th {
+                background-color: #f4f4f4;
+                color: #333;
+              }
+            </style>
+          </head>
+          <body>
+            ${printContent}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
     },
   },
   mounted() {
-    this.updateMonthDays()
+    this.updateMonthDays();
   },
-}
+};
 </script>

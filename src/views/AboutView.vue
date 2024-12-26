@@ -23,18 +23,24 @@ const modalStore = useModalStore()
                 <div @click="registerEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
                   بحث
                 </div>
-                <input  v-model="sreach" type="text" name="search"
+                <input v-model="sreach" type="text" name="search"
                   class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
                   placeholder="ادخل بيانات الموظف" />
               </div>
 
-              <button @click="getAllEmployees(sreach)"
-                class="px-4 py-4 my-auto bg-blue-500 rounded-xl text-white cursor-pointer h-full">
-                كل الموظفين
-              </button>
+              <div class="flex gap-4">
+                <button @click="getAllEmployees(sreach)"
+                  class="px-4 py-4 my-auto bg-blue-500 rounded-xl text-white cursor-pointer h-full">
+                  كل الموظفين
+                </button>
+                <button @click="printTable"
+                  class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+                  طباعة
+                </button>
+              </div>
             </div>
             <div class="mt-6 rounded-xl bg-white shadow h-full overflow-y-auto overflow-x-auto">
-              <table class="w-full table-auto border-collapse border border-gray-300">
+              <table class="w-full table-auto border-collapse border border-gray-300 main-tabale">
                 <thead>
                   <tr class="bg-gray-100">
                     <th class="border border-gray-300 px-4 py-2">الاسم</th>
@@ -44,7 +50,7 @@ const modalStore = useModalStore()
                     <th class="border border-gray-300 px-4 py-2">الجنس</th>
                     <th class="border border-gray-300 px-4 py-2">نوع التوظيف </th>
                     <th class="border border-gray-300 px-4 py-2">القسم </th>
-                    <th class="border border-gray-300 px-4 py-2">الرقم الوظيفي</th>
+                    <th class="border border-gray-300 px-4 py-2">رقم تعريف البصمة</th>
                     <th class="border border-gray-300 px-4 py-2">تاريخ التوظيف</th>
                     <th class="border border-gray-300 px-4 py-2">العنوان</th>
                     <th class="border border-gray-300 px-4 py-2">تاريخ الميلاد</th>
@@ -52,11 +58,11 @@ const modalStore = useModalStore()
                     <!-- <th class="border border-gray-300 px-4 py-2">شهري أو سنوي</th> -->
                     <th class="border border-gray-300 px-4 py-2">الراتب الشهري</th>
                     <th class="border border-gray-300 px-4 py-2">البريد الإلكتروني</th>
-                    <th class="border border-gray-300 px-4 py-2">الإجراءات</th>
+                    <th class="border bootmes border-gray-300 px-4 py-2">الإجراءات</th>
                   </tr>
                 </thead>
-                <tbody >
-                  <tr  v-for="employee in response" :key="employee.id" class="hover:bg-gray-50">
+                <tbody>
+                  <tr v-for="employee in response" :key="employee.id" class="hover:bg-gray-50">
                     <td class="border border-gray-300 px-4 py-2">{{ employee.firstName }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.middleName }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.lastName }}</td>
@@ -66,7 +72,8 @@ const modalStore = useModalStore()
                     </td>
                     <td class="border border-gray-300 px-4 py-2" v-else>انثى</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.contractType }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ employee.department.departmentName || 'غير محدد' }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ employee.department.departmentName || 'غير محدد' }}
+                    </td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.employeeId }}</td>
                     <td class="border border-gray-300 px-4 py-2">
                       {{ formatDate(employee.hireDate) }}
@@ -81,8 +88,7 @@ const modalStore = useModalStore()
                     <!-- <td class="border border-gray-300 px-4 py-2">{{ employee.salaryPeriod }}</td> -->
                     <td class="border border-gray-300 px-4 py-2">{{ employee.salary }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ employee.email }}</td>
-                    <td
-                    class="border border-gray-300 px-4 py-2">
+                    <td class="border bootmes border-gray-300 px-4 py-2">
                       <div class=" flex items-center">
                         <span @click="() => {
                           modalStore.toggleModalEditProfile()
@@ -123,7 +129,7 @@ const modalStore = useModalStore()
             <div class="grid gap-4 grid-cols-2 w-full px-4 mt-4 md:mt-6">
               <!-- Existing fields -->
               <div class="mb-3" v-if="selectedEmployee">
-                <p class="text-blue-500 font-bold">الرقم الوظيفي</p>
+                <p class="text-blue-500 font-bold">رقم تعريف البصمة</p>
                 <input type="text" class="border border-gray-300 rounded w-full p-2 mt-1"
                   v-model="selectedEmployee.employeeId" />
               </div>
@@ -245,6 +251,39 @@ export default {
     }
   },
   methods: {
+    printTable() {
+      const table = document.querySelector('.main-tabale');
+      const newWindow = window.open('', '_blank');
+      newWindow.document.write(`
+      <html>
+      <head>
+        <title>طباعة الجدول</title>
+        <style>
+        .bootmes{
+        display: none;
+        }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+        </style>
+      </head>
+      <body>
+        ${table.outerHTML}
+      </body>
+      </html>
+    `);
+      newWindow.document.close(); // إغلاق المستند لبدء الطباعة
+      newWindow.print(); // أمر الطباعة
+    },
     async fetchDepartments() {
       try {
         const myToken = localStorage.getItem('authToken')

@@ -6,9 +6,9 @@
         <div
           class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit">
           <font-awesome-icon class="w-4 h-4 absolute left-2 text-gray-500" :icon="['fas', 'magnifying-glass']" />
-          <div @click="searchEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
-            بحث
-          </div>
+            <div @click="searchEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
+              بحث
+            </div>
           <input v-model="sreach" type="text" name="search"
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
             placeholder="ادخل بيانات الموظف" />
@@ -27,6 +27,10 @@
             </div>
           </div>
         </div>
+        <button @click="printTable"
+              class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+              طباعة
+            </button>
         <div class="flex items-center space-x-4">
           <div class="mx-2">
             <label for="month" class="block text-sm font-medium text-gray-700">الشهر</label>
@@ -44,7 +48,7 @@
           </div>
         </div>
       </div>
-      <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4">
+      <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4 main-tabale">
         <div class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
           <!-- days of week -->
           <div
@@ -113,6 +117,80 @@ export default {
     },
   },
   methods: {
+    printTable() {
+  const calendar = document.querySelector('.main-tabale');
+  const calendarHTML = calendar.outerHTML;
+
+  const newWindow = window.open('', '_blank');
+  newWindow.document.write(`
+    <html>
+    <head>
+      <title>طباعة الجدول</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+        .main-tabale {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 1px;
+          border: 1px solid #ddd;
+        }
+        .grid > div {
+          border: 1px solid #ddd;
+          padding: 10px;
+          text-align: center;
+        }
+        .bg-white {
+          background-color: #ffffff;
+        }
+        .bg-gray-50 {
+          background-color: #f9fafb;
+        }
+        .bg-gray-200 {
+          background-color: #e5e7eb;
+        }
+        .text-gray-500 {
+          color: #6b7280;
+        }
+        .text-red-500 {
+          color: #ef4444;
+        }
+        .text-green-500 {
+          color: #10b981;
+        }
+        time {
+          display: block;
+          font-size: 14px;
+          font-weight: bold;
+        }
+        .rounded-full {
+          border-radius: 50%;
+        }
+        .bg-indigo-600 {
+          background-color: #4f46e5;
+        }
+        .text-white {
+          color: #ffffff;
+        }
+      </style>
+    </head>
+    <body>
+      <h1 style="text-align: center; margin-top: 20px; font-size: 24px;">جدول الحضور</h1>
+      ${calendarHTML}
+    </body>
+    </html>
+  `);
+  newWindow.document.close();
+  newWindow.print();
+},
     async searchEmployee(sreach) {
       try {
         this.isLoading = true
