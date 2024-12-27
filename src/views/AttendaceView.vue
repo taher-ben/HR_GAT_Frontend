@@ -196,7 +196,7 @@ export default {
         this.isLoading = true
 
         const result = await axios.post(
-          'http://localhost:8000/api/employees/search',
+          'http://localhost:88/api/employees/search',
           { name: sreach },
           {
             headers: {
@@ -224,7 +224,7 @@ export default {
     },
     async registerEmployee(empid) {
       try {
-        const attendanceResult = await axios.get(`http://localhost:8000/api/attendance/${empid}`, {
+        const attendanceResult = await axios.get(`http://localhost:88/api/attendance/${empid}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.myToken}`,

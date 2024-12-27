@@ -76,7 +76,6 @@ export default {
       },
       schema: {
         departmentName: 'required',
-        managerId: 'required',
       },
       departments: [],
       isLoading: false,

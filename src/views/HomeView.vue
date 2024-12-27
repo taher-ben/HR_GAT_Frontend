@@ -233,7 +233,7 @@ export default {
     },
     async submitForm() {
       if (this.isLoading) return
-
+      console.log('emlopp');
       this.isLoading = true
       try {
         const formData = new FormData()
@@ -258,45 +258,46 @@ export default {
         });
         this.form = []
       } catch (error) {
+        console.error(error.response);
         const errorMessage = error.response?.data?.message || 'حدث خطأ أثناء تسجيل الموظف.'
-        Swal.fire({
+          Swal.fire({
           position: "center-center",
           icon: error,
           title: errorMessage,
           showConfirmButton: false,
           timer: 2000
         });
-      } finally {
-        this.isLoading = false
-      }
-    },
+  } finally {
+    this.isLoading = false
+  }
+},
     async departments() {
-      if (this.isLoading) return
+  if (this.isLoading) return
 
-      this.isLoading = true
-      try {
-        const myToken = localStorage.getItem('authToken')
+  this.isLoading = true
+  try {
+    const myToken = localStorage.getItem('authToken')
 
-        const response = await axios.get(API_ENDPOINTS.departments, {
-          headers: {
-            Authorization: `Bearer ${myToken}`,
-          },
-        })
+    const response = await axios.get(API_ENDPOINTS.departments, {
+      headers: {
+        Authorization: `Bearer ${myToken}`,
+      },
+    })
 
-        this.dataFordepartments = response.data.data.departments
-        console.log(this.dataFordepartments)
-      } catch (error) {
-        console.error('حدث خطأ أثناء جلب البيانات:', error.response?.data?.message || error.message)
+    this.dataFordepartments = response.data.data.departments
+    console.log(this.dataFordepartments)
+  } catch (error) {
+    console.error('حدث خطأ أثناء جلب البيانات:', error.response?.data?.message || error.message)
 
-        this.dataFordepartments = []
-      } finally {
-        this.isLoading = false
-      }
-    },
+    this.dataFordepartments = []
+  } finally {
+    this.isLoading = false
+  }
+},
   },
-  mounted() {
-    this.departments()
-  },
+mounted() {
+  this.departments()
+},
 }
 </script>
 <style>

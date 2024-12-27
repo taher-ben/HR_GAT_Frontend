@@ -303,7 +303,7 @@ export default {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const result = await axios.post(
-          'http://localhost:8000/api/employees/search',
+          'http://localhost:88/api/employees/search',
           { name: x },
           {
             headers: {
@@ -329,7 +329,7 @@ export default {
     },
     async fetchLeaves() {
       try {
-        const result = await axios.get('http://localhost:8000/api/leaves', {
+        const result = await axios.get('http://localhost:88/api/leaves', {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },
@@ -374,7 +374,7 @@ export default {
     },
     async fetchByType(type) {
       try {
-        const result = await axios.get(`http://localhost:8000/api/leaves?type=${type}`, {
+        const result = await axios.get(`http://localhost:88/api/leaves?type=${type}`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },
@@ -393,7 +393,7 @@ export default {
     },
     async typeSearch(searchByType) {
       try {
-        const result = await axios.get(`http://localhost:8000/api/leaves?type=${searchByType}`, {
+        const result = await axios.get(`http://localhost:88/api/leaves?type=${searchByType}`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },
@@ -412,7 +412,7 @@ export default {
     },
     async submitForm() {
       try {
-        const result = await axios.post('http://localhost:8000/api/leaves', this.form, {
+        const result = await axios.post('http://localhost:88/api/leaves', this.form, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.myToken}`,
@@ -454,7 +454,7 @@ export default {
 
         if (result.isConfirmed) {
           // إذا تم تأكيد الحذف
-          await axios.delete(`http://localhost:8000/api/leaves/${leaveId}`, {
+          await axios.delete(`http://localhost:88/api/leaves/${leaveId}`, {
             headers: {
               Authorization: `Bearer ${this.myToken}`,
             },

@@ -16,6 +16,18 @@
             class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
             طباعة
           </button>
+          <div>
+            <h4>العنوان الاول </h4>
+            <input v-model="title" type="text">
+          </div>
+          <div>
+            <h4>العنوان الثاني </h4>
+            <input v-model="suject" type="text">
+          </div>
+          <div>
+            <h4>النص الرئيسي </h4>
+            <input v-model="paragraph" type="text">
+          </div>
         </div>
       </div>
     </header>
@@ -44,7 +56,7 @@
             <td class="border border-gray-300 px-4 py-2">{{ record.amount }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ formatDate(record.date) }}</td>
             <td class="border border-gray-300 px-4 py-2">{{ record.reason }}</td>
-            <td class="border border-gray-300 px-4 py-2 flex gap-2 bootmes">
+            <td class="border bootmes border-gray-300 px-4 py-2 flex gap-2 ">
               <button @click="editRecord(record)" class="bg-yellow-500 text-white px-2 py-1 rounded">
                 تعديل
               </button>
@@ -139,6 +151,9 @@ import { format } from 'date-fns'
 export default {
   data() {
     return {
+      title: 'title',
+      suject: 'subject',
+      paragraph: '',
       allRecords: '',
       myToken: localStorage.getItem('authToken'),
       searchQuery: '',
@@ -171,32 +186,141 @@ export default {
       const table = document.querySelector('.main-tabale');
       const newWindow = window.open('', '_blank');
       newWindow.document.write(`
-      <html>
-      <head>
-        <title>طباعة الجدول</title>
-        <style>
-        .bootmes{
-        display: none;
-        }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-          }
-          th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-          }
-          th {
-            background-color: #f2f2f2;
-          }
-        </style>
-      </head>
-      <body>
-        ${table.outerHTML}
-      </body>
-      </html>
-    `);
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      padding: 10px 20px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+    .container {
+      width: 100%;
+      margin: 0 auto;
+    }
+    .mx-auto {
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .my-2 {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .my-4 {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .py-2 {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .px-2 {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .flex-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .flex {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    h3, h4 {
+      margin: 5px 0;
+    }
+    .content {
+      margin: 10px 15px;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+    .header {
+      max-width: 100%;
+    }
+    .header img {
+      width: 100%;
+    }
+    .title {
+      font-size: x-large;
+      padding: 0 2px;
+    }
+    .subject {
+      font-size: large;
+      margin-bottom: 30px;
+    }
+            .bootmes {
+      display: none !important;
+      }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="flex">
+      <div class="header" style="max-width: 100px;">
+        <img src="public/0.png" alt="Logo">
+      </div>
+      <div class="flex-col px-2">
+        <h3 class="my-2">دولة ليبيا</h3>
+        <h4 class="my-2">وزارة الصحة</h4>
+        <h4 class="my-2">مستشفى غات العام</h4>
+      </div>
+    </div>
+
+    <!-- Title Section -->
+    <div class="flex my-4">
+      <div class="mx-auto">
+        <h3 class="title">${this.title}</h3>
+      </div>
+    </div>
+
+    <!-- Subject Section -->
+    <div class="subject my-4">
+      ${this.suject}
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+      <p>${this.paragraph}</p>
+    </div>
+
+    <!-- Table Section -->
+    <div class="my-4">
+      ${table.outerHTML}
+    </div>
+    <div class="">
+    <h3></h3>
+      </div>
+  </div>
+</body>
+</html>
+
+  `);
       newWindow.document.close();
       newWindow.print();
     },
@@ -209,7 +333,7 @@ export default {
         this.isLoading = true
 
         const result = await axios.post(
-          'http://localhost:8000/api/employees/search',
+          'http://localhost:88/api/employees/search',
           { name: sreach },
           {
             headers: {
@@ -234,7 +358,7 @@ export default {
     },
     async fetchData() {
       try {
-        const response = await axios.get('http://localhost:8000/api/penalty-and-reward/', {
+        const response = await axios.get('http://localhost:88/api/penalty-and-reward/', {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }
@@ -270,7 +394,7 @@ export default {
 
     async submitForm() {
       try {
-        const url = 'http://localhost:8000/api/penalty-and-reward/'
+        const url = 'http://localhost:88/api/penalty-and-reward/'
         const payload = { ...this.form }
 
         if (this.formMode === 'add') {
@@ -317,7 +441,7 @@ export default {
 
     async deleteRecord(recordId) {
       try {
-        await axios.delete(`http://localhost:8000/api/penalty-and-reward/${recordId}/`, {
+        await axios.delete(`http://localhost:88/api/penalty-and-reward/${recordId}/`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }

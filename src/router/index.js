@@ -73,6 +73,18 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },
+    {
+      path: '/hr-system.local/login',
+      redirect: '/',
+    },
+    {
+      path: '/hr-system.local',
+      redirect: '/',
+    },
+    {
+      path: '/192.168.1.*/login',
+      redirect: '/',
+    },
   ],
 })
 

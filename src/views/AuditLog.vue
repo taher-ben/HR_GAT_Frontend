@@ -108,7 +108,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('http://localhost:8000/api/audit-logs', {
+        const response = await axios.get('http://localhost:88/api/audit-logs', {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },

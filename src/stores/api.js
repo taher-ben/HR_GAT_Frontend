@@ -1,5 +1,5 @@
 // api.js
-const BASE_URL = 'http://localhost:8000/api'
+const BASE_URL = 'http://localhost:88/api'
 
 const API_ENDPOINTS = {
   employees: `${BASE_URL}/employees`,

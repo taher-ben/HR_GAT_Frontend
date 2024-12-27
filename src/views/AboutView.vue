@@ -306,7 +306,7 @@ export default {
       try {
         this.isLoading = true
 
-        const result = await axios.get(`http://localhost:8000/api/employees`, {
+        const result = await axios.get(`http://localhost:88/api/employees`, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${this.myToken}`,
@@ -331,7 +331,7 @@ export default {
         this.isLoading = true
 
         const result = await axios.post(
-          'http://localhost:8000/api/employees/search',
+          'http://localhost:88/api/employees/search',
           { name: sreach },
           {
             headers: {
@@ -373,7 +373,7 @@ export default {
       try {
         this.isLoading = true
         const result = await axios.patch(
-          `http://localhost:8000/api/employees/${this.selectedEmployee.employeeId}`,
+          `http://localhost:88/api/employees/${this.selectedEmployee.employeeId}`,
           this.selectedEmployee,
           {
             headers: {
@@ -429,7 +429,7 @@ export default {
 
         this.isLoading = true;
 
-        await axios.delete(`http://localhost:8000/api/employees/${employeeId}`, {
+        await axios.delete(`http://localhost:88/api/employees/${employeeId}`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },

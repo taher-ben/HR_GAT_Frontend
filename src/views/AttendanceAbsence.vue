@@ -126,7 +126,7 @@ export default {
         };
 
         const response = await axios.get(
-          `http://localhost:8000/api/attendance?date=${year}-${month}-${day}`,
+          `http://localhost:88/api/attendance?date=${year}-${month}-${day}`,
           config
         );
         this.attendances = response.data.data;
@@ -143,7 +143,7 @@ export default {
         };
 
         const response = await axios.get(
-          `http://localhost:8000/api/attendance?month=${month}&year=${year}`,
+          `http://localhost:88/api/attendance?month=${month}&year=${year}`,
           config
         );
         this.attendances = response.data.data;

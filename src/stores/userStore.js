@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', {
       this.error = null
       try {
         const authToken = localStorage.getItem('authToken')
-        const response = await axios.get(`http://localhost:8000/users/${userId}`, {
+        const response = await axios.get(`http://localhost:88/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
