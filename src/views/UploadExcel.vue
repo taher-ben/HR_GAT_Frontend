@@ -69,7 +69,7 @@ export default {
       formData.append('excel', file)
 
       try {
-        const response = await axios.post('http://localhost:88/api/attendance/upload', formData, {
+        const response = await axios.post('http://192.168.1.250:88/api/attendance/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${this.myToken}`,

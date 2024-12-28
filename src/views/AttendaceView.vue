@@ -6,9 +6,9 @@
         <div
           class="relative bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center mt-8 md:w-full w-fit">
           <font-awesome-icon class="w-4 h-4 absolute left-2 text-gray-500" :icon="['fas', 'magnifying-glass']" />
-            <div @click="searchEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
-              بحث
-            </div>
+          <div @click="searchEmployee(sreach)" class="px-4 py-4 me-1 bg-blue-500 text-white cursor-pointer">
+            بحث
+          </div>
           <input v-model="sreach" type="text" name="search"
             class="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none"
             placeholder="ادخل بيانات الموظف" />
@@ -27,10 +27,40 @@
             </div>
           </div>
         </div>
-        <button @click="printTable"
-              class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
-              طباعة
-            </button>
+        <button @click="openPrint" class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+          أعداد النصوص لي الطباعة
+        </button>
+        <div :class="ISOPEN ? 'hidden' : 'absolute'"
+          class=" print z-20 w-[40vh]  top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] bg-slate-50 py-8 px-6 rounded-md shadow-sm flex flex-col">
+          <div>
+            <h4 class="mb-6 font-bold">العنوان الاول </h4>
+            <input v-model="title" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+              text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+          </div>
+          <div>
+            <h4 class="mb-6 font-bold">العنوان الثاني </h4>
+            <input v-model="suject" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+              text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+          </div>
+          <div>
+            <h4 class="mb-6 font-bold">النص الرئيسي </h4>
+            <textarea v-model="paragraph" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+            text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1"></textarea>
+          </div>
+          <div>
+            <h4 class="mb-6 font-bold"> أعتماد القسم </h4>
+            <input v-model="yourDepartment" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+            text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+          </div>
+          <div>
+            <div @click="openPrint">
+              <button @click="printTable"
+                class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+                طباعة
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="flex items-center space-x-4">
           <div class="mx-2">
             <label for="month" class="block text-sm font-medium text-gray-700">الشهر</label>
@@ -48,8 +78,8 @@
           </div>
         </div>
       </div>
-      <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4 main-tabale">
-        <div class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
+      <div class="lg:flex lg:h-full lg:flex-col md:p-8 p-4 ">
+        <div class="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col main-tabale">
           <!-- days of week -->
           <div
             class="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
@@ -99,6 +129,10 @@ export default {
   name: 'EmployeeCalendar',
   data() {
     return {
+      ISOPEN: true,
+      title: '',
+      suject: '',
+      yourDepartment: '',
       response: [],
       sreach: '',
       month: new Date().getMonth() + 1,
@@ -117,15 +151,17 @@ export default {
     },
   },
   methods: {
+    openPrint() {
+      this.ISOPEN = !this.ISOPEN;
+    },
     printTable() {
-  const calendar = document.querySelector('.main-tabale');
-  const calendarHTML = calendar.outerHTML;
+      const calendar = document.querySelector('.main-tabale');
+      const calendarHTML = calendar.outerHTML;
 
-  const newWindow = window.open('', '_blank');
-  newWindow.document.write(`
+      const newWindow = window.open('', '_blank');
+      newWindow.document.write(`
     <html>
     <head>
-      <title>طباعة الجدول</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -180,23 +216,153 @@ export default {
         .text-white {
           color: #ffffff;
         }
+          .container {
+      width: 100%;
+      margin: 0 auto;
+    }
+        * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 10px 20px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+    .container {
+      width: 100%;
+      margin: 0 auto;
+    }
+    .mx-auto {
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .my-2 {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .my-4 {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .py-2 {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .px-2 {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .flex-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .flex-col-end {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .flexed {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    h3, h4 {
+      margin: 5px 0;
+    }
+    .content {
+      margin: 10px 15px;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+    .header {
+      max-width: 100%;
+    }
+    .header img {
+      width: 100%;
+    }
+    .title {
+      font-size: x-large;
+      padding: 0 2px;
+    }
+    .subject {
+      font-size: large;
+      margin-bottom: 30px;
+    }
+   .bootmes{
+      display: none;
+      }
       </style>
     </head>
-    <body>
-      <h1 style="text-align: center; margin-top: 20px; font-size: 24px;">جدول الحضور</h1>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="flexed">
+      <div class="header" style="max-width: 100px;">
+        <img src="0.png" alt="Logo">
+      </div>
+      <div class="flexed-col px-2">
+        <h3 class="my-2">دولة ليبيا</h3>
+        <h4 class="my-2">وزارة الصحة</h4>
+        <h4 class="my-2">مستشفى غات العام</h4>
+      </div>
+    </div>
+
+    <!-- Title Section -->
+    <div class="flexed my-4">
+      <div class="mx-auto">
+        <h3 class="title">${this.title}</h3>
+      </div>
+    </div>
+
+    <!-- Subject Section -->
+    <div class="subject my-4">
+      ${this.suject}
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+      <p>${this.paragraph}</p>
+    </div>
+
+    <!-- Table Section -->
+    <div class="my-4">
       ${calendarHTML}
+    </div>
+    <div class="my-4 flex-col-end">
+      <p style=" font-weight: bolder; margin-left:15px;" class="my-4">أعتماد رئيس القسم</p>
+      <p>_________________</p>
+    </div>
+  </div>
     </body>
     </html>
   `);
-  newWindow.document.close();
-  newWindow.print();
-},
+      newWindow.document.close();
+      newWindow.print();
+    },
     async searchEmployee(sreach) {
       try {
         this.isLoading = true
 
         const result = await axios.post(
-          'http://localhost:88/api/employees/search',
+          'http://192.168.1.250:88/api/employees/search',
           { name: sreach },
           {
             headers: {
@@ -224,7 +390,7 @@ export default {
     },
     async registerEmployee(empid) {
       try {
-        const attendanceResult = await axios.get(`http://localhost:88/api/attendance/${empid}`, {
+        const attendanceResult = await axios.get(`http://192.168.1.250:88/api/attendance/${empid}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.myToken}`,

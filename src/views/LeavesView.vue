@@ -105,6 +105,38 @@
       <div v-else class="border border-gray-100 space-y-3 lg:p-10">
         <div class="text-xl mx-8">ادخل اسم الموظف</div>
         <div class="flex justify-between items-center">
+
+          <div :class="ISOPEN ? 'hidden' : 'absolute'"
+            class=" print z-20 w-[40vh]  top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] bg-slate-50 py-8 px-6 rounded-md shadow-sm flex flex-col">
+            <div>
+              <h4 class="mb-6 font-bold">العنوان الاول </h4>
+              <input v-model="title" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+              text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+            </div>
+            <div>
+              <h4 class="mb-6 font-bold">العنوان الثاني </h4>
+              <input v-model="suject" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+              text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+            </div>
+            <div>
+              <h4 class="mb-6 font-bold">النص الرئيسي </h4>
+              <input v-model="paragraph" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+            text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+            </div>
+            <div>
+              <h4 class="mb-6 font-bold"> أعتماد القسم </h4>
+              <input v-model="yourDepartment" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+            text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+            </div>
+            <div>
+              <div @click="openPrint">
+                <button @click="printTable"
+                  class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+                  طباعة
+                </button>
+              </div>
+            </div>
+          </div>
           <div
             class="relative mx-8 bg-gray-200 hover:bg-gray-300 transition duration-300 ease-in-out pe-2 flex md:max-w-2xl items-center my-8 md:w-full w-fit">
             <font-awesome-icon class="w-4 h-4 absolute left-2 text-gray-500" :icon="['fas', 'magnifying-glass']" />
@@ -135,9 +167,9 @@
               @click="showEdite()">
               <div>تسجيل إجازة جديدة</div>
             </div>
-            <button @click="printTable"
+            <button @click="openPrint"
               class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
-              طباعة
+              أعداد النصوص لي الطباعة
             </button>
           </div>
         </div>
@@ -203,6 +235,10 @@ import Swal from 'sweetalert2'
 export default {
   data() {
     return {
+      ISOPEN: true,
+      title: '',
+      suject: '',
+      yourDepartment: '',
       searchResult: [],
       selectedType: '',
       searchByType: '',
@@ -251,38 +287,155 @@ export default {
     }
   },
   methods: {
+    openPrint() {
+      this.ISOPEN = !this.ISOPEN;
+    },
     printTable() {
       const table = document.querySelector('.main-tabale');
       const newWindow = window.open('', '_blank');
       newWindow.document.write(`
-      <html>
-      <head>
-        <title>طباعة الجدول</title>
-        <style>
-        .bootmes{
-        display: none;
-        }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-          }
-          th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-          }
-          th {
-            background-color: #f2f2f2;
-          }
-        </style>
-      </head>
-      <body>
-        ${table.outerHTML}
-      </body>
-      </html>
-    `);
-      newWindow.document.close(); // إغلاق المستند لبدء الطباعة
-      newWindow.print(); // أمر الطباعة
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 10px 20px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+    .container {
+      width: 100%;
+      margin: 0 auto;
+    }
+    .mx-auto {
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .my-2 {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .my-4 {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .py-2 {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .px-2 {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .flex-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .flex-col-end {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .flex {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    h3, h4 {
+      margin: 5px 0;
+    }
+    .content {
+      margin: 10px 15px;
+      text-align: justify;
+      text-justify: inter-word;
+    }
+    .header {
+      max-width: 100%;
+    }
+    .header img {
+      width: 100%;
+    }
+    .title {
+      font-size: x-large;
+      padding: 0 2px;
+    }
+    .subject {
+      font-size: large;
+      margin-bottom: 30px;
+    }
+   .bootmes{
+      display: none;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="flex">
+      <div class="header" style="max-width: 100px;">
+        <img src="0.png" alt="Logo">
+      </div>
+      <div class="flex-col px-2">
+        <h3 class="my-2">دولة ليبيا</h3>
+        <h4 class="my-2">وزارة الصحة</h4>
+        <h4 class="my-2">مستشفى غات العام</h4>
+      </div>
+    </div>
+
+    <!-- Title Section -->
+    <div class="flex my-4">
+      <div class="mx-auto">
+        <h3 class="title">${this.title}</h3>
+      </div>
+    </div>
+
+    <!-- Subject Section -->
+    <div class="subject my-4">
+      ${this.suject}
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+      <p>${this.paragraph}</p>
+    </div>
+
+    <!-- Table Section -->
+    <div class="my-4">
+      ${table.outerHTML}
+    </div>
+    <div class="my-4 flex-col-end">
+      <p style=" font-weight: bolder; margin-left:15px;" class="my-4">${this.yourDepartment}</p>
+      <p>_________________</p>
+    </div>
+  </div>
+</body>
+</html>
+  `);
+      newWindow.document.close();
+      newWindow.print();
     },
     formatDate(date) {
       if (date) {
@@ -303,7 +456,7 @@ export default {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const result = await axios.post(
-          'http://localhost:88/api/employees/search',
+          'http://192.168.1.250:88/api/employees/search',
           { name: x },
           {
             headers: {
@@ -329,7 +482,7 @@ export default {
     },
     async fetchLeaves() {
       try {
-        const result = await axios.get('http://localhost:88/api/leaves', {
+        const result = await axios.get('http://192.168.1.250:88/api/leaves', {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },
@@ -374,7 +527,7 @@ export default {
     },
     async fetchByType(type) {
       try {
-        const result = await axios.get(`http://localhost:88/api/leaves?type=${type}`, {
+        const result = await axios.get(`http://192.168.1.250:88/api/leaves?type=${type}`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },
@@ -393,7 +546,7 @@ export default {
     },
     async typeSearch(searchByType) {
       try {
-        const result = await axios.get(`http://localhost:88/api/leaves?type=${searchByType}`, {
+        const result = await axios.get(`http://192.168.1.250:88/api/leaves?type=${searchByType}`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           },
@@ -412,7 +565,7 @@ export default {
     },
     async submitForm() {
       try {
-        const result = await axios.post('http://localhost:88/api/leaves', this.form, {
+        const result = await axios.post('http://192.168.1.250:88/api/leaves', this.form, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.myToken}`,
@@ -454,7 +607,7 @@ export default {
 
         if (result.isConfirmed) {
           // إذا تم تأكيد الحذف
-          await axios.delete(`http://localhost:88/api/leaves/${leaveId}`, {
+          await axios.delete(`http://192.168.1.250:88/api/leaves/${leaveId}`, {
             headers: {
               Authorization: `Bearer ${this.myToken}`,
             },

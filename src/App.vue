@@ -110,7 +110,13 @@ export default {
                   <span class="font-medium px-3">سجل العمليات</span>
                 </RouterLink>
               </li>
-
+              <li v-if="authStore.isAuthenticated" class=" hidden min-w-max py-2 mb-4 md:px-2 px-1 hover:bg-gray-50">
+                <RouterLink to="/ChangeAndMake" activeClass="text-blue-600" class="relative flex items-center">
+                  <font-awesome-icon class="text-blue-500 bg-blue-600 bg-opacity-10 p-3 mx-1 rounded-full size-4"
+                    :icon="['fas', 'building']" />
+                  <span class="font-medium px-3"> اعدادات كلمة السر </span>
+                </RouterLink>
+              </li>
               <!-- زر تسجيل الخروج -->
               <li v-if="authStore.isAuthenticated" class="min-w-max py-2 mb-4 md:px-2 px-1">
                 <button @click="logout"

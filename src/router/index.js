@@ -16,6 +16,12 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
+      path: '/ChangeAndMake',
+      name: 'ChangeAndMake',
+      component: () => import('../views/ChangeAndMake.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
@@ -71,18 +77,6 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: '/',
-    },
-    {
-      path: '/hr-system.local/login',
-      redirect: '/',
-    },
-    {
-      path: '/hr-system.local',
-      redirect: '/',
-    },
-    {
-      path: '/192.168.1.*/login',
       redirect: '/',
     },
   ],

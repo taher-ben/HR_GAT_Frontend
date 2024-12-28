@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 w-full bg-white">
+  <div :class="ISOPEN ? 'blur-none' : ''" class="p-6 w-full bg-white">
     <header class="flex flex-col flex-end mb-6 w-fit">
       <h1 class="mt-4 mb-10 ml-5 text-3xl font-bold">إدارة الخصومات والمكافآت</h1>
       <div class="flex md:flex-row flex-col gap-4">
@@ -12,21 +12,39 @@
               placeholder="ادخل اسم الموظف" />
             <button class="px-4 py-4 me-1 bg-blue-500 text-white">بحث</button>
           </form>
-          <button @click="printTable"
-            class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
-            طباعة
+          <button @click="openPrint" class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+            أعداد النصوص لي الطباعة
           </button>
-          <div>
-            <h4>العنوان الاول </h4>
-            <input v-model="title" type="text">
-          </div>
-          <div>
-            <h4>العنوان الثاني </h4>
-            <input v-model="suject" type="text">
-          </div>
-          <div>
-            <h4>النص الرئيسي </h4>
-            <input v-model="paragraph" type="text">
+          <div :class="ISOPEN ? 'hidden' : 'absolute'"
+            class=" print z-20 w-[40vh]  top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] bg-slate-50 py-8 px-6 rounded-md shadow-sm flex flex-col">
+            <div>
+              <h4 class="mb-6 font-bold">العنوان الاول </h4>
+              <input v-model="title" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+              text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+            </div>
+            <div>
+              <h4 class="mb-6 font-bold">العنوان الثاني </h4>
+              <input v-model="suject" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+              text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+            </div>
+            <div>
+              <h4 class="mb-6 font-bold">النص الرئيسي </h4>
+              <textarea v-model="paragraph" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+            text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1"></textarea>
+            </div>
+            <div>
+              <h4 class="mb-6 font-bold"> أعتماد القسم </h4>
+              <input v-model="yourDepartment" type="text" class="mb-3 w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-medium
+            text-zinc-950 focus:outline-none focus:ring-sky-600 focus:ring-1">
+            </div>
+            <div>
+              <div @click="openPrint">
+                <button @click="printTable"
+                  class="px-4 py-4 my-auto bg-green-500 rounded-xl text-white cursor-pointer h-full">
+                  طباعة
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -151,8 +169,10 @@ import { format } from 'date-fns'
 export default {
   data() {
     return {
-      title: 'title',
-      suject: 'subject',
+      ISOPEN: true,
+      title: '',
+      suject: '',
+      yourDepartment: '',
       paragraph: '',
       allRecords: '',
       myToken: localStorage.getItem('authToken'),
@@ -176,6 +196,9 @@ export default {
   },
 
   methods: {
+    openPrint() {
+      this.ISOPEN = !this.ISOPEN;
+    },
     formatDate(date) {
       if (date) {
         return format(new Date(date), 'yyyy-MM-dd')
@@ -186,140 +209,145 @@ export default {
       const table = document.querySelector('.main-tabale');
       const newWindow = window.open('', '_blank');
       newWindow.document.write(`
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      padding: 10px 20px;
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-    }
-    .container {
-      width: 100%;
-      margin: 0 auto;
-    }
-    .mx-auto {
-      margin-right: auto;
-      margin-left: auto;
-    }
-    .my-2 {
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .my-4 {
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
-    .py-2 {
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-    .px-2 {
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-    .flex-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .flex {
-      display: flex;
-      flex-direction: row-reverse;
-      justify-content: space-between;
-      align-items: center;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    h3, h4 {
-      margin: 5px 0;
-    }
-    .content {
-      margin: 10px 15px;
-      text-align: justify;
-      text-justify: inter-word;
-    }
-    .header {
-      max-width: 100%;
-    }
-    .header img {
-      width: 100%;
-    }
-    .title {
-      font-size: x-large;
-      padding: 0 2px;
-    }
-    .subject {
-      font-size: large;
-      margin-bottom: 30px;
-    }
-            .bootmes {
-      display: none !important;
-      }
+      <!DOCTYPE html>
+      <html lang="ar" dir="rtl">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
 
-  </style>
-</head>
-<body>
-  <div class="container">
-    <!-- Header Section -->
-    <div class="flex">
-      <div class="header" style="max-width: 100px;">
-        <img src="public/0.png" alt="Logo">
-      </div>
-      <div class="flex-col px-2">
-        <h3 class="my-2">دولة ليبيا</h3>
-        <h4 class="my-2">وزارة الصحة</h4>
-        <h4 class="my-2">مستشفى غات العام</h4>
-      </div>
-    </div>
+          body {
+            padding: 10px 20px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+          }
+          .container {
+            width: 100%;
+            margin: 0 auto;
+          }
+          .mx-auto {
+            margin-right: auto;
+            margin-left: auto;
+          }
+          .my-2 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+          }
+          .my-4 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+          }
+          .py-2 {
+            padding-top: 10px;
+            padding-bottom: 10px;
+          }
+          .px-2 {
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+          .flex-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .flex-col-end {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+          }
+          .flex {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+          }
+          th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+          h3, h4 {
+            margin: 5px 0;
+          }
+          .content {
+            margin: 10px 15px;
+            text-align: justify;
+            text-justify: inter-word;
+          }
+          .header {
+            max-width: 100%;
+          }
+          .header img {
+            width: 100%;
+          }
+          .title {
+            font-size: x-large;
+            padding: 0 2px;
+          }
+          .subject {
+            font-size: large;
+            margin-bottom: 30px;
+          }
+         .bootmes{
+            display: none;
+            }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <!-- Header Section -->
+          <div class="flex">
+            <div class="header" style="max-width: 100px;">
+              <img src="0.png" alt="Logo">
+            </div>
+            <div class="flex-col px-2">
+              <h3 class="my-2">دولة ليبيا</h3>
+              <h4 class="my-2">وزارة الصحة</h4>
+              <h4 class="my-2">مستشفى غات العام</h4>
+            </div>
+          </div>
 
-    <!-- Title Section -->
-    <div class="flex my-4">
-      <div class="mx-auto">
-        <h3 class="title">${this.title}</h3>
-      </div>
-    </div>
+          <!-- Title Section -->
+          <div class="flex my-4">
+            <div class="mx-auto">
+              <h3 class="title">${this.title}</h3>
+            </div>
+          </div>
 
-    <!-- Subject Section -->
-    <div class="subject my-4">
-      ${this.suject}
-    </div>
+          <!-- Subject Section -->
+          <div class="subject my-4">
+            ${this.suject}
+          </div>
 
-    <!-- Content Section -->
-    <div class="content">
-      <p>${this.paragraph}</p>
-    </div>
+          <!-- Content Section -->
+          <div class="content">
+            <p>${this.paragraph}</p>
+          </div>
 
-    <!-- Table Section -->
-    <div class="my-4">
-      ${table.outerHTML}
-    </div>
-    <div class="">
-    <h3></h3>
-      </div>
-  </div>
-</body>
-</html>
-
+          <!-- Table Section -->
+          <div class="my-4">
+            ${table.outerHTML}
+          </div>
+          <div class="my-4 flex-col-end">
+            <p style=" font-weight: bolder; margin-left:15px;" class="my-4">${this.yourDepartment}</p>
+            <p>_________________</p>
+          </div>
+        </div>
+      </body>
+      </html>
   `);
       newWindow.document.close();
       newWindow.print();
@@ -333,7 +361,7 @@ export default {
         this.isLoading = true
 
         const result = await axios.post(
-          'http://localhost:88/api/employees/search',
+          'http://192.168.1.250:88/api/employees/search',
           { name: sreach },
           {
             headers: {
@@ -358,7 +386,7 @@ export default {
     },
     async fetchData() {
       try {
-        const response = await axios.get('http://localhost:88/api/penalty-and-reward/', {
+        const response = await axios.get('http://192.168.1.250:88/api/penalty-and-reward/', {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }
@@ -394,7 +422,7 @@ export default {
 
     async submitForm() {
       try {
-        const url = 'http://localhost:88/api/penalty-and-reward/'
+        const url = 'http://192.168.1.250:88/api/penalty-and-reward/'
         const payload = { ...this.form }
 
         if (this.formMode === 'add') {
@@ -441,7 +469,7 @@ export default {
 
     async deleteRecord(recordId) {
       try {
-        await axios.delete(`http://localhost:88/api/penalty-and-reward/${recordId}/`, {
+        await axios.delete(`http://192.168.1.250:88/api/penalty-and-reward/${recordId}/`, {
           headers: {
             Authorization: `Bearer ${this.myToken}`,
           }
